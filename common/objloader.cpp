@@ -21,7 +21,8 @@ bool loadOBJ(
 	const char * path, 
 	std::vector<glm::vec3> & out_vertices, 
 	std::vector<glm::vec3> & out_normals
-){
+)
+{
 	printf("Loading OBJ file %s...\n", path);
 
 	std::vector<unsigned int> vertexIndices, normalIndices;
@@ -30,13 +31,15 @@ bool loadOBJ(
 
 
 	FILE * file = fopen(path, "r");
-	if( file == NULL ){
-		printf("Impossible to open the file ! Are you in the right path ? See Tutorial 1 for details\n");
+	if( file == NULL )
+    {
+		printf("Impossible to open the file ! \n");
 		getchar();
 		return false;
 	}
 
-	while( 1 ){
+	while( 1 )
+    {
 
 		char lineHeader[128];
 		// read the first word of the line

@@ -18,35 +18,42 @@ using namespace std;
 
 const int window_width = 800, window_height = 600;
 GLFWwindow *window;
-typedef struct Vertex {
+
+typedef struct Vertex
+{
     float Position[4];
     float Color[4];
     float Normal[3];
 
-    void SetPosition(float *coords) {
+    void SetPosition(float *coords)
+    {
         Position[0] = coords[0];
         Position[1] = coords[1];
         Position[2] = coords[2];
         Position[3] = 1.0;
     }
 
-    void SetColor(float *color) {
+    void SetColor(float *color)
+    {
         Color[0] = color[0];
         Color[1] = color[1];
         Color[2] = color[4];
         Color[3] = color[3];
     }
 
-    void SetNormal(float *normal) {
+    void SetNormal(float *normal)
+    {
         Normal[0] = normal[0];
         Normal[1] = normal[1];
         Normal[2] = normal[2];
     }
 } Vertex;
+
 glm::mat4 gProjectionMatrix;
 glm::mat4 gViewMatrix;
 GLuint programID;
 GLuint tessProgramID;
+
 const GLuint numObjects = 256;
 GLuint vertexBufferID[numObjects] = {0};
 GLuint vertexArrayID[numObjects] = {0};
@@ -54,6 +61,7 @@ GLuint indexBufferID[numObjects] = {0};
 size_t numIndices[numObjects] = {0};
 size_t vertexBufferSize[numObjects] = {0};
 size_t indexBufferSize[numObjects] = {0};
+
 Vertex* suzanne_verts;
 GLushort* suzanne_idcs;
 GLuint matrixID;
@@ -158,11 +166,14 @@ void createObjects()
     vertexBufferSize[0] = sizeof(coordVerts);	// ATTN: this needs to be done for each hand-made object with the ObjectID (subscript)
     createVAOs(coordVerts, NULL, 0);
 
-    loadObject("Model/Suzanne.obj", glm::vec4(0.4, 0.5, 0.3, 1.0), suzanne_verts, suzanne_idcs, 1);
+
+    //loadObject("Model/Suzanne.obj", glm::vec4(0.4, 0.5, 0.3, 1.0), suzanne_verts, suzanne_idcs, 1);
+    loadObject("Model/cube_output.obj", glm::vec4(0.4, 0.5, 0.3, 1.0), suzanne_verts, suzanne_idcs, 1);
     createVAOs(suzanne_verts, suzanne_idcs, 1);
 }
 
-void loadObject(char* file, glm::vec4 color, Vertex * &out_vertices, GLushort * &out_indices, int objectID) {
+void loadObject(char* file, glm::vec4 color, Vertex * &out_vertices, GLushort * &out_indices, int objectID)
+{
     vector<glm::vec3> vertices;
     vector<glm::vec3> normals;
 
@@ -177,14 +188,16 @@ void loadObject(char* file, glm::vec4 color, Vertex * &out_vertices, GLushort * 
     const size_t idx_count = indices.size();
 
     out_vertices = new Vertex[vert_count];
-    for(int i = 0; i < vert_count; i++) {
+    for(int i = 0; i < vert_count; i++)
+    {
         out_vertices[i].SetPosition(&indexed_vertices[i].x);
         out_vertices[i].SetNormal(&indexed_normals[i].x);
         out_vertices[i].SetColor(&color[0]);
     }
 
     out_indices = new GLushort[idx_count];
-    for(int i = 0; i < idx_count; i++) {
+    for(int i = 0; i < idx_count; i++)
+    {
         out_indices[i] = indices[i];
     }
 
@@ -233,7 +246,7 @@ void createVAOs(Vertex vertices[], GLushort indices[], int objectID)
 
 void renderScene()
 {
-    glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_CULL_FACE);
 
