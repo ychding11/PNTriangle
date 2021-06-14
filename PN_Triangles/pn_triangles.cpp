@@ -169,8 +169,8 @@ void createObjects()
     std::vector<Mesh> meshes;
     load_obj("Model/cube.obj", "Model/", meshes);
 
-    //loadObject("Model/Suzanne.obj", glm::vec4(0.4, 0.5, 0.3, 1.0), suzanne_verts, suzanne_idcs, 1);
-    loadObject("Model/cube_output.obj", glm::vec4(0.4, 0.5, 0.3, 1.0), suzanne_verts, suzanne_idcs, 1);
+    loadObject("Model/Suzanne.obj", glm::vec4(0.4, 0.5, 0.3, 1.0), suzanne_verts, suzanne_idcs, 1);
+    //loadObject("Model/cube_output.obj", glm::vec4(0.4, 0.5, 0.3, 1.0), suzanne_verts, suzanne_idcs, 1);
     createVAOs(suzanne_verts, suzanne_idcs, 1);
 }
 
@@ -206,6 +206,40 @@ void loadObject(char* file, glm::vec4 color, Vertex * &out_vertices, GLushort * 
     numIndices[objectID] = idx_count;
     vertexBufferSize[objectID] = sizeof(out_vertices[0]) * vert_count;
     indexBufferSize[objectID] = sizeof(GLushort) * idx_count;
+}
+
+void create_vaos(std::vector<Mesh> &meshes)
+{
+    for (int i = 0; i < meshes.size(); ++i)
+    {
+        GLenum errorCheckValue = glGetError();
+
+        int objectID = i;
+        vertexBufferSize[objectID] = meshes[i].vertices.size() * sizeof(SimpleVertex);
+        const size_t vertexSize = sizeof(meshes[i].vertices[0]);
+        const size_t normalOffset =  sizeof(meshes[i].vertices[0].position);
+
+        glGenVertexArrays(1, &vertexArrayID[objectID]);
+        glBindVertexArray(vertexArrayID[objectID]);
+
+        glGenBuffers(1, &vertexBufferID[objectID]);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID[objectID]);
+        glBufferData(GL_ARRAY_BUFFER, vertexBufferSize[objectID], meshes[i].vertices.data(), GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, vertexSize, 0);
+        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, vertexSize, (GLvoid*)normalOffset);
+
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+
+        glBindVertexArray(0);
+
+        errorCheckValue = glGetError();
+        if(errorCheckValue != GL_NO_ERROR)
+        {
+            fprintf(stderr, "Error: Could not create a VBO: %s\n", gluErrorString(errorCheckValue));
+        }
+    }
 }
 
 void createVAOs(Vertex vertices[], GLushort indices[], int objectID)
@@ -308,9 +342,9 @@ void renderScene()
             glDrawElements(GL_TRIANGLES, numIndices[1], GL_UNSIGNED_SHORT, (void*)0);
 
             ////// test
-            glBindVertexArray(vertexArrayID[2]);
-            glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-            glDrawElements(GL_TRIANGLES, numIndices[2], GL_UNSIGNED_SHORT, (void*)0);
+            //glBindVertexArray(vertexArrayID[2]);
+            //glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+            //glDrawElements(GL_TRIANGLES, numIndices[2], GL_UNSIGNED_SHORT, (void*)0);
         }
 
         glBindVertexArray(0);
@@ -333,9 +367,9 @@ void renderScene()
             glDrawElements(GL_PATCHES, numIndices[1], GL_UNSIGNED_SHORT, (void*)0);
 
             ////// test
-            glPatchParameteri(GL_PATCH_VERTICES, 3);
-            glBindVertexArray(vertexArrayID[2]);
-            glDrawElements(GL_PATCHES, numIndices[2], GL_UNSIGNED_SHORT, (void*)0);
+            //glPatchParameteri(GL_PATCH_VERTICES, 3);
+            //glBindVertexArray(vertexArrayID[2]);
+            //glDrawElements(GL_PATCHES, numIndices[2], GL_UNSIGNED_SHORT, (void*)0);
 
             glBindVertexArray(0);
         }
