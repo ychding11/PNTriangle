@@ -59,6 +59,7 @@ GLuint vertexBufferID[numObjects] = {0};
 GLuint vertexArrayID[numObjects] = {0};
 GLuint indexBufferID[numObjects] = {0};
 size_t numIndices[numObjects] = {0};
+size_t numVertex[numObjects] = {0};
 size_t vertexBufferSize[numObjects] = {0};
 size_t indexBufferSize[numObjects] = {0};
 
@@ -214,40 +215,6 @@ void loadObject(char* file, glm::vec4 color, Vertex * &out_vertices, GLushort * 
     indexBufferSize[objectID] = sizeof(GLushort) * idx_count;
 }
 
-void create_vaos(std::vector<Mesh> &meshes)
-{
-    for (int i = 0; i < meshes.size(); ++i)
-    {
-        GLenum errorCheckValue = glGetError();
-
-        int objectID = i;
-        vertexBufferSize[objectID] = meshes[i].vertices.size() * sizeof(SimpleVertex);
-        const size_t vertexSize = sizeof(meshes[i].vertices[0]);
-        const size_t normalOffset =  sizeof(meshes[i].vertices[0].position);
-
-        glGenVertexArrays(1, &vertexArrayID[objectID]);
-        glBindVertexArray(vertexArrayID[objectID]);
-
-        glGenBuffers(1, &vertexBufferID[objectID]);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID[objectID]);
-        glBufferData(GL_ARRAY_BUFFER, vertexBufferSize[objectID], meshes[i].vertices.data(), GL_STATIC_DRAW);
-
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, vertexSize, 0);
-        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, vertexSize, (GLvoid*)normalOffset);
-
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-
-        glBindVertexArray(0);
-
-        errorCheckValue = glGetError();
-        if(errorCheckValue != GL_NO_ERROR)
-        {
-            fprintf(stderr, "Error: Could not create a VBO: %s\n", gluErrorString(errorCheckValue));
-        }
-    }
-}
-
 void createVAOs(Vertex vertices[], GLushort indices[], int objectID)
 {
     GLenum errorCheckValue = glGetError();
@@ -385,6 +352,133 @@ void renderScene()
     }
 
     glUseProgram(0);
+    glfwSwapBuffers(window);
+    glfwPollEvents();
+}
+
+void create_vaos(std::vector<Mesh> &meshes)
+{
+    for (int i = 0; i < meshes.size(); ++i)
+    {
+        GLenum errorCheckValue = glGetError();
+
+        int objectID = i;
+        vertexBufferSize[objectID] = meshes[i].vertices.size() * sizeof(SimpleVertex);
+        numVertex[objectID] = meshes[i].vertices.size();
+
+        const size_t vertexSize = sizeof(meshes[i].vertices[0]);
+        const size_t normalOffset =  sizeof(meshes[i].vertices[0].position);
+
+        glGenVertexArrays(1, &vertexArrayID[objectID]);
+        glBindVertexArray(vertexArrayID[objectID]);
+
+        glGenBuffers(1, &vertexBufferID[objectID]);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID[objectID]);
+        glBufferData(GL_ARRAY_BUFFER, vertexBufferSize[objectID], meshes[i].vertices.data(), GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, vertexSize, 0);
+        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, vertexSize, (GLvoid*)normalOffset);
+
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+
+        glBindVertexArray(0);
+
+        errorCheckValue = glGetError();
+        if(errorCheckValue != GL_NO_ERROR)
+        {
+            fprintf(stderr, "Error: Could not create a VBO: %s\n", gluErrorString(errorCheckValue));
+        }
+    }
+}
+
+void render_scene()
+{
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_CULL_FACE);
+
+    if (moveCameraLeft)
+    {
+        cameraAngleTheta -= 0.01f;
+    }
+
+    if (moveCameraRight)
+    {
+        cameraAngleTheta += 0.01f;
+    }
+
+    if (moveCameraUp)
+    {
+        cameraAnglePhi -= 0.01f;
+    }
+
+    if (moveCameraDown)
+    {
+        cameraAnglePhi += 0.01f;
+    }
+
+    if (moveCameraLeft || moveCameraRight || moveCameraDown || moveCameraUp)
+    {
+        float camX = cameraSphereRadius * cos(cameraAnglePhi) * sin(cameraAngleTheta);
+        float camY = cameraSphereRadius * sin(cameraAnglePhi);
+        float camZ = cameraSphereRadius * cos(cameraAnglePhi) * cos(cameraAngleTheta);
+        gViewMatrix = glm::lookAt(glm::vec3(camX, camY, camZ),	// eye
+            glm::vec3(0.0, 10.0, 0.0),	// center
+            glm::vec3(0.0, 1.0, 0.0));	// up
+    }
+
+    if(shouldDisplayWireframeMode)
+    {
+        glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+    }
+    else
+    {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+    glm::vec3 lightPos = glm::vec3(20.0f, 20.0f, 20.0f);
+    glm::vec3 mesh_color = glm::vec3(0.4f, 0.5f, 3.0f);
+    glm::mat4x4 modelMatrix = glm::mat4(1.0);
+    glUseProgram(programID);
+    {
+        glUniform3f(lightID, lightPos.x, lightPos.y, lightPos.z);
+        glUniform3f(mesh_color_ID, mesh_color.x, mesh_color.y, mesh_color.z);
+        glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &gViewMatrix[0][0]);
+        glUniformMatrix4fv(projectionMatrixID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
+        glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
+
+        glBindVertexArray(vertexArrayID[0]);	// draw CoordAxes
+        glDrawArrays(GL_LINES, 0, 6);
+
+        glBindVertexArray(0);
+    }
+
+    if(!shouldTessellateModel)
+    {
+        glBindVertexArray(vertexArrayID[1]);
+        glDrawArrays( GL_TRIANGLES, 0, numVertex[1] );
+    }
+    else
+    {
+        glUseProgram(tessProgramID);
+        {
+            glUniform3f(tessLightID, lightPos.x, lightPos.y, lightPos.z);
+            glUniform3f(tess_mesh_color_ID, mesh_color.x, mesh_color.y, mesh_color.z);
+            glUniformMatrix4fv(tessViewMatrixID, 1, GL_FALSE, &gViewMatrix[0][0]);
+            glUniformMatrix4fv(tessProjectionMatrixID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
+            glUniformMatrix4fv(tessModelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
+
+            glUniform1f(tessellationLevelInnerID, tessellationLevel);
+            glUniform1f(tessellationLevelOuterID, tessellationLevel);
+
+            glPatchParameteri(GL_PATCH_VERTICES, 3);
+            glBindVertexArray(vertexArrayID[1]);
+            glDrawArrays( GL_PATCHES, 0, numVertex[1] );
+        }
+    }
+    glBindVertexArray(0);
+    glUseProgram(0);
+
     glfwSwapBuffers(window);
     glfwPollEvents();
 }
