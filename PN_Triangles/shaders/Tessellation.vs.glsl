@@ -13,8 +13,12 @@ layout(location = 2) in vec3 vertexNormal_modelspace;
 
 out V2T vdata;
 
-void main() {
+uniform vec3 mesh_color;
+
+void main()
+{
     vdata.position = (vertexPosition_modelspace).xyz;
     vdata.normal = normalize(vertexNormal_modelspace);
-    vdata.color = vertexColor;
+    //vdata.color = vertexColor;
+    vdata.color = vec4(mesh_color, 1.0f);
 }

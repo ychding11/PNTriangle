@@ -21,6 +21,7 @@ uniform mat4 M;
 uniform mat4 V;
 uniform mat4 P;
 uniform vec3 lightPosition_worldspace;
+uniform vec3 mesh_color;
 
 void main() {
     gl_Position = P * V * M * vertexPosition_modelspace;
@@ -36,5 +37,6 @@ void main() {
 
     vdata.position = vertexPosition_modelspace.xyz;
     vdata.normal = vertexNormal_modelspace;
-    vdata.color = vertexColor;
+    //vdata.color = vertexColor;
+    vdata.color = vec4(mesh_color, 1.0f);
 }

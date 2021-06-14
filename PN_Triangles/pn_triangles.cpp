@@ -69,6 +69,9 @@ GLuint modelMatrixID;
 GLuint viewMatrixID;
 GLuint projectionMatrixID;
 GLuint lightID;
+GLuint mesh_color_ID;
+GLuint tess_mesh_color_ID;
+
 GLuint tessMatrixID;
 GLuint tessModelMatrixID;
 GLuint tessViewMatrixID;
@@ -139,6 +142,7 @@ void initOpenGL()
     viewMatrixID = glGetUniformLocation(programID, "V");
     projectionMatrixID = glGetUniformLocation(programID, "P");
     lightID = glGetUniformLocation(programID, "lightPosition_worldspace");
+    mesh_color_ID = glGetUniformLocation(programID, "mesh_color");
 
     tessModelMatrixID = glGetUniformLocation(tessProgramID, "M");
     tessViewMatrixID = glGetUniformLocation(tessProgramID, "V");
@@ -146,6 +150,8 @@ void initOpenGL()
     tessLightID = glGetUniformLocation(tessProgramID, "lightPosition_worldspace");
     tessellationLevelInnerID = glGetUniformLocation(tessProgramID, "tessellationLevelInner");
     tessellationLevelOuterID = glGetUniformLocation(tessProgramID, "tessellationLevelOuter");
+
+    tess_mesh_color_ID = glGetUniformLocation(tessProgramID, "mesh_color");
 
     createObjects();
 }
@@ -325,10 +331,12 @@ void renderScene()
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
     glm::vec3 lightPos = glm::vec3(20.0f, 20.0f, 20.0f);
+    glm::vec3 mesh_color = glm::vec3(0.4f, 0.5f, 3.0f);
     glm::mat4x4 modelMatrix = glm::mat4(1.0);
     glUseProgram(programID);
     {
         glUniform3f(lightID, lightPos.x, lightPos.y, lightPos.z);
+        glUniform3f(mesh_color_ID, mesh_color.x, mesh_color.y, mesh_color.z);
         glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &gViewMatrix[0][0]);
         glUniformMatrix4fv(projectionMatrixID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
         glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
@@ -355,6 +363,7 @@ void renderScene()
         glUseProgram(tessProgramID);
         {
             glUniform3f(tessLightID, lightPos.x, lightPos.y, lightPos.z);
+            glUniform3f(tess_mesh_color_ID, mesh_color.x, mesh_color.y, mesh_color.z);
             glUniformMatrix4fv(tessViewMatrixID, 1, GL_FALSE, &gViewMatrix[0][0]);
             glUniformMatrix4fv(tessProjectionMatrixID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
             glUniformMatrix4fv(tessModelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
