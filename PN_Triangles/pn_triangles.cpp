@@ -166,6 +166,8 @@ void createObjects()
     vertexBufferSize[0] = sizeof(coordVerts);	// ATTN: this needs to be done for each hand-made object with the ObjectID (subscript)
     createVAOs(coordVerts, NULL, 0);
 
+    std::vector<Mesh> meshes;
+    load_obj("Model/cube.obj", "Model/", meshes);
 
     //loadObject("Model/Suzanne.obj", glm::vec4(0.4, 0.5, 0.3, 1.0), suzanne_verts, suzanne_idcs, 1);
     loadObject("Model/cube_output.obj", glm::vec4(0.4, 0.5, 0.3, 1.0), suzanne_verts, suzanne_idcs, 1);
