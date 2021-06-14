@@ -91,15 +91,18 @@ void createVAOs(Vertex[], GLushort[], int);
 void renderScene(void);
 void cleanup(void);
 
-int main(void) {
+int main(void)
+{
     int errorCode = initWindow();
-    if(errorCode != 0) {
+    if(errorCode != 0)
+    {
         return errorCode;
     }
 
     initOpenGL();
 
-    do {
+    do
+    {
         renderScene();
     } while(glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 
@@ -108,7 +111,8 @@ int main(void) {
     return 0;
 }
 
-void initOpenGL() {
+void initOpenGL()
+{
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     glEnable(GL_CULL_FACE);
@@ -120,8 +124,7 @@ void initOpenGL() {
                               glm::vec3(0.0f, 1.0f, 0.0f));
 
     programID = loadStandardShaders("shaders/Standard.vert", "shaders/Standard.frag");
-    tessProgramID = loadTessShaders("shaders/Tessellation.vs.glsl", "shaders/Tessellation.tc.glsl", "shaders/Tessellation.te.glsl",
-                                "shaders/Tessellation.fs.glsl");
+    tessProgramID = loadTessShaders("shaders/Tessellation.vs.glsl", "shaders/Tessellation.tc.glsl", "shaders/Tessellation.te.glsl", "shaders/Tessellation.fs.glsl");
 
     matrixID = glGetUniformLocation(programID, "MVP");
     modelMatrixID = glGetUniformLocation(programID, "M");
@@ -139,7 +142,8 @@ void initOpenGL() {
     createObjects();
 }
 
-void createObjects() {
+void createObjects()
+{
     //-- COORDINATE AXES --//
     Vertex coordVerts[] =
     {
@@ -156,23 +160,6 @@ void createObjects() {
 
     loadObject("Model/Suzanne.obj", glm::vec4(0.4, 0.5, 0.3, 1.0), suzanne_verts, suzanne_idcs, 1);
     createVAOs(suzanne_verts, suzanne_idcs, 1);
-
-    /*Vertex triVerts[] =
-    {
-      {{3.0, -2.0, -1.0, 1.0}, {1.0, 1.0, 0.0, 1.0}, {0.0, 0.0, 1.0}},
-      {{-3.0, -2.0, -1.0, 1.0}, {1.0, 1.0, 0.0, 1.0}, {0.0, 0.0, 1.0}},
-      {{0.0, 3.0, -1.0, 1.0}, {1.0, 1.0, 0.0, 1.0}, {0.0, 0.0, 1.0}}
-    };
-
-    GLushort triIdcs[] =
-    {
-        0, 1, 2
-    };
-
-    vertexBufferSize[2] = sizeof(triVerts);
-    numIndices[2] = 3;
-    indexBufferSize[2] = sizeof(triIdcs);
-    createVAOs(triVerts, triIdcs, 2);*/
 }
 
 void loadObject(char* file, glm::vec4 color, Vertex * &out_vertices, GLushort * &out_indices, int objectID) {
@@ -206,7 +193,8 @@ void loadObject(char* file, glm::vec4 color, Vertex * &out_vertices, GLushort * 
     indexBufferSize[objectID] = sizeof(GLushort) * idx_count;
 }
 
-void createVAOs(Vertex vertices[], GLushort indices[], int objectID) {
+void createVAOs(Vertex vertices[], GLushort indices[], int objectID)
+{
     GLenum errorCheckValue = glGetError();
     const size_t vertexSize = sizeof(vertices[0]);
     const size_t colorOffset = sizeof(vertices[0].Position);
@@ -219,7 +207,8 @@ void createVAOs(Vertex vertices[], GLushort indices[], int objectID) {
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID[objectID]);
     glBufferData(GL_ARRAY_BUFFER, vertexBufferSize[objectID], vertices, GL_STATIC_DRAW);
 
-    if(indices != NULL) {
+    if(indices != NULL)
+    {
         glGenBuffers(1, &indexBufferID[objectID]);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID[objectID]);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBufferSize[objectID], indices, GL_STATIC_DRAW);
@@ -236,33 +225,40 @@ void createVAOs(Vertex vertices[], GLushort indices[], int objectID) {
     glBindVertexArray(0);
 
     errorCheckValue = glGetError();
-    if(errorCheckValue != GL_NO_ERROR) {
+    if(errorCheckValue != GL_NO_ERROR)
+    {
         fprintf(stderr, "Error: Could not create a VBO: %s\n", gluErrorString(errorCheckValue));
     }
 }
 
-void renderScene() {
+void renderScene()
+{
     glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_CULL_FACE);
 
-    if (moveCameraLeft) {
+    if (moveCameraLeft)
+    {
         cameraAngleTheta -= 0.01f;
     }
 
-    if (moveCameraRight) {
+    if (moveCameraRight)
+    {
         cameraAngleTheta += 0.01f;
     }
 
-    if (moveCameraUp) {
+    if (moveCameraUp)
+    {
         cameraAnglePhi -= 0.01f;
     }
 
-    if (moveCameraDown) {
+    if (moveCameraDown)
+    {
         cameraAnglePhi += 0.01f;
     }
 
-    if (moveCameraLeft || moveCameraRight || moveCameraDown || moveCameraUp) {
+    if (moveCameraLeft || moveCameraRight || moveCameraDown || moveCameraUp)
+    {
         float camX = cameraSphereRadius * cos(cameraAnglePhi) * sin(cameraAngleTheta);
         float camY = cameraSphereRadius * sin(cameraAnglePhi);
         float camZ = cameraSphereRadius * cos(cameraAnglePhi) * cos(cameraAngleTheta);
@@ -271,9 +267,12 @@ void renderScene() {
             glm::vec3(0.0, 1.0, 0.0));	// up
     }
 
-    if(shouldDisplayWireframeMode) {
+    if(shouldDisplayWireframeMode)
+    {
         glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-    } else {
+    }
+    else
+    {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
     glm::vec3 lightPos = glm::vec3(20.0f, 20.0f, 20.0f);
@@ -288,7 +287,8 @@ void renderScene() {
         glBindVertexArray(vertexArrayID[0]);	// draw CoordAxes
         glDrawArrays(GL_LINES, 0, 6);
 
-        if(!shouldTessellateModel) {
+        if(!shouldTessellateModel)
+        {
             glBindVertexArray(vertexArrayID[1]);
             glDrawElements(GL_TRIANGLES, numIndices[1], GL_UNSIGNED_SHORT, (void*)0);
 
@@ -301,7 +301,8 @@ void renderScene() {
         glBindVertexArray(0);
     }
 
-    if(shouldTessellateModel) {
+    if(shouldTessellateModel)
+    {
         glUseProgram(tessProgramID);
         {
             glUniform3f(tessLightID, lightPos.x, lightPos.y, lightPos.z);
@@ -557,9 +558,12 @@ GLuint loadTessShaders(const char *tess_vert_file_path, const char *tess_ctrl_fi
 	return tessProgramID;
 }
 
-int initWindow() {
-    if(!glfwInit()) {
-        fprintf(stderr, "Failed to initialize GLFW!\n");
+const char * g_window_title = "PN Triangle";
+int initWindow()
+{
+    if(!glfwInit())
+    {
+        throw runtime_error("Failed to initialize GLFW !");
         return -1;
     }
 
@@ -569,17 +573,19 @@ int initWindow() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    window = glfwCreateWindow(window_width, window_height, "PN Triangles", NULL, NULL);
-    if(window == NULL) {
-        fprintf(stderr, "Failed to open GLFW window.\n");
+    window = glfwCreateWindow(window_width, window_height, g_window_title, NULL, NULL);
+    if(window == NULL)
+    {
+        throw runtime_error("Failed to open GLFW window!");
         glfwTerminate();
         return -1;
     }
-    glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(window); //< pick context of window into current thread
 
     glewExperimental = true;
-    if(glewInit() != GLEW_OK) {
-        fprintf(stderr, "Failed to initialize GLEW!\n");
+    if(glewInit() != GLEW_OK)
+    {
+        throw runtime_error("Failed to initialize GLEW !");
         return -1;
     }
 
@@ -590,8 +596,10 @@ int initWindow() {
     return 0;
 }
 
-void cleanup() {
-    for(int i = 0; i < numObjects; i++) {
+void cleanup()
+{
+    for(int i = 0; i < numObjects; i++)
+    {
         glDeleteBuffers(1, &vertexBufferID[i]);
         glDeleteBuffers(1, &indexBufferID[i]);
         glDeleteVertexArrays(1, &vertexArrayID[i]);
@@ -655,6 +663,7 @@ static void keyCallback(GLFWwindow *window, int key, int scancode, int action, i
     }
 }
 
-static void mouseCallback(GLFWwindow *window, int button, int action, int mods) {
+static void mouseCallback(GLFWwindow *window, int button, int action, int mods)
+{
 
 }
