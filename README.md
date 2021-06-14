@@ -1,2 +1,3 @@
-# openGL-Tessellation
-Applying PN Triangles and PN Quads using openGL's Tessellation engine
+## Tessellation
+
+Applying PN Triangles by OpenGL .
