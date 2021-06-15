@@ -83,8 +83,8 @@ void initOpenGL()
 
     gProjectionMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 
-    gViewMatrix = glm::lookAt(glm::vec3(15.0f, 15.0f, 15.0f),
-                              glm::vec3(0.0f, 10.0f, 0.0f),
+    gViewMatrix = glm::lookAt(glm::vec3(5.0f, 5.0f, 5.0f),
+                              glm::vec3(0.0f, 0.0f, 0.0f),
                               glm::vec3(0.0f, 1.0f, 0.0f));
 
     programID = loadStandardShaders("shaders/Standard.vert", "shaders/Standard.frag");
@@ -607,7 +607,7 @@ int main(int argc, char **argv)
     }
 
     initOpenGL();
-    createObjects("Model/Suzanne.obj");
+    createObjects(modelPath);
 
     do
     {
