@@ -15,7 +15,7 @@
 using namespace glm;
 using namespace std;
 
-const int window_width = 800, window_height = 600;
+const int window_width = 1000, window_height = 1000;
 GLFWwindow *window;
 
 
@@ -47,6 +47,7 @@ GLuint tessProjectionMatrixID;
 GLuint tessLightID;
 GLfloat tessellationLevelInnerID;
 GLfloat tessellationLevelOuterID;
+
 GLfloat cameraAngleTheta = 3.142 / 4;
 GLfloat cameraAnglePhi = asin(1 / sqrt(3));
 GLfloat cameraSphereRadius = sqrt(675);
@@ -73,27 +74,6 @@ void cleanup(void);
 
 void create_vaos(std::vector<Mesh> &meshes);
 void render_scene();
-
-int main(void)
-{
-    int errorCode = initWindow();
-    if(errorCode != 0)
-    {
-        return errorCode;
-    }
-
-    initOpenGL();
-
-    do
-    {
-        render_scene();
-
-    } while(glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
-
-    cleanup();
-
-    return 0;
-}
 
 void initOpenGL()
 {
@@ -126,13 +106,12 @@ void initOpenGL()
 
     tess_mesh_color_ID = glGetUniformLocation(tessProgramID, "mesh_color");
 
-    createObjects();
 }
 
-void createObjects()
+void createObjects(const std::string &filename)
 {
     std::vector<Mesh> meshes;
-    load_obj("Model/Suzanne.obj", "Model/", meshes);
+    load_obj(filename, "Model/", meshes);
     create_vaos(meshes);
 }
 
@@ -598,3 +577,46 @@ static void mouseCallback(GLFWwindow *window, int button, int action, int mods)
 {
 
 }
+
+int main(int argc, char **argv)
+{
+    std::string modelPath;
+    char **filename = nullptr; 
+    for (int i = 0; i < argc; ++i)
+    {
+        if (i + 1 < argc && strcmp(argv[i], "-obj") == 0)
+            filename = argv + i + 1, ++i;
+        else
+        {
+        }
+    }
+
+    if ( filename != nullptr )
+    {
+        modelPath = *filename;
+    }
+    else
+    {
+        modelPath = "Model/Suzanne.obj";
+    }
+
+    int errorCode = initWindow();
+    if(errorCode != 0)
+    {
+        return errorCode;
+    }
+
+    initOpenGL();
+    createObjects("Model/Suzanne.obj");
+
+    do
+    {
+        render_scene();
+
+    } while(glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
+
+    cleanup();
+
+    return 0;
+}
+
