@@ -63,6 +63,13 @@ size_t numVertex[numObjects] = {0};
 size_t vertexBufferSize[numObjects] = {0};
 size_t indexBufferSize[numObjects] = {0};
 
+GLuint m_object_num = 0;
+const GLuint m_max_object_num = 256;
+GLuint m_vao_id[m_max_object_num] = {0};
+GLuint m_vbo_id[m_max_object_num] = {0};
+size_t m_vb_size[m_max_object_num] = {0};
+size_t m_vertex_num[m_max_object_num] = {0};
+
 Vertex* suzanne_verts;
 GLushort* suzanne_idcs;
 GLuint matrixID;
@@ -103,6 +110,10 @@ void createVAOs(Vertex[], GLushort[], int);
 void renderScene(void);
 void cleanup(void);
 
+
+void create_vaos(std::vector<Mesh> &meshes);
+void render_scene();
+
 int main(void)
 {
     int errorCode = initWindow();
@@ -115,7 +126,9 @@ int main(void)
 
     do
     {
-        renderScene();
+        // renderScene();
+        render_scene();
+
     } while(glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 
     cleanup();
@@ -174,11 +187,12 @@ void createObjects()
     createVAOs(coordVerts, NULL, 0);
 
     std::vector<Mesh> meshes;
-    load_obj("Model/cube.obj", "Model/", meshes);
+    load_obj("Model/Suzanne.obj", "Model/", meshes);
+    create_vaos(meshes);
 
-    loadObject("Model/Suzanne.obj", glm::vec4(0.4, 0.5, 0.3, 1.0), suzanne_verts, suzanne_idcs, 1);
-    //loadObject("Model/cube_output.obj", glm::vec4(0.4, 0.5, 0.3, 1.0), suzanne_verts, suzanne_idcs, 1);
-    createVAOs(suzanne_verts, suzanne_idcs, 1);
+    //loadObject("Model/Suzanne.obj", glm::vec4(0.4, 0.5, 0.3, 1.0), suzanne_verts, suzanne_idcs, 1);
+    ////loadObject("Model/cube_output.obj", glm::vec4(0.4, 0.5, 0.3, 1.0), suzanne_verts, suzanne_idcs, 1);
+    //createVAOs(suzanne_verts, suzanne_idcs, 1);
 }
 
 void loadObject(char* file, glm::vec4 color, Vertex * &out_vertices, GLushort * &out_indices, int objectID)
@@ -362,22 +376,21 @@ void create_vaos(std::vector<Mesh> &meshes)
     {
         GLenum errorCheckValue = glGetError();
 
-        int objectID = i;
-        vertexBufferSize[objectID] = meshes[i].vertices.size() * sizeof(SimpleVertex);
-        numVertex[objectID] = meshes[i].vertices.size();
+        m_vb_size[m_object_num] = meshes[i].vertices.size() * sizeof(SimpleVertex);
+        m_vertex_num[m_object_num] = meshes[i].vertices.size();
 
-        const size_t vertexSize = sizeof(meshes[i].vertices[0]);
+        const size_t vertexStride = sizeof(SimpleVertex);
         const size_t normalOffset =  sizeof(meshes[i].vertices[0].position);
 
-        glGenVertexArrays(1, &vertexArrayID[objectID]);
-        glBindVertexArray(vertexArrayID[objectID]);
+        glGenVertexArrays(1, &m_vao_id[m_object_num]);
+        glBindVertexArray(m_vao_id[m_object_num]);
 
-        glGenBuffers(1, &vertexBufferID[objectID]);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID[objectID]);
-        glBufferData(GL_ARRAY_BUFFER, vertexBufferSize[objectID], meshes[i].vertices.data(), GL_STATIC_DRAW);
+        glGenBuffers(1, &m_vbo_id[m_object_num]);
+        glBindBuffer(GL_ARRAY_BUFFER, m_vbo_id[m_object_num]);
+        glBufferData(GL_ARRAY_BUFFER, m_vb_size[m_object_num], meshes[i].vertices.data(), GL_STATIC_DRAW);
 
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, vertexSize, 0);
-        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, vertexSize, (GLvoid*)normalOffset);
+        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, vertexStride, 0);
+        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, vertexStride, (GLvoid*)normalOffset);
 
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
@@ -389,6 +402,7 @@ void create_vaos(std::vector<Mesh> &meshes)
         {
             fprintf(stderr, "Error: Could not create a VBO: %s\n", gluErrorString(errorCheckValue));
         }
+        m_object_num++;
     }
 }
 
@@ -437,10 +451,10 @@ void render_scene()
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
     glm::vec3 lightPos = glm::vec3(20.0f, 20.0f, 20.0f);
-    glm::vec3 mesh_color = glm::vec3(0.4f, 0.5f, 3.0f);
+    glm::vec3 mesh_color = glm::vec3(0.9f, 0.5f, 3.0f);
     glm::mat4x4 modelMatrix = glm::mat4(1.0);
-    glUseProgram(programID);
     {
+        glUseProgram(programID);
         glUniform3f(lightID, lightPos.x, lightPos.y, lightPos.z);
         glUniform3f(mesh_color_ID, mesh_color.x, mesh_color.y, mesh_color.z);
         glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &gViewMatrix[0][0]);
@@ -453,27 +467,38 @@ void render_scene()
         glBindVertexArray(0);
     }
 
-    if(!shouldTessellateModel)
+    for (int i = 0; i < m_object_num; ++i)
     {
-        glBindVertexArray(vertexArrayID[1]);
-        glDrawArrays( GL_TRIANGLES, 0, numVertex[1] );
-    }
-    else
-    {
-        glUseProgram(tessProgramID);
+        if(!shouldTessellateModel)
         {
-            glUniform3f(tessLightID, lightPos.x, lightPos.y, lightPos.z);
-            glUniform3f(tess_mesh_color_ID, mesh_color.x, mesh_color.y, mesh_color.z);
-            glUniformMatrix4fv(tessViewMatrixID, 1, GL_FALSE, &gViewMatrix[0][0]);
-            glUniformMatrix4fv(tessProjectionMatrixID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
-            glUniformMatrix4fv(tessModelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
+            glUseProgram(programID);
 
-            glUniform1f(tessellationLevelInnerID, tessellationLevel);
-            glUniform1f(tessellationLevelOuterID, tessellationLevel);
+            glUniform3f(lightID, lightPos.x, lightPos.y, lightPos.z);
+            glUniform3f(mesh_color_ID, mesh_color.x, mesh_color.y, mesh_color.z);
+            glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &gViewMatrix[0][0]);
+            glUniformMatrix4fv(projectionMatrixID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
+            glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
 
-            glPatchParameteri(GL_PATCH_VERTICES, 3);
-            glBindVertexArray(vertexArrayID[1]);
-            glDrawArrays( GL_PATCHES, 0, numVertex[1] );
+            glBindVertexArray(m_vao_id[i]);
+            glDrawArrays( GL_TRIANGLES, 0, m_vertex_num[i] );
+        }
+        else
+        {
+            glUseProgram(tessProgramID);
+            {
+                glUniform3f(tessLightID, lightPos.x, lightPos.y, lightPos.z);
+                glUniform3f(tess_mesh_color_ID, mesh_color.x, mesh_color.y, mesh_color.z);
+                glUniformMatrix4fv(tessViewMatrixID, 1, GL_FALSE, &gViewMatrix[0][0]);
+                glUniformMatrix4fv(tessProjectionMatrixID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
+                glUniformMatrix4fv(tessModelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
+
+                glUniform1f(tessellationLevelInnerID, tessellationLevel);
+                glUniform1f(tessellationLevelOuterID, tessellationLevel);
+
+                glPatchParameteri(GL_PATCH_VERTICES, 3);
+                glBindVertexArray(m_vao_id[i]);
+                glDrawArrays( GL_PATCHES, 0, m_vertex_num[i] );
+            }
         }
     }
     glBindVertexArray(0);

@@ -7,9 +7,8 @@ struct V2F
     vec4 color;
 };
 
-layout(location = 0) in vec4 vertexPosition_modelspace;
-layout(location = 1) in vec4 vertexColor;
-layout(location = 2) in vec3 vertexNormal_modelspace;
+layout(location = 0) in vec3 vertexPosition_modelspace;
+layout(location = 1) in vec3 vertexNormal_modelspace;
 
 out vec3 position_worldspace;
 out vec3 normal_cameraspace;
@@ -23,11 +22,12 @@ uniform mat4 P;
 uniform vec3 lightPosition_worldspace;
 uniform vec3 mesh_color;
 
-void main() {
-    gl_Position = P * V * M * vertexPosition_modelspace;
-    position_worldspace = (M * vertexPosition_modelspace).xyz;
+void main()
+{
+    gl_Position = P * V * M * vec4(vertexPosition_modelspace, 1.f);
+    position_worldspace = (M * vec4(vertexPosition_modelspace, 1.f)).xyz;
 
-    vec3 vertexPosition_cameraspace = (V * M * vertexPosition_modelspace).xyz;
+    vec3 vertexPosition_cameraspace = (V * M * vec4(vertexPosition_modelspace, 1.f)).xyz;
     eyeDirection_cameraspace = vec3(0.0f, 0.0f, 0.0f) - vertexPosition_cameraspace;
 
     vec3 lightPosition_cameraspace = (V * vec4(lightPosition_worldspace, 1)).xyz;
@@ -37,6 +37,5 @@ void main() {
 
     vdata.position = vertexPosition_modelspace.xyz;
     vdata.normal = vertexNormal_modelspace;
-    //vdata.color = vertexColor;
     vdata.color = vec4(mesh_color, 1.0f);
 }
