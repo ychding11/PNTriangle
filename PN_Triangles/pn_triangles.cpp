@@ -11,7 +11,6 @@
 #include <fstream>
 #include <vector>
 #include <common/objloader.hpp>
-#include <common/vboindexer.hpp>
 
 using namespace glm;
 using namespace std;
@@ -19,35 +18,6 @@ using namespace std;
 const int window_width = 800, window_height = 600;
 GLFWwindow *window;
 
-typedef struct Vertex
-{
-    float Position[4];
-    float Color[4];
-    float Normal[3];
-
-    void SetPosition(float *coords)
-    {
-        Position[0] = coords[0];
-        Position[1] = coords[1];
-        Position[2] = coords[2];
-        Position[3] = 1.0;
-    }
-
-    void SetColor(float *color)
-    {
-        Color[0] = color[0];
-        Color[1] = color[1];
-        Color[2] = color[4];
-        Color[3] = color[3];
-    }
-
-    void SetNormal(float *normal)
-    {
-        Normal[0] = normal[0];
-        Normal[1] = normal[1];
-        Normal[2] = normal[2];
-    }
-} Vertex;
 
 glm::mat4 gProjectionMatrix;
 glm::mat4 gViewMatrix;
@@ -62,8 +32,6 @@ GLuint m_vbo_id[m_max_object_num] = {0};
 size_t m_vb_size[m_max_object_num] = {0};
 size_t m_vertex_num[m_max_object_num] = {0};
 
-Vertex* suzanne_verts;
-GLushort* suzanne_idcs;
 GLuint matrixID;
 GLuint modelMatrixID;
 GLuint viewMatrixID;

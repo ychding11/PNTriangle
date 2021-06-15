@@ -1,3 +1,5 @@
+
+#if 0
 #include <vector>
 #include <map>
 
@@ -96,3 +98,5 @@ void indexVBO(
 		}
 	}
 }
+
+#endif
