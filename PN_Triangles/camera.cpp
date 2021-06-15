@@ -76,32 +76,32 @@ void Camera::startNewRotation()
 
 void Camera::rotate(glm::vec2 delta)
 {
-  delta *= 100;
-  delta.x = m_invertRotation ? delta.x : -delta.x;
-  delta.y = m_distance < 0.f ? -delta.y : delta.y;
-  m_azel += delta;
-  m_azel.x = maintainUnitCircle(m_azel.x);
-  m_azel.y = maintainUnitCircle(m_azel.y);
-  update();
+    delta *= 100;
+    delta.x = m_invertRotation ? delta.x : -delta.x;
+    delta.y = m_distance < 0.f ? -delta.y : delta.y;
+    m_azel += delta;
+    m_azel.x = maintainUnitCircle(m_azel.x);
+    m_azel.y = maintainUnitCircle(m_azel.y);
+    update();
 }
 
 void Camera::zoom(float delta)
 {
-  m_distance += m_speed * delta;
-  update();
+    m_distance += m_speed * delta;
+    update();
 }
 
 void Camera::pan(glm::vec2 delta)
 {
-  delta  *= m_speed;
-  delta.y = -delta.y;
+    delta  *= m_speed;
+    delta.y = -delta.y;
 
-  const glm::vec3 amount = delta.x * m_right + delta.y * m_up;
+    const glm::vec3 amount = delta.x * m_right + delta.y * m_up;
 
-  m_eye += amount;
-  m_at += amount;
+    m_eye += amount;
+    m_at += amount;
 
-  update();
+    update();
 }
 
 void Camera::setAxis(OrbitAxis axis)
@@ -131,28 +131,29 @@ glm::vec3 Camera::up() const
 }
 
 #include <cassert>
+#include <limits>
 void Camera::update()
 {
-  const float distance = std::abs(m_distance);
+    const float distance = std::abs(m_distance);
 
-  const OrbitAxis axis = m_distance < 0.f ? negateAxis(m_axis) : m_axis;
+    const OrbitAxis axis = m_distance < 0.f ? negateAxis(m_axis) : m_axis;
 
-  const float azimuth = degreesToRadians(m_azel.x);
-  const float elevation = degreesToRadians(m_azel.y);
+    const float azimuth = degreesToRadians(m_azel.x);
+    const float elevation = degreesToRadians(m_azel.y);
 
-  const glm::vec3 toLocalOrbit = azelToDirection(azimuth, elevation, axis);
+    const glm::vec3 toLocalOrbit = azelToDirection(azimuth, elevation, axis);
 
-  const glm::vec3 localOrbitPos = toLocalOrbit * distance;
-  const glm::vec3 fromLocalOrbit = -localOrbitPos;
+    const glm::vec3 localOrbitPos = toLocalOrbit * distance;
+    const glm::vec3 fromLocalOrbit = -localOrbitPos;
 
-  const glm::vec3 alteredElevation = azelToDirection(azimuth, elevation + 3, m_axis);
+    const glm::vec3 alteredElevation = azelToDirection(azimuth, elevation + 3, m_axis);
 
-  const glm::vec3 cameraRight = glm::cross(toLocalOrbit, alteredElevation);
-  const glm::vec3 cameraUp    = glm::cross(cameraRight, fromLocalOrbit);
+    const glm::vec3 cameraRight = glm::cross(toLocalOrbit, alteredElevation);
+    const glm::vec3 cameraUp    = glm::cross(cameraRight, fromLocalOrbit);
 
-  m_eye = localOrbitPos + m_at;
-  m_up    = glm::normalize(cameraUp);
-  m_right = glm::normalize(cameraRight);
+    m_eye = localOrbitPos + m_at;
+    m_up    = glm::normalize(cameraUp);
+    m_right = glm::normalize(cameraRight);
 
     m_forward = this->dir();
 
@@ -170,9 +171,9 @@ void Camera::update()
     m_viewMatrix[3][2] =  dot(m_forward, m_eye);
 
 
-    //assert(abs(m_aspect - std::numeric_limits<T>::epsilon()) > static_cast<float>(0));
+    assert(std::fabs(m_aspect - std::numeric_limits<float>::epsilon()) > static_cast<float>(0));
 
-    float const tanHalfFovy = std::tanf(m_fovy * 0.5f);
+    float const tanHalfFovy = std::tanf( degreesToRadians(m_fovy * 0.5f) );
 
     m_projMatrix[0][0] = static_cast<float>(1) / (m_aspect * tanHalfFovy);
     m_projMatrix[1][1] = static_cast<float>(1) / (tanHalfFovy);
