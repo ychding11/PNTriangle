@@ -43,7 +43,6 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Tessellation.fs.glsl 
 
 add_executable(PN_Triangles
 	common/objloader.cpp
-	common/vboindexer.cpp
 	PN_Triangles/pn_triangles.cpp
 	PN_Triangles/shaders/Standard.vert
 	PN_Triangles/shaders/Standard.frag
