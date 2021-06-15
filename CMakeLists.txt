@@ -14,7 +14,6 @@ include_directories(
 	external/glfw-3.1.2/include/GLFW/
 	external/glm-0.9.7.1/
 	external/glew-1.13.0/include/
-	external/assimp-3.0.1270/include/
 )
 
 set(ALL_LIBS ${OPENGL_LIBRARY} glfw GLEW_1130)
@@ -44,6 +43,8 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Tessellation.fs.glsl 
 add_executable(PN_Triangles
 	common/objloader.cpp
 	PN_Triangles/pn_triangles.cpp
+	PN_Triangles/camera.h
+	PN_Triangles/camera.cpp
 	PN_Triangles/shaders/Standard.vert
 	PN_Triangles/shaders/Standard.frag
 	PN_Triangles/shaders/Tessellation.vs.glsl

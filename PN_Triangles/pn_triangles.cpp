@@ -61,7 +61,6 @@ bool shouldDisplayWireframeMode = false;
 
 int initWindow(void);
 void initOpenGL(void);
-void createObjects(void);
 
 static void keyCallback(GLFWwindow* , int, int, int, int);
 static void mouseCallback(GLFWwindow*, int, int, int);
@@ -180,11 +179,11 @@ void render_scene()
 
     if (moveCameraLeft || moveCameraRight || moveCameraDown || moveCameraUp)
     {
-        float camX = cameraSphereRadius * cos(cameraAnglePhi) * sin(cameraAngleTheta);
-        float camY = cameraSphereRadius * sin(cameraAnglePhi);
-        float camZ = cameraSphereRadius * cos(cameraAnglePhi) * cos(cameraAngleTheta);
+        float camX = cameraSphereRadius * sin(cameraAnglePhi) * cos(cameraAngleTheta);
+        float camY = cameraSphereRadius * cos(cameraAnglePhi);
+        float camZ = cameraSphereRadius * sin(cameraAnglePhi) * sin(cameraAngleTheta);
         gViewMatrix = glm::lookAt(glm::vec3(camX, camY, camZ),	// eye
-            glm::vec3(0.0, 10.0, 0.0),	// center
+            glm::vec3(0.0, 0.0, 0.0),	// target 
             glm::vec3(0.0, 1.0, 0.0));	// up
     }
 
@@ -536,8 +535,11 @@ static void keyCallback(GLFWwindow *window, int key, int scancode, int action, i
         default:
             break;
         }
-    } else if(action == GLFW_RELEASE) {
-        switch (key) {
+    }
+    else if(action == GLFW_RELEASE)
+    {
+        switch (key)
+        {
         case GLFW_KEY_LEFT:
             moveCameraLeft = false;
             break;
@@ -558,12 +560,14 @@ static void keyCallback(GLFWwindow *window, int key, int scancode, int action, i
             shouldDisplayWireframeMode = ! shouldDisplayWireframeMode;
             break;
         case GLFW_KEY_LEFT_BRACKET:
-            if(shouldTessellateModel) {
+            if(shouldTessellateModel)
+            {
                 --tessellationLevel;
             }
             break;
         case GLFW_KEY_RIGHT_BRACKET:
-            if(shouldTessellateModel) {
+            if(shouldTessellateModel)
+            {
                 ++tessellationLevel;
             }
             break;
