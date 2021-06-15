@@ -54,14 +54,6 @@ glm::mat4 gViewMatrix;
 GLuint programID;
 GLuint tessProgramID;
 
-const GLuint numObjects = 256;
-GLuint vertexBufferID[numObjects] = {0};
-GLuint vertexArrayID[numObjects] = {0};
-GLuint indexBufferID[numObjects] = {0};
-size_t numIndices[numObjects] = {0};
-size_t numVertex[numObjects] = {0};
-size_t vertexBufferSize[numObjects] = {0};
-size_t indexBufferSize[numObjects] = {0};
 
 GLuint m_object_num = 0;
 const GLuint m_max_object_num = 256;
@@ -101,13 +93,13 @@ bool shouldDisplayWireframeMode = false;
 int initWindow(void);
 void initOpenGL(void);
 void createObjects(void);
+
 static void keyCallback(GLFWwindow* , int, int, int, int);
 static void mouseCallback(GLFWwindow*, int, int, int);
+
 GLuint loadStandardShaders(const char*, const char*);
 GLuint loadTessShaders(const char*, const char*, const char*, const char*);
-void loadObject(char*, glm::vec4, Vertex* &, GLushort* &, int);
-void createVAOs(Vertex[], GLushort[], int);
-void renderScene(void);
+
 void cleanup(void);
 
 
@@ -126,7 +118,6 @@ int main(void)
 
     do
     {
-        // renderScene();
         render_scene();
 
     } while(glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
@@ -172,203 +163,11 @@ void initOpenGL()
 
 void createObjects()
 {
-    //-- COORDINATE AXES --//
-    Vertex coordVerts[] =
-    {
-        { { 0.0, 0.0, 0.0, 1.0 },{ 1.0, 0.0, 0.0, 1.0 },{ 0.0, 0.0, 1.0 } },
-        { { 5.0, 0.0, 0.0, 1.0 },{ 1.0, 0.0, 0.0, 1.0 },{ 0.0, 0.0, 1.0 } },
-        { { 0.0, 0.0, 0.0, 1.0 },{ 0.0, 1.0, 0.0, 1.0 },{ 0.0, 0.0, 1.0 } },
-        { { 0.0, 5.0, 0.0, 1.0 },{ 0.0, 1.0, 0.0, 1.0 },{ 0.0, 0.0, 1.0 } },
-        { { 0.0, 0.0, 0.0, 1.0 },{ 0.0, 0.0, 1.0, 1.0 },{ 0.0, 0.0, 1.0 } },
-        { { 0.0, 0.0, 5.0, 1.0 },{ 0.0, 0.0, 1.0, 1.0 },{ 0.0, 0.0, 1.0 } },
-    };
-
-    vertexBufferSize[0] = sizeof(coordVerts);	// ATTN: this needs to be done for each hand-made object with the ObjectID (subscript)
-    createVAOs(coordVerts, NULL, 0);
-
     std::vector<Mesh> meshes;
     load_obj("Model/Suzanne.obj", "Model/", meshes);
     create_vaos(meshes);
-
-    //loadObject("Model/Suzanne.obj", glm::vec4(0.4, 0.5, 0.3, 1.0), suzanne_verts, suzanne_idcs, 1);
-    ////loadObject("Model/cube_output.obj", glm::vec4(0.4, 0.5, 0.3, 1.0), suzanne_verts, suzanne_idcs, 1);
-    //createVAOs(suzanne_verts, suzanne_idcs, 1);
 }
 
-void loadObject(char* file, glm::vec4 color, Vertex * &out_vertices, GLushort * &out_indices, int objectID)
-{
-    vector<glm::vec3> vertices;
-    vector<glm::vec3> normals;
-
-    bool res = loadOBJ(file, vertices, normals);
-
-    vector<GLushort> indices;
-    vector<glm::vec3> indexed_vertices;
-    vector<glm::vec3> indexed_normals;
-    indexVBO(vertices, normals, indices, indexed_vertices, indexed_normals);
-
-    const size_t vert_count = indexed_vertices.size();
-    const size_t idx_count = indices.size();
-
-    out_vertices = new Vertex[vert_count];
-    for(int i = 0; i < vert_count; i++)
-    {
-        out_vertices[i].SetPosition(&indexed_vertices[i].x);
-        out_vertices[i].SetNormal(&indexed_normals[i].x);
-        out_vertices[i].SetColor(&color[0]);
-    }
-
-    out_indices = new GLushort[idx_count];
-    for(int i = 0; i < idx_count; i++)
-    {
-        out_indices[i] = indices[i];
-    }
-
-    numIndices[objectID] = idx_count;
-    vertexBufferSize[objectID] = sizeof(out_vertices[0]) * vert_count;
-    indexBufferSize[objectID] = sizeof(GLushort) * idx_count;
-}
-
-void createVAOs(Vertex vertices[], GLushort indices[], int objectID)
-{
-    GLenum errorCheckValue = glGetError();
-    const size_t vertexSize = sizeof(vertices[0]);
-    const size_t colorOffset = sizeof(vertices[0].Position);
-    const size_t normalOffset = colorOffset + sizeof(vertices[0].Color);
-
-    glGenVertexArrays(1, &vertexArrayID[objectID]);
-    glBindVertexArray(vertexArrayID[objectID]);
-
-    glGenBuffers(1, &vertexBufferID[objectID]);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID[objectID]);
-    glBufferData(GL_ARRAY_BUFFER, vertexBufferSize[objectID], vertices, GL_STATIC_DRAW);
-
-    if(indices != NULL)
-    {
-        glGenBuffers(1, &indexBufferID[objectID]);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID[objectID]);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBufferSize[objectID], indices, GL_STATIC_DRAW);
-    }
-
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, vertexSize, 0);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, vertexSize, (GLvoid*)colorOffset);
-    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, vertexSize, (GLvoid*)normalOffset);
-
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
-
-    glBindVertexArray(0);
-
-    errorCheckValue = glGetError();
-    if(errorCheckValue != GL_NO_ERROR)
-    {
-        fprintf(stderr, "Error: Could not create a VBO: %s\n", gluErrorString(errorCheckValue));
-    }
-}
-
-void renderScene()
-{
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_CULL_FACE);
-
-    if (moveCameraLeft)
-    {
-        cameraAngleTheta -= 0.01f;
-    }
-
-    if (moveCameraRight)
-    {
-        cameraAngleTheta += 0.01f;
-    }
-
-    if (moveCameraUp)
-    {
-        cameraAnglePhi -= 0.01f;
-    }
-
-    if (moveCameraDown)
-    {
-        cameraAnglePhi += 0.01f;
-    }
-
-    if (moveCameraLeft || moveCameraRight || moveCameraDown || moveCameraUp)
-    {
-        float camX = cameraSphereRadius * cos(cameraAnglePhi) * sin(cameraAngleTheta);
-        float camY = cameraSphereRadius * sin(cameraAnglePhi);
-        float camZ = cameraSphereRadius * cos(cameraAnglePhi) * cos(cameraAngleTheta);
-        gViewMatrix = glm::lookAt(glm::vec3(camX, camY, camZ),	// eye
-            glm::vec3(0.0, 10.0, 0.0),	// center
-            glm::vec3(0.0, 1.0, 0.0));	// up
-    }
-
-    if(shouldDisplayWireframeMode)
-    {
-        glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-    }
-    else
-    {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
-    glm::vec3 lightPos = glm::vec3(20.0f, 20.0f, 20.0f);
-    glm::vec3 mesh_color = glm::vec3(0.4f, 0.5f, 3.0f);
-    glm::mat4x4 modelMatrix = glm::mat4(1.0);
-    glUseProgram(programID);
-    {
-        glUniform3f(lightID, lightPos.x, lightPos.y, lightPos.z);
-        glUniform3f(mesh_color_ID, mesh_color.x, mesh_color.y, mesh_color.z);
-        glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &gViewMatrix[0][0]);
-        glUniformMatrix4fv(projectionMatrixID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
-        glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
-
-        glBindVertexArray(vertexArrayID[0]);	// draw CoordAxes
-        glDrawArrays(GL_LINES, 0, 6);
-
-        if(!shouldTessellateModel)
-        {
-            glBindVertexArray(vertexArrayID[1]);
-            glDrawElements(GL_TRIANGLES, numIndices[1], GL_UNSIGNED_SHORT, (void*)0);
-
-            ////// test
-            //glBindVertexArray(vertexArrayID[2]);
-            //glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-            //glDrawElements(GL_TRIANGLES, numIndices[2], GL_UNSIGNED_SHORT, (void*)0);
-        }
-
-        glBindVertexArray(0);
-    }
-
-    if(shouldTessellateModel)
-    {
-        glUseProgram(tessProgramID);
-        {
-            glUniform3f(tessLightID, lightPos.x, lightPos.y, lightPos.z);
-            glUniform3f(tess_mesh_color_ID, mesh_color.x, mesh_color.y, mesh_color.z);
-            glUniformMatrix4fv(tessViewMatrixID, 1, GL_FALSE, &gViewMatrix[0][0]);
-            glUniformMatrix4fv(tessProjectionMatrixID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
-            glUniformMatrix4fv(tessModelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
-
-            glUniform1f(tessellationLevelInnerID, tessellationLevel);
-            glUniform1f(tessellationLevelOuterID, tessellationLevel);
-
-            glPatchParameteri(GL_PATCH_VERTICES, 3);
-            glBindVertexArray(vertexArrayID[1]);
-            glDrawElements(GL_PATCHES, numIndices[1], GL_UNSIGNED_SHORT, (void*)0);
-
-            ////// test
-            //glPatchParameteri(GL_PATCH_VERTICES, 3);
-            //glBindVertexArray(vertexArrayID[2]);
-            //glDrawElements(GL_PATCHES, numIndices[2], GL_UNSIGNED_SHORT, (void*)0);
-
-            glBindVertexArray(0);
-        }
-    }
-
-    glUseProgram(0);
-    glfwSwapBuffers(window);
-    glfwPollEvents();
-}
 
 void create_vaos(std::vector<Mesh> &meshes)
 {
@@ -453,19 +252,6 @@ void render_scene()
     glm::vec3 lightPos = glm::vec3(20.0f, 20.0f, 20.0f);
     glm::vec3 mesh_color = glm::vec3(0.9f, 0.5f, 3.0f);
     glm::mat4x4 modelMatrix = glm::mat4(1.0);
-    {
-        glUseProgram(programID);
-        glUniform3f(lightID, lightPos.x, lightPos.y, lightPos.z);
-        glUniform3f(mesh_color_ID, mesh_color.x, mesh_color.y, mesh_color.z);
-        glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &gViewMatrix[0][0]);
-        glUniformMatrix4fv(projectionMatrixID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
-        glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
-
-        glBindVertexArray(vertexArrayID[0]);	// draw CoordAxes
-        glDrawArrays(GL_LINES, 0, 6);
-
-        glBindVertexArray(0);
-    }
 
     for (int i = 0; i < m_object_num; ++i)
     {
@@ -775,13 +561,13 @@ int initWindow()
 
 void cleanup()
 {
-    for(int i = 0; i < numObjects; i++)
+    for(int i = 0; i < m_object_num; i++)
     {
-        glDeleteBuffers(1, &vertexBufferID[i]);
-        glDeleteBuffers(1, &indexBufferID[i]);
-        glDeleteVertexArrays(1, &vertexArrayID[i]);
+        glDeleteBuffers(1, &m_vbo_id[i]);
+        glDeleteVertexArrays(1, &m_vao_id[i]);
     }
     glDeleteProgram(programID);
+    glDeleteProgram(tessProgramID);
     glfwTerminate();
 }
 
