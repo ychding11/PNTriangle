@@ -12,10 +12,12 @@
 #include <vector>
 #include <common/objloader.hpp>
 
+#include "camera.h" 
+
 using namespace glm;
 using namespace std;
 
-const int window_width = 1000, window_height = 1000;
+const int window_width = 1280, window_height = 720;
 GLFWwindow *window;
 
 
@@ -55,8 +57,10 @@ bool moveCameraLeft = false;
 bool moveCameraRight = false;
 bool moveCameraUp = false;
 bool moveCameraDown = false;
+
 float tessellationLevel = 1.0f;
 bool shouldTessellateModel = false;
+
 bool shouldDisplayWireframeMode = false;
 
 int initWindow(void);
@@ -80,7 +84,7 @@ void initOpenGL()
     glDepthFunc(GL_LESS);
     glEnable(GL_CULL_FACE);
 
-    gProjectionMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+    gProjectionMatrix = glm::perspective(45.0f, 1280.0f / 720.0f, 0.1f, 100.0f);
 
     gViewMatrix = glm::lookAt(glm::vec3(5.0f, 5.0f, 5.0f),
                               glm::vec3(0.0f, 0.0f, 0.0f),
@@ -177,7 +181,8 @@ void render_scene()
         cameraAnglePhi += 0.01f;
     }
 
-    if (moveCameraLeft || moveCameraRight || moveCameraDown || moveCameraUp)
+    //if (moveCameraLeft || moveCameraRight || moveCameraDown || moveCameraUp)
+    if (0)
     {
         float camX = cameraSphereRadius * sin(cameraAnglePhi) * cos(cameraAngleTheta);
         float camY = cameraSphereRadius * cos(cameraAnglePhi);
@@ -187,6 +192,7 @@ void render_scene()
             glm::vec3(0.0, 1.0, 0.0));	// up
     }
 
+    
     if(shouldDisplayWireframeMode)
     {
         glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
@@ -610,8 +616,15 @@ int main(int argc, char **argv)
         return errorCode;
     }
 
+    Camera camera(glm::vec3{0.f}, 5.f);
+
+
     initOpenGL();
     createObjects(modelPath);
+
+    gProjectionMatrix = camera.projMatrix();
+
+    gViewMatrix = camera.viewMatrix();
 
     do
     {
