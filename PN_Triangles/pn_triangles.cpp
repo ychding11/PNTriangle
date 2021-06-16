@@ -67,7 +67,9 @@ int initWindow(void);
 void initOpenGL(void);
 
 static void keyCallback(GLFWwindow* , int, int, int, int);
-static void mouseCallback(GLFWwindow*, int, int, int);
+
+static void glfwindow_mouseMotion_cb(GLFWwindow *window, double x, double y);
+static void glfwindow_mouseButton_cb(GLFWwindow *window, int button, int action, int mods);
 
 GLuint loadStandardShaders(const char*, const char*);
 GLuint loadTessShaders(const char*, const char*, const char*, const char*);
@@ -84,11 +86,11 @@ void initOpenGL()
     glDepthFunc(GL_LESS);
     glEnable(GL_CULL_FACE);
 
-    gProjectionMatrix = glm::perspective(45.0f, 1280.0f / 720.0f, 0.1f, 100.0f);
+   /* gProjectionMatrix = glm::perspective(45.0f, 1280.0f / 720.0f, 0.1f, 100.0f);
 
     gViewMatrix = glm::lookAt(glm::vec3(5.0f, 5.0f, 5.0f),
                               glm::vec3(0.0f, 0.0f, 0.0f),
-                              glm::vec3(0.0f, 1.0f, 0.0f));
+                              glm::vec3(0.0f, 1.0f, 0.0f));*/
 
     programID = loadStandardShaders("shaders/Standard.vert", "shaders/Standard.frag");
     tessProgramID = loadTessShaders("shaders/Tessellation.vs.glsl", "shaders/Tessellation.tc.glsl", "shaders/Tessellation.te.glsl", "shaders/Tessellation.fs.glsl");
@@ -515,9 +517,10 @@ int initWindow()
         return -1;
     }
 
-    glfwSetCursorPos(window, window_width / 2, window_height / 2);
+    glfwSetCursorPos(window, window_width / 2.f, window_height / 2.f);
     glfwSetKeyCallback(window, keyCallback);
-    glfwSetMouseButtonCallback(window, mouseCallback);
+    glfwSetMouseButtonCallback(window, glfwindow_mouseButton_cb);
+    glfwSetCursorPosCallback(window, glfwindow_mouseMotion_cb);
 
     return 0;
 }
@@ -594,9 +597,106 @@ static void keyCallback(GLFWwindow *window, int key, int scancode, int action, i
     }
 }
 
-static void mouseCallback(GLFWwindow *window, int button, int action, int mods)
+Camera camera(glm::vec3{0.f}, 5.f);
+
+struct ButtonState
+{
+    bool  isPressed{ false };
+    glm::ivec2 posFirstPressed{ -1 };
+    glm::ivec2 posLastSeen{ -1 };
+    bool  shiftWhenPressed{ false };
+    bool  ctrlWhenPressed{ false };
+    bool  altWhenPressed{ false };
+};
+
+ButtonState leftButton;
+ButtonState rightButton;
+ButtonState centerButton;
+glm::ivec2 lastMousePos{ -1,-1 };
+glm::ivec2 lastMousePosition{ -1,-1 };
+
+inline glm::ivec2 getMousePos() 
+{
+    double x, y;
+    glfwGetCursorPos(window, &x, &y);
+    return glm::ivec2{(int)x, (int)y};
+}
+
+inline glm::ivec2 getWindowSize() 
+{
+    return glm::ivec2{ window_width, window_height};
+}
+
+void mouseButtonLeft(const glm::ivec2 &where, bool pressed)
 {
 
+}
+
+/*! mouse got dragged with left button pressedn, by 'delta' pixels, at last position where */
+void mouseDragLeft(const glm::ivec2  &where, const glm::ivec2 &delta)
+{
+    const glm::vec2 fraction = glm::vec2(delta) / glm::vec2(getWindowSize());
+}
+
+/*! mouse got dragged with left button pressedn, by 'delta' pixels, at last position where */
+void mouseDragCenter(const glm::ivec2  &where, const glm::ivec2 &delta)
+{
+    const glm::vec2 fraction = glm::vec2(delta) / glm::vec2(getWindowSize());
+}
+
+//< zoom in / out
+void mouseDragRight(const glm::ivec2  &where, const glm::ivec2 &delta)
+{
+    const glm::vec2 fraction = glm::vec2(delta) / glm::vec2(getWindowSize());
+}
+
+/*! callback for _moving_ the mouse to a new position */
+static void glfwindow_mouseMotion_cb(GLFWwindow *window, double x, double y)
+{
+    //OWLViewer *gw = static_cast<OWLViewer*>(glfwGetWindowUserPointer(window));
+    //assert(gw);
+
+    glm::ivec2 newMousePosition{ (int)x, (int)y };
+    if (lastMousePosition != glm::ivec2(-1))
+    {
+        if (leftButton.isPressed)
+            mouseDragLeft(newMousePosition, newMousePosition - lastMousePosition);
+        if (centerButton.isPressed)
+            mouseDragCenter(newMousePosition, newMousePosition - lastMousePosition);
+        if (rightButton.isPressed)
+            mouseDragRight(newMousePosition, newMousePosition - lastMousePosition);
+    }
+    lastMousePosition = newMousePosition;
+}
+
+static void glfwindow_mouseButton_cb(GLFWwindow *window, int button, int action, int mods)
+{
+    const bool pressed = (action == GLFW_PRESS);
+    lastMousePos = getMousePos();
+    switch (button)
+    {
+    case GLFW_MOUSE_BUTTON_LEFT:
+        leftButton.isPressed = pressed;
+        leftButton.shiftWhenPressed = (mods & GLFW_MOD_SHIFT);
+        leftButton.ctrlWhenPressed = (mods & GLFW_MOD_CONTROL);
+        leftButton.altWhenPressed = (mods & GLFW_MOD_ALT);
+        //mouseButtonLeft(lastMousePos, pressed);
+        break;
+    case GLFW_MOUSE_BUTTON_MIDDLE:
+        centerButton.isPressed = pressed;
+        centerButton.shiftWhenPressed = (mods & GLFW_MOD_SHIFT);
+        centerButton.ctrlWhenPressed = (mods & GLFW_MOD_CONTROL);
+        centerButton.altWhenPressed = (mods & GLFW_MOD_ALT);
+        //mouseButtonCenter(lastMousePos, pressed);
+        break;
+    case GLFW_MOUSE_BUTTON_RIGHT:
+        rightButton.isPressed = pressed;
+        rightButton.shiftWhenPressed = (mods & GLFW_MOD_SHIFT);
+        rightButton.ctrlWhenPressed = (mods & GLFW_MOD_CONTROL);
+        rightButton.altWhenPressed = (mods & GLFW_MOD_ALT);
+        //mouseButtonRight(lastMousePos, pressed);
+        break;
+    }
 }
 
 int main(int argc, char **argv)
@@ -627,7 +727,6 @@ int main(int argc, char **argv)
         return errorCode;
     }
 
-    Camera camera(glm::vec3{0.f}, 5.f);
 
 
     initOpenGL();
