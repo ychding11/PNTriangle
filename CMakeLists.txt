@@ -1,7 +1,7 @@
-# CMake entry point
-cmake_minimum_required (VERSION 2.6)
-project (PNTriangle-OGL)
 
+cmake_minimum_required (VERSION 2.6)
+
+project (PNTriangle-OGL)
 
 find_package (OpenGL REQUIRED)
 
