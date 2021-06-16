@@ -16,7 +16,8 @@ out vec3 color;
 
 uniform vec3 lightPosition_worldspace;
 
-void main() {
+void main()
+{
     vec3 lightColor = vec3(1, 1, 0.5);
     float lightPower = 600.0f;
 
