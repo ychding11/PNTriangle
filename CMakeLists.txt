@@ -56,10 +56,12 @@ file(GLOB SOURCE_FILES
 	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/*.cpp
 )
 
-add_executable( PN_Triangles ${SOURCE_FILES} ${SHADER_FILES} )
-target_link_libraries( PN_Triangles ${ALL_LIBS} )
+set(TARGET_NAME "PN_Triangles")
+add_executable( ${TARGET_NAME} ${SOURCE_FILES} ${SHADER_FILES} )
+target_link_libraries( ${TARGET_NAME} ${ALL_LIBS} )
 
 foreach(shader ${SHADER_FILES})
-    add_custom_command(TARGET PN_Triangles POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${shader} shaders/ )
+    set_source_files_properties( ${shader} PROPERTIES HEADER_FILE_ONLY TRUE )
+    add_custom_command( TARGET ${TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${shader} shaders/ )
     message(STATUS "copy ${shader} into build/shaders") 
 endforeach()
