@@ -10,8 +10,8 @@
 #include <string>
 #include <fstream>
 #include <vector>
-#include <common/objloader.hpp>
 
+#include "common/objloader.h"
 #include "shaderUtility.h"
 
 #include "camera.h" 
