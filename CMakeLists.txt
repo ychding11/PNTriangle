@@ -40,16 +40,21 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Tessellation.tc.glsl 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Tessellation.te.glsl DESTINATION shaders/)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Tessellation.fs.glsl DESTINATION shaders/)
 
-add_executable(PN_Triangles
-	common/objloader.cpp
-	PN_Triangles/pn_triangles.cpp
-	PN_Triangles/camera.h
-	PN_Triangles/camera.cpp
-	PN_Triangles/shaders/Standard.vert
-	PN_Triangles/shaders/Standard.frag
-	PN_Triangles/shaders/Tessellation.vs.glsl
-	PN_Triangles/shaders/Tessellation.tc.glsl
-	PN_Triangles/shaders/Tessellation.te.glsl
-	PN_Triangles/shaders/Tessellation.fs.glsl
+file(GLOB SHADER_FILES
+	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Standard.vert
+	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Standard.frag
+	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Tessellation.vs.glsl
+	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Tessellation.tc.glsl
+	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Tessellation.te.glsl
+	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Tessellation.fs.glsl
 )
+file(GLOB SOURCE_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/common/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/common/*.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/common/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/*.cpp
+)
+
+add_executable( PN_Triangles ${SOURCE_FILES} ${SHADER_FILES} )
 target_link_libraries( PN_Triangles ${ALL_LIBS} )
