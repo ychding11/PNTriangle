@@ -10,25 +10,26 @@ static inline float degreesToRadians(float degrees)
 
 static glm::vec3 azelToDirection(float az, float el, OrbitAxis axis)
 {
-  const float x = std::sin(az) * std::cos(el);
-  const float y = std::cos(az) * std::cos(el);
-  const float z = std::sin(el);
-  switch (axis)
-  {
-  case OrbitAxis::POS_X:
-    return -normalize(glm::vec3(z, y, x));
-  case OrbitAxis::POS_Y:
-    return -normalize(glm::vec3(x, z, y));
-  case OrbitAxis::POS_Z:
-    return -normalize(glm::vec3(x, y, z));
-  case OrbitAxis::NEG_X:
-    return normalize(glm::vec3(z, y, x));
-  case OrbitAxis::NEG_Y:
-    return normalize(glm::vec3(x, z, y));
-  case OrbitAxis::NEG_Z:
-    return normalize(glm::vec3(x, y, z));
-  }
-  return {};
+    const float x = std::sin(az) * std::cos(el);
+    const float y = std::cos(az) * std::cos(el);
+    const float z = std::sin(el);
+
+    switch (axis)
+    {
+        case OrbitAxis::POS_X:
+        return -normalize(glm::vec3(z, y, x));
+        case OrbitAxis::POS_Y:
+        return -normalize(glm::vec3(x, z, y));
+        case OrbitAxis::POS_Z:
+        return -normalize(glm::vec3(x, y, z));
+        case OrbitAxis::NEG_X:
+        return normalize(glm::vec3(z, y, x));
+        case OrbitAxis::NEG_Y:
+        return normalize(glm::vec3(x, z, y));
+        case OrbitAxis::NEG_Z:
+        return normalize(glm::vec3(x, y, z));
+    }
+    return {};
 }
 
 static OrbitAxis negateAxis(OrbitAxis current)

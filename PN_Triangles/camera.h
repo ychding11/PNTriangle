@@ -17,46 +17,44 @@ enum class OrbitAxis
 
 class Camera 
 {
- public:
+public:
 
-  Camera() = default;
-  Camera(glm::vec3 at, float dist, glm::vec2 azel = glm::vec2(0.f));
+    Camera() = default;
+    Camera(glm::vec3 at, float dist, glm::vec2 azel = glm::vec2(0.f));
 
-  void startNewRotation();
+    void startNewRotation();
 
-  void rotate(glm::vec2 delta);
-  void zoom(float delta);
-  void pan(glm::vec2 delta);
+    void rotate(glm::vec2 delta);
+    void zoom(float delta);
+    void pan(glm::vec2 delta);
 
-  void setAxis(OrbitAxis axis);
+    void setAxis(OrbitAxis axis);
 
-  glm::vec2 azel() const;
+    glm::vec2 azel() const;
 
-  glm::vec3 eye() const;
-  glm::vec3 dir() const;
-  glm::vec3 up() const;
+    glm::vec3 eye() const;
+    glm::vec3 dir() const;
+    glm::vec3 up() const;
 
- protected:
+protected:
 
-  void update();
+    void update();
 
-
-  OrbitAxis m_axis{OrbitAxis::POS_Y};
-
+    OrbitAxis m_axis{OrbitAxis::POS_Y};
   
-  glm::vec2 m_azel{0.f}; //< NOTE: unit is in degrees
+    glm::vec2 m_azel{0.f}; //< NOTE: unit is in degrees
 
-  float m_distance{1.f};
-  float m_worldSize{1.f};
-  float m_speed{0.25f};
+    float m_distance{1.f};
+    float m_worldSize{1.f};
+    float m_speed{0.25f};
 
-  bool m_invertRotation{false};
+    bool m_invertRotation{false};
 
-  glm::vec3 m_eye;
-  glm::vec3 m_at;
-  glm::vec3 m_up;
-  glm::vec3 m_right;
-  glm::vec3 m_forward; //< newly added
+    glm::vec3 m_eye;
+    glm::vec3 m_at;
+    glm::vec3 m_up;
+    glm::vec3 m_right;
+    glm::vec3 m_forward; //< newly added
 
 
     //< use RH coordinate
