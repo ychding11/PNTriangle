@@ -634,16 +634,18 @@ void mouseButtonLeft(const glm::ivec2 &where, bool pressed)
 
 }
 
-/*! mouse got dragged with left button pressedn, by 'delta' pixels, at last position where */
+//< rotate
 void mouseDragLeft(const glm::ivec2  &where, const glm::ivec2 &delta)
 {
     const glm::vec2 fraction = glm::vec2(delta) / glm::vec2(getWindowSize());
+    camera.rotate(fraction);
 }
 
-/*! mouse got dragged with left button pressedn, by 'delta' pixels, at last position where */
+//< pan
 void mouseDragCenter(const glm::ivec2  &where, const glm::ivec2 &delta)
 {
     const glm::vec2 fraction = glm::vec2(delta) / glm::vec2(getWindowSize());
+    camera.pan(-fraction ); //< relative motion
 }
 
 //< zoom in / out
