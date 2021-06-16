@@ -246,68 +246,77 @@ void render_scene()
     glfwPollEvents();
 }
 
-GLuint loadStandardShaders(const char *vert_file_path, const char *frag_file_path) {
+GLuint loadStandardShaders(const char *vert_file_path, const char *frag_file_path)
+{
     GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
     GLuint fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
     string vertexShaderCode;
     ifstream vertexShaderStream(vert_file_path, ios::in);
-    if(vertexShaderStream.is_open()) {
+    if(vertexShaderStream.is_open())
+    {
         string line = "";
-        while(std::getline(vertexShaderStream, line)) {
+        while(std::getline(vertexShaderStream, line))
+        {
             vertexShaderCode += "\n" + line;
         }
         vertexShaderStream.close();
-    } else {
-        cout << "Couldn't open " << vert_file_path << endl;
-        getchar();
+    }
+    else
+    {
+        throw std::runtime_error( std::string("Couldn't open ") + vert_file_path );
         return 0;
     }
 
     string fragmentShaderCode;
     ifstream fragmentShaderStream(frag_file_path, ios::in);
-    if(fragmentShaderStream.is_open()) {
+    if(fragmentShaderStream.is_open())
+    {
         string line = "";
-        while(std::getline(fragmentShaderStream, line)) {
+        while(std::getline(fragmentShaderStream, line))
+        {
             fragmentShaderCode += "\n" + line;
         }
         fragmentShaderStream.close();
-    } else {
-        cout << "Couldn't open " << frag_file_path << endl;
-        getchar();
+    }
+    else
+    {
+        throw std::runtime_error( std::string("Couldn't open ") + vert_file_path );
         return 0;
     }
 
     GLint result = GL_FALSE;
     int infoLogLength;
 
-    cout << "Compiling shader " <<  vert_file_path << endl;
+    std::cout << "Compiling shader " <<  vert_file_path << endl;
     char const *vertexSource = vertexShaderCode.c_str();
     glShaderSource(vertexShaderID, 1, &vertexSource, NULL);
     glCompileShader(vertexShaderID);
 
     glGetShaderiv(vertexShaderID, GL_COMPILE_STATUS, &result);
     glGetShaderiv(vertexShaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
-    if(infoLogLength > 0) {
+    if(infoLogLength > 0)
+    {
         vector<char> vertexShaderErrorMessage(infoLogLength + 1);
         glGetShaderInfoLog(vertexShaderID, infoLogLength, NULL, &vertexShaderErrorMessage[0]);
-        cout << &vertexShaderErrorMessage[0] << endl;
+        std::cout << &vertexShaderErrorMessage[0] << endl;
     }
 
-    cout << "Compiling shader " <<  frag_file_path << endl;
+    std::cout << "Compiling shader " <<  frag_file_path << endl;
     char const *fragmentSource = fragmentShaderCode.c_str();
     glShaderSource(fragmentShaderID, 1, &fragmentSource, NULL);
     glCompileShader(fragmentShaderID);
 
     glGetShaderiv(fragmentShaderID, GL_COMPILE_STATUS, &result);
     glGetShaderiv(fragmentShaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
-    if(infoLogLength > 0) {
+    if(infoLogLength > 0)
+    {
         vector<char> fragmentShaderErrorMessage(infoLogLength + 1);
         glGetShaderInfoLog(fragmentShaderID, infoLogLength, NULL, &fragmentShaderErrorMessage[0]);
-        cout << &fragmentShaderErrorMessage[0] << endl;
+        std::cout << &fragmentShaderErrorMessage[0] << endl;
     }
 
-    cout << "Linking shader" << endl;
+    std::cout << "Linking shader" << endl;
     GLuint programID = glCreateProgram();
     glAttachShader(programID, vertexShaderID);
     glAttachShader(programID, fragmentShaderID);
@@ -315,10 +324,11 @@ GLuint loadStandardShaders(const char *vert_file_path, const char *frag_file_pat
 
     glGetShaderiv(programID, GL_LINK_STATUS, &result);
     glGetShaderiv(programID, GL_INFO_LOG_LENGTH, &infoLogLength);
-    if(infoLogLength > 0) {
+    if(infoLogLength > 0)
+    {
         vector<char> programErrorMessage(infoLogLength + 1);
         glGetShaderInfoLog(programID, infoLogLength, NULL, &programErrorMessage[0]);
-        cout << programErrorMessage[0] << endl;
+        std::cout << programErrorMessage[0] << endl;
     }
 
     glDetachShader(programID, vertexShaderID);
@@ -331,7 +341,8 @@ GLuint loadStandardShaders(const char *vert_file_path, const char *frag_file_pat
 }
 
 GLuint loadTessShaders(const char *tess_vert_file_path, const char *tess_ctrl_file_path, const char *tess_eval_file_path,
-	const char *tess_frag_file_path) {
+	const char *tess_frag_file_path)
+{
 	GLuint tessVertShaderID = glCreateShader(GL_VERTEX_SHADER);
 	GLuint tessCtrlShaderID = glCreateShader(GL_TESS_CONTROL_SHADER);
 	GLuint tessEvalShaderID = glCreateShader(GL_TESS_EVALUATION_SHADER);
