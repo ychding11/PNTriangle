@@ -15,11 +15,13 @@
 #include "shaderUtility.h"
 
 #include "camera.h" 
+#include "event_handler.h" 
+
 
 using namespace glm;
 using namespace std;
 
-const int window_width = 1280, window_height = 720;
+int window_width = 1280, window_height = 720;
 GLFWwindow *window;
 
 
@@ -60,12 +62,6 @@ bool shouldDisplayWireframeMode = false;
 
 int initWindow(void);
 void initOpenGL(void);
-
-static void glfwindow_key_cb(GLFWwindow* , int, int, int, int);
-
-static void glfwindow_mouseMotion_cb(GLFWwindow *window, double x, double y);
-static void glfwindow_mouseButton_cb(GLFWwindow *window, int button, int action, int mods);
-
 
 void cleanup(void);
 
@@ -257,6 +253,7 @@ void cleanup()
     glfwTerminate();
 }
 
+#if 0
 static void glfwindow_key_cb(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
     if(action == GLFW_RELEASE)
@@ -401,6 +398,7 @@ static void glfwindow_mouseButton_cb(GLFWwindow *window, int button, int action,
         break;
     }
 }
+#endif 
 
 int main(int argc, char **argv)
 {
