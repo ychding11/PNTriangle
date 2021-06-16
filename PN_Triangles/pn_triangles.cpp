@@ -36,29 +36,22 @@ GLuint m_vbo_id[m_max_object_num] = {0};
 size_t m_vb_size[m_max_object_num] = {0};
 size_t m_vertex_num[m_max_object_num] = {0};
 
+GLuint lightID;
 GLuint matrixID;
 GLuint modelMatrixID;
 GLuint viewMatrixID;
 GLuint projectionMatrixID;
-GLuint lightID;
 GLuint mesh_color_ID;
-GLuint tess_mesh_color_ID;
 
+GLuint tessLightID;
+
+GLuint tess_mesh_color_ID;
 GLuint tessMatrixID;
 GLuint tessModelMatrixID;
 GLuint tessViewMatrixID;
 GLuint tessProjectionMatrixID;
-GLuint tessLightID;
 GLfloat tessellationLevelInnerID;
 GLfloat tessellationLevelOuterID;
-
-GLfloat cameraAngleTheta = 3.142 / 4;
-GLfloat cameraAnglePhi = asin(1 / sqrt(3));
-GLfloat cameraSphereRadius = sqrt(675);
-bool moveCameraLeft = false;
-bool moveCameraRight = false;
-bool moveCameraUp = false;
-bool moveCameraDown = false;
 
 float tessellationLevel = 1.0f;
 bool shouldTessellateModel = false;
@@ -68,16 +61,13 @@ bool shouldDisplayWireframeMode = false;
 int initWindow(void);
 void initOpenGL(void);
 
-static void keyCallback(GLFWwindow* , int, int, int, int);
+static void glfwindow_key_cb(GLFWwindow* , int, int, int, int);
 
 static void glfwindow_mouseMotion_cb(GLFWwindow *window, double x, double y);
 static void glfwindow_mouseButton_cb(GLFWwindow *window, int button, int action, int mods);
 
-GLuint loadStandardShaders(const char*, const char*);
-GLuint loadTessShaders(const char*, const char*, const char*, const char*);
 
 void cleanup(void);
-
 
 void create_vaos(std::vector<Mesh> &meshes);
 void render_scene();
@@ -248,7 +238,7 @@ int initWindow()
     }
 
     glfwSetCursorPos(window, window_width / 2.f, window_height / 2.f);
-    glfwSetKeyCallback(window, keyCallback);
+    glfwSetKeyCallback(window, glfwindow_key_cb);
     glfwSetMouseButtonCallback(window, glfwindow_mouseButton_cb);
     glfwSetCursorPosCallback(window, glfwindow_mouseMotion_cb);
 
@@ -267,40 +257,19 @@ void cleanup()
     glfwTerminate();
 }
 
-static void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
-    if(action == GLFW_PRESS) {
-        switch (key) {
-        case GLFW_KEY_LEFT:
-            moveCameraLeft = true;
-            break;
-        case GLFW_KEY_RIGHT:
-            moveCameraRight = true;
-            break;
-        case GLFW_KEY_UP:
-            moveCameraUp = true;
-            break;
-        case GLFW_KEY_DOWN:
-            moveCameraDown = true;
-            break;
-        default:
-            break;
-        }
-    }
-    else if(action == GLFW_RELEASE)
+static void glfwindow_key_cb(GLFWwindow *window, int key, int scancode, int action, int mods)
+{
+    if(action == GLFW_RELEASE)
     {
         switch (key)
         {
         case GLFW_KEY_LEFT:
-            moveCameraLeft = false;
             break;
         case GLFW_KEY_RIGHT:
-            moveCameraRight = false;
             break;
         case GLFW_KEY_UP:
-            moveCameraUp = false;
             break;
         case GLFW_KEY_DOWN:
-            moveCameraDown = false;
             break;
         case GLFW_KEY_T:
             shouldTessellateModel = !shouldTessellateModel;
