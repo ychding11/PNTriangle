@@ -157,6 +157,8 @@ void create_vaos(std::vector<Mesh> &meshes)
     }
 }
 
+Camera camera(glm::vec3{0.f}, 5.f);
+
 void render_scene()
 {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -194,7 +196,8 @@ void render_scene()
             glm::vec3(0.0, 1.0, 0.0));	// up
     }
 
-    
+    gViewMatrix = camera.viewMatrix();
+
     if(shouldDisplayWireframeMode)
     {
         glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
@@ -597,7 +600,6 @@ static void keyCallback(GLFWwindow *window, int key, int scancode, int action, i
     }
 }
 
-Camera camera(glm::vec3{0.f}, 5.f);
 
 struct ButtonState
 {
@@ -648,6 +650,9 @@ void mouseDragCenter(const glm::ivec2  &where, const glm::ivec2 &delta)
 void mouseDragRight(const glm::ivec2  &where, const glm::ivec2 &delta)
 {
     const glm::vec2 fraction = glm::vec2(delta) / glm::vec2(getWindowSize());
+    float scale = std::fabs(fraction.x) > std::fabs(fraction.y) ? fraction.x : fraction.y;
+    camera.zoom(scale);
+    printf("zoom in / out : %.4f\n", scale);
 }
 
 /*! callback for _moving_ the mouse to a new position */
