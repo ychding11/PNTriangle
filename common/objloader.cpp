@@ -148,15 +148,19 @@ bool load_obj(const std::string &filename, const std::string &base_dir, std::vec
                 pmin = glm::min(vert.position, pmin);
                 pmax = glm::max(vert.position, pmax);
                 if (~index.normal_index) //< -1 == 0xFFFFFFFF, it is equal to if (index.normal_index != -1)
-                    vert.normal =
                 {
+
+                    vert.normal =
+                    {
                         attrib.normals[3 * index.normal_index + 0],
                         attrib.normals[3 * index.normal_index + 1],
                         attrib.normals[3 * index.normal_index + 2]
-                };
+                    };
+                }
                 else
                 {
                     throw std::runtime_error("No normal channel found in vertex");
+                    return false;
                 }
 
             }
