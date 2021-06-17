@@ -11,7 +11,8 @@
 #include "objloader.h"
 
 
-bool loadQuadOBJ(const char * path, std::vector<glm::vec3> &out_vertices, std::vector<glm::vec3> &out_normals) {
+bool loadQuadOBJ(const char * path, std::vector<glm::vec3> &out_vertices, std::vector<glm::vec3> &out_normals)
+{
     printf("Loading OBJ file with quads %s...\n", path);
 
     std::vector<unsigned int> vertexIndices, normalIndices;
@@ -190,3 +191,47 @@ bool load_obj(const std::string &filename, const std::string &base_dir, std::vec
 #endif
     return true;
 }
+
+///////////////////////////// Class MeshBin //////////////////////////////////////////////
+
+    MeshBin::MeshBin(const std::string &filename)
+        :m_max_object_num(256)
+    {
+        load_obj(filename, "Model/", m_meshes);
+    }
+
+    void MeshBin::create_vaos()
+    {
+        for (int i = 0; i < m_meshes.size(); ++i)
+        {
+            GLenum errorCheckValue = glGetError();
+
+            m_vb_size[m_object_num] = m_meshes[i].vertices.size() * sizeof(SimpleVertex);
+            m_vertex_num[m_object_num] = m_meshes[i].vertices.size();
+
+            const size_t vertexStride = sizeof(SimpleVertex);
+            const size_t normalOffset = sizeof(m_meshes[i].vertices[0].position);
+
+            glGenVertexArrays(1, &m_vao_id[m_object_num]);
+            glBindVertexArray(m_vao_id[m_object_num]);
+
+            glGenBuffers(1, &m_vbo_id[m_object_num]);
+            glBindBuffer(GL_ARRAY_BUFFER, m_vbo_id[m_object_num]);
+            glBufferData(GL_ARRAY_BUFFER, m_vb_size[m_object_num], m_meshes[i].vertices.data(), GL_STATIC_DRAW);
+
+            glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, vertexStride, 0);
+            glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, vertexStride, (GLvoid*)normalOffset);
+
+            glEnableVertexAttribArray(0);
+            glEnableVertexAttribArray(1);
+
+            glBindVertexArray(0);
+
+            errorCheckValue = glGetError();
+            if (errorCheckValue != GL_NO_ERROR)
+            {
+                fprintf(stderr, "Error: Could not create a VBO: %s\n", gluErrorString(errorCheckValue));
+            }
+            m_object_num++;
+        }
+    }
