@@ -38,6 +38,15 @@ public:
 
     MeshBin(const std::string &filename);
 
+    ~MeshBin()
+    {
+        for (int i = 0; i < m_object_num; i++)
+        {
+            glDeleteBuffers(1, &m_vbo_id[i]);
+            glDeleteVertexArrays(1, &m_vao_id[i]);
+        }
+    }
+    
     size_t size() const
     {
         return m_object_num;

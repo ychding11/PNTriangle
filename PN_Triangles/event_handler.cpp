@@ -81,11 +81,11 @@ struct ButtonState
     bool  altWhenPressed{ false };
 };
 
-ButtonState leftButton;
-ButtonState rightButton;
-ButtonState centerButton;
-glm::ivec2 lastMousePos{ -1,-1 };
-glm::ivec2 lastMousePosition{ -1,-1 };
+static ButtonState leftButton;
+static ButtonState rightButton;
+static ButtonState centerButton;
+static glm::ivec2 lastMousePos{ -1,-1 };
+static glm::ivec2 lastMousePosition{ -1,-1 };
 
 static inline glm::ivec2 getMousePos(GLFWwindow *window)
 {
