@@ -61,14 +61,12 @@ bool shouldTessellateModel = false;
 bool shouldDisplayWireframeMode = false;
 
 int initWindow(void);
-void initOpenGL(void);
 
 void cleanup(void);
 
 void create_vaos(std::vector<Mesh> &meshes);
-void render_scene();
 
-void initOpenGL()
+void initOpenGLShaders()
 {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
@@ -93,50 +91,6 @@ void initOpenGL()
 
     tess_mesh_color_ID = glGetUniformLocation(tessProgramID, "mesh_color");
 
-}
-
-void createObjects(const std::string &filename)
-{
-    std::vector<Mesh> meshes;
-    load_obj(filename, "Model/", meshes);
-    create_vaos(meshes);
-}
-
-
-void create_vaos(std::vector<Mesh> &meshes)
-{
-    for (int i = 0; i < meshes.size(); ++i)
-    {
-        GLenum errorCheckValue = glGetError();
-
-        m_vb_size[m_object_num] = meshes[i].vertices.size() * sizeof(SimpleVertex);
-        m_vertex_num[m_object_num] = meshes[i].vertices.size();
-
-        const size_t vertexStride = sizeof(SimpleVertex);
-        const size_t normalOffset =  sizeof(meshes[i].vertices[0].position);
-
-        glGenVertexArrays(1, &m_vao_id[m_object_num]);
-        glBindVertexArray(m_vao_id[m_object_num]);
-
-        glGenBuffers(1, &m_vbo_id[m_object_num]);
-        glBindBuffer(GL_ARRAY_BUFFER, m_vbo_id[m_object_num]);
-        glBufferData(GL_ARRAY_BUFFER, m_vb_size[m_object_num], meshes[i].vertices.data(), GL_STATIC_DRAW);
-
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, vertexStride, 0);
-        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, vertexStride, (GLvoid*)normalOffset);
-
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-
-        glBindVertexArray(0);
-
-        errorCheckValue = glGetError();
-        if(errorCheckValue != GL_NO_ERROR)
-        {
-            fprintf(stderr, "Error: Could not create a VBO: %s\n", gluErrorString(errorCheckValue));
-        }
-        m_object_num++;
-    }
 }
 
 Camera camera(glm::vec3{0.f}, 5.f);
@@ -243,11 +197,6 @@ int initWindow()
 
 void cleanup()
 {
-    //for(int i = 0; i < m_object_num; i++)
-    //{
-    //    glDeleteBuffers(1, &m_vbo_id[i]);
-    //    glDeleteVertexArrays(1, &m_vao_id[i]);
-    //}
     glDeleteProgram(programID);
     glDeleteProgram(tessProgramID);
     glfwTerminate();
@@ -284,10 +233,9 @@ int main(int argc, char **argv)
 
 
 
-    initOpenGL();
+    initOpenGLShaders();
 
     MeshBin meshes{modelPath};
-    //createObjects(modelPath);
 
     gProjectionMatrix = camera.projMatrix();
 
