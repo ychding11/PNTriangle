@@ -202,6 +202,7 @@ bool load_obj(const std::string &filename, const std::string &base_dir, std::vec
         :m_max_object_num(256)
     {
         load_obj(filename, "Model/", m_meshes);
+        create_vaos();
     }
 
     void MeshBin::create_vaos()
