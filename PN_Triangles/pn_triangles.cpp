@@ -95,13 +95,16 @@ void initOpenGLShaders()
 
 Camera camera(glm::vec3{0.f}, 5.f);
 
-void render_scene(const MeshBin & m_meshBin)
+void render_scene(const MeshBin & m_meshBin, const Camera &m_camera)
 {
+    gViewMatrix = m_camera.viewMatrix();
+    glm::vec3 lightPos = glm::vec3(20.0f, 20.0f, 20.0f);
+    glm::vec3 mesh_color = glm::vec3(0.9f, 0.5f, 3.0f);
+    glm::mat4x4 modelMatrix = glm::mat4(1.0);
+
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_CULL_FACE);
-
-    gViewMatrix = camera.viewMatrix();
 
     if(shouldDisplayWireframeMode)
     {
@@ -111,9 +114,6 @@ void render_scene(const MeshBin & m_meshBin)
     {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
-    glm::vec3 lightPos = glm::vec3(20.0f, 20.0f, 20.0f);
-    glm::vec3 mesh_color = glm::vec3(0.9f, 0.5f, 3.0f);
-    glm::mat4x4 modelMatrix = glm::mat4(1.0);
 
     for (int i = 0; i < m_meshBin.size(); ++i)
     {
@@ -243,7 +243,7 @@ int main(int argc, char **argv)
 
     do
     {
-        render_scene(meshes);
+        render_scene(meshes, camera);
 
     } while(glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 
