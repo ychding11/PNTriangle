@@ -79,11 +79,31 @@ public:
         initOpenGLShaders();
     }
 
+    void run();
 private:
+    std::string m_objPath;
     int initWindow(void);
     void initOpenGLShaders();
     void render(const MeshBin & m_meshBin, const Camera &m_camera);
 };
+
+void Viewer::run()
+{
+    //< second stage init
+    MeshBin meshes{ m_objPath };
+    Camera camera(glm::vec3{0.f}, 5.f); //< camera setting should according to Mesh info
+
+    //< it should lighting here
+
+    glfwCallbackData cb{ &camera };
+    glfwSetWindowUserPointer(m_window, &cb);
+
+    do
+    {
+        render(meshes, camera);
+
+    } while(glfwGetKey(m_window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(m_window) == 0);
+}
 
 void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
 {
