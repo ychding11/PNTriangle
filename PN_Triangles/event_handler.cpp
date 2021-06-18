@@ -16,19 +16,10 @@
 #include "event_handler.h" 
 
 
-
-
 extern float tessellationLevel;
 extern bool shouldTessellateModel;
 
 extern bool shouldDisplayWireframeMode;
-
-
-extern int window_width, window_height;
-
-
-//extern Camera camera;
-
 
 
 void glfwindow_key_cb(GLFWwindow *window, int key, int scancode, int action, int mods)
@@ -94,9 +85,12 @@ static inline glm::ivec2 getMousePos(GLFWwindow *window)
     return glm::ivec2{ (int)x, (int)y };
 }
 
-static inline glm::ivec2 getWindowSize()
+//< suppose : window size == glfw frame buffer size
+static inline glm::ivec2 getWindowSize(GLFWwindow *window)
 {
-    return glm::ivec2{ window_width, window_height };
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+    return glm::ivec2{ width, height };
 }
 
 static void mouseButtonLeft(const glm::ivec2 &where, bool pressed)
@@ -111,7 +105,7 @@ static void mouseDragLeft(GLFWwindow *window, const glm::ivec2  &where, const gl
     assert(cb);
     Camera &camera = *reinterpret_cast<Camera*>(cb->pCamera);
 
-    const glm::vec2 fraction = glm::vec2(delta) / glm::vec2(getWindowSize());
+    const glm::vec2 fraction = glm::vec2(delta) / glm::vec2(getWindowSize(window));
     camera.rotate(fraction);
 }
 
@@ -122,7 +116,7 @@ static void mouseDragCenter(GLFWwindow *window, const glm::ivec2  &where, const 
     assert(cb);
     Camera &camera = *reinterpret_cast<Camera*>(cb->pCamera);
 
-    const glm::vec2 fraction = glm::vec2(delta) / glm::vec2(getWindowSize());
+    const glm::vec2 fraction = glm::vec2(delta) / glm::vec2(getWindowSize(window));
     camera.pan(-fraction); //< relative motion
 }
 
@@ -133,7 +127,7 @@ static void mouseDragRight(GLFWwindow *window, const glm::ivec2  &where, const g
     assert(cb);
     Camera &camera = *reinterpret_cast<Camera*>(cb->pCamera);
 
-    const glm::vec2 fraction = glm::vec2(delta) / glm::vec2(getWindowSize());
+    const glm::vec2 fraction = glm::vec2(delta) / glm::vec2(getWindowSize(window));
     float scale = std::fabs(fraction.x) > std::fabs(fraction.y) ? fraction.x : fraction.y;
     camera.zoom(scale);
     printf("zoom in / out : %.4f\n", scale);
