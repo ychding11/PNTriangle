@@ -27,7 +27,7 @@ extern bool shouldDisplayWireframeMode;
 extern int window_width, window_height;
 
 
-extern Camera camera;
+//extern Camera camera;
 
 
 
@@ -105,22 +105,34 @@ static void mouseButtonLeft(const glm::ivec2 &where, bool pressed)
 }
 
 //< rotate
-static void mouseDragLeft(const glm::ivec2  &where, const glm::ivec2 &delta)
+static void mouseDragLeft(GLFWwindow *window, const glm::ivec2  &where, const glm::ivec2 &delta)
 {
+    glfwCallbackData *cb = static_cast<glfwCallbackData*>(glfwGetWindowUserPointer(window));
+    assert(cb);
+    Camera &camera = *reinterpret_cast<Camera*>(cb->pCamera);
+
     const glm::vec2 fraction = glm::vec2(delta) / glm::vec2(getWindowSize());
     camera.rotate(fraction);
 }
 
 //< pan
-static void mouseDragCenter(const glm::ivec2  &where, const glm::ivec2 &delta)
+static void mouseDragCenter(GLFWwindow *window, const glm::ivec2  &where, const glm::ivec2 &delta)
 {
+    glfwCallbackData *cb = static_cast<glfwCallbackData*>(glfwGetWindowUserPointer(window));
+    assert(cb);
+    Camera &camera = *reinterpret_cast<Camera*>(cb->pCamera);
+
     const glm::vec2 fraction = glm::vec2(delta) / glm::vec2(getWindowSize());
     camera.pan(-fraction); //< relative motion
 }
 
 //< zoom in / out
-static void mouseDragRight(const glm::ivec2  &where, const glm::ivec2 &delta)
+static void mouseDragRight(GLFWwindow *window, const glm::ivec2  &where, const glm::ivec2 &delta)
 {
+    glfwCallbackData *cb = static_cast<glfwCallbackData*>(glfwGetWindowUserPointer(window));
+    assert(cb);
+    Camera &camera = *reinterpret_cast<Camera*>(cb->pCamera);
+
     const glm::vec2 fraction = glm::vec2(delta) / glm::vec2(getWindowSize());
     float scale = std::fabs(fraction.x) > std::fabs(fraction.y) ? fraction.x : fraction.y;
     camera.zoom(scale);
@@ -130,18 +142,15 @@ static void mouseDragRight(const glm::ivec2  &where, const glm::ivec2 &delta)
 /*! callback for _moving_ the mouse to a new position */
 void glfwindow_mouseMotion_cb(GLFWwindow *window, double x, double y)
 {
-    //OWLViewer *gw = static_cast<OWLViewer*>(glfwGetWindowUserPointer(window));
-    //assert(gw);
-
     glm::ivec2 newMousePosition{ (int)x, (int)y };
     if (lastMousePosition != glm::ivec2(-1))
     {
         if (leftButton.isPressed)
-            mouseDragLeft(newMousePosition, newMousePosition - lastMousePosition);
+            mouseDragLeft(window, newMousePosition, newMousePosition - lastMousePosition);
         if (centerButton.isPressed)
-            mouseDragCenter(newMousePosition, newMousePosition - lastMousePosition);
+            mouseDragCenter(window, newMousePosition, newMousePosition - lastMousePosition);
         if (rightButton.isPressed)
-            mouseDragRight(newMousePosition, newMousePosition - lastMousePosition);
+            mouseDragRight(window, newMousePosition, newMousePosition - lastMousePosition);
     }
     lastMousePosition = newMousePosition;
 }

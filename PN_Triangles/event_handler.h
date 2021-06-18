@@ -6,6 +6,11 @@
 //<
 //<
 
+struct glfwCallbackData
+{
+    void *pCamera;
+};
+
 void glfwindow_key_cb(GLFWwindow *window, int key, int scancode, int action, int mods);
 
 void glfwindow_mouseMotion_cb(GLFWwindow *window, double x, double y);

@@ -93,7 +93,6 @@ void initOpenGLShaders()
 
 }
 
-Camera camera(glm::vec3{0.f}, 5.f);
 
 void render_scene(const MeshBin & m_meshBin, const Camera &m_camera)
 {
@@ -231,7 +230,9 @@ int main(int argc, char **argv)
         return errorCode;
     }
 
-
+    Camera camera(glm::vec3{0.f}, 5.f);
+    glfwCallbackData cb{ &camera };
+    glfwSetWindowUserPointer(window, &cb);
 
     initOpenGLShaders();
 
