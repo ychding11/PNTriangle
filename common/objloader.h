@@ -47,7 +47,12 @@ public:
             glDeleteVertexArrays(1, &m_vao_id[i]);
         }
     }
-    
+
+    glm::vec3 center() const
+    {
+        return glm::vec3{};
+    }
+
     size_t size() const
     {
         return m_object_num;
