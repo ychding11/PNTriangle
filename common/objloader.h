@@ -7,6 +7,8 @@
 
 #include <vector>
 
+#include "aabb.h" 
+
 bool loadQuadOBJ(const char * path, std::vector<glm::vec3> &out_vertices, std::vector<glm::vec3> &out_normals);
 
 struct SimpleVertex

@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 
+#include <string>
+#include <sstream>
 #include <algorithm>
 
 class AABB
@@ -18,7 +20,7 @@ public:
 
 
     /// Expand the AABB to include point \p p.
-    void extend(const glm::vec3& p);
+    void Extend(const glm::vec3& p);
 
     /// Retrieves the center of the AABB.
     glm::vec3 Center() const
@@ -55,6 +57,24 @@ public:
     /// Retrieves the AABB's maximum point.
     glm::vec3 Max() const { return mMax; }
 
+    std::string str() const
+    {
+        std::stringstream ss;
+        ss  << " AABB : "
+            << "[ "
+            << mMin.x << ","
+            << mMin.y << ","
+            << mMin.z
+            << " ] "
+            << " ==> "
+            << "[ "
+            << mMax.x << ","
+            << mMax.y << ","
+            << mMax.z
+            << " ] "
+            ;
+        return ss.str();
+    }
 
 private:
 
@@ -84,18 +104,18 @@ inline AABB::AABB()
 inline AABB::AABB(const glm::vec3& p1, const glm::vec3& p2)
 {
     setNull();
-    extend(p1);
-    extend(p2);
+    Extend(p1);
+    Extend(p2);
 }
 
 inline AABB::AABB(const AABB& aabb)
 {
     setNull();
-    extend(aabb.mMin);
-    extend(aabb.mMax);
+    Extend(aabb.mMin);
+    Extend(aabb.mMax);
 }
 
-inline void AABB::extend(const glm::vec3& p)
+inline void AABB::Extend(const glm::vec3& p)
 {
     if (isNull())
     {

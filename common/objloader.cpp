@@ -169,14 +169,13 @@ bool load_obj(const std::string &filename, const std::string &base_dir, std::vec
         }
     }
 
-    ss << "After reassembling," << meshes.size() << " meshes made, only one material within each mesh. " << "\n"
+    AABB aabb{pmin, pmax};
+    ss << "After binning," << meshes.size() << " meshes constructed(each mesh contains only one material)" << "\n"
        << "Mesh file : " << filename << "\n"
+       << aabb.str()
     ;
 
     printf("%s \n", ss.str().c_str());
-    //< output aabb info here
-    //Log("[SCENE]: original AABB, [{},{},{}] --> [{},{},{}]", pmin.x, pmin.y, pmin.z, pmax.x, pmax.y, pmax.z);
-
 
 #if 0
     //< normalize all the vertex to [-1, 1]
