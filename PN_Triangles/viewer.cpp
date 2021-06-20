@@ -22,7 +22,7 @@ void Viewer::Run()
 
     //< it should lighting here
 
-    glfwCallbackData cb{ &camera };
+    glfwCallbackData cb{ &camera, m_wireframeMode, m_tessellationEnable, m_tessellationLevel};
     glfwSetWindowUserPointer(m_window, &cb);
 
     do
@@ -44,7 +44,7 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_CULL_FACE);
 
-    if(shouldDisplayWireframeMode)
+    if(m_wireframeMode)
     {
         glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
     }
@@ -55,7 +55,7 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
 
     for (int i = 0; i < m_meshBin.size(); ++i)
     {
-        if(!shouldTessellateModel)
+        if(!m_tessellationEnable)
         {
             glUseProgram(programID);
 
@@ -78,8 +78,8 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
                 glUniformMatrix4fv(tessProjectionMatrixID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
                 glUniformMatrix4fv(tessModelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
 
-                glUniform1f(tessellationLevelInnerID, tessellationLevel);
-                glUniform1f(tessellationLevelOuterID, tessellationLevel);
+                glUniform1f(tessellationLevelInnerID, m_tessellationLevel);
+                glUniform1f(tessellationLevelOuterID, m_tessellationLevel);
 
                 glPatchParameteri(GL_PATCH_VERTICES, 3);
                 glBindVertexArray( m_meshBin.vao(i) );

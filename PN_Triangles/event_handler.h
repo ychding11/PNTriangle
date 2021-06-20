@@ -9,6 +9,10 @@
 struct glfwCallbackData
 {
     void *pCamera;
+
+    bool  &wireframeMode;
+    bool  &tessellationEnable;
+    float &tessellationLevel;
 };
 
 void glfwindow_key_cb(GLFWwindow *window, int key, int scancode, int action, int mods);

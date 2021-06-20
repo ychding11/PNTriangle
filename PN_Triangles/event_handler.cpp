@@ -16,16 +16,17 @@
 #include "event_handler.h" 
 
 
-extern float tessellationLevel;
-extern bool shouldTessellateModel;
-
-extern bool shouldDisplayWireframeMode;
-
 
 void glfwindow_key_cb(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
     if (action == GLFW_RELEASE)
     {
+        glfwCallbackData *cb = static_cast<glfwCallbackData*>(glfwGetWindowUserPointer(window));
+        assert(cb);
+        bool  &wireframeMode = cb->wireframeMode;
+        bool  &tessellationEnable = cb->tessellationEnable;
+        float &tessellationLevel = cb->tessellationLevel;
+
         switch (key)
         {
         case GLFW_KEY_LEFT:
@@ -37,20 +38,20 @@ void glfwindow_key_cb(GLFWwindow *window, int key, int scancode, int action, int
         case GLFW_KEY_DOWN:
             break;
         case GLFW_KEY_T:
-            shouldTessellateModel = !shouldTessellateModel;
+            tessellationEnable = !tessellationEnable;
             tessellationLevel = 1.0f;
             break;
         case GLFW_KEY_W:
-            shouldDisplayWireframeMode = !shouldDisplayWireframeMode;
+            wireframeMode = !wireframeMode;
             break;
         case GLFW_KEY_LEFT_BRACKET:
-            if (shouldTessellateModel)
+            if (tessellationEnable)
             {
                 --tessellationLevel;
             }
             break;
         case GLFW_KEY_RIGHT_BRACKET:
-            if (shouldTessellateModel)
+            if (tessellationEnable)
             {
                 ++tessellationLevel;
             }
