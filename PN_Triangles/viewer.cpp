@@ -1,93 +1,20 @@
 #include <stdio.h>
 #include <iostream>
-#include <stdlib.h>
-#include <math.h>
 #include <GL/glew.h>
 #include <glfw3.h>
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/quaternion.hpp>
 #include <string>
-#include <fstream>
 #include <vector>
 
 #include "common/objloader.h"
 #include "shaderUtility.h"
 
 #include "camera.h" 
+#include "viewer.h" 
+
 #include "event_handler.h" 
 
-
-
-//<
-//< It combines function of lighting, window management, rendering
-//<
-class Viewer
-{
-private:
-
-    int m_window_width = 1280;
-    int m_window_height = 720;
-    GLFWwindow *m_window{nullptr};
-
-    std::string m_window_title{ "PN Triangle" };
-private:
-
-    //glm::mat4 gProjectionMatrix;
-    //glm::mat4 gViewMatrix;
-    
-    GLuint programID;
-    GLuint tessProgramID;
-
-
-    GLuint lightID;
-    GLuint matrixID;
-    GLuint modelMatrixID;
-    GLuint viewMatrixID;
-    GLuint projectionMatrixID;
-    GLuint mesh_color_ID;
-
-    GLuint tessLightID;
-
-    GLuint tess_mesh_color_ID;
-    GLuint tessMatrixID;
-    GLuint tessModelMatrixID;
-    GLuint tessViewMatrixID;
-    GLuint tessProjectionMatrixID;
-    GLfloat tessellationLevelInnerID;
-    GLfloat tessellationLevelOuterID;
-
-    bool  shouldTessellateModel = false;
-    bool  shouldDisplayWireframeMode = false;
-    float tessellationLevel = 1.0f;
-
-public:
-    Viewer() = delete;
-    ~Viewer()
-    {
-        glDeleteProgram(programID);
-        glDeleteProgram(tessProgramID);
-        glfwTerminate();
-    }
-
-    Viewer(std::string title, int width, int height)
-        : m_window_title(title)
-        , m_window_width(width)
-        , m_window_height(height)
-    {
-        initWindow();
-        initOpenGLShaders();
-    }
-
-    void run();
-private:
-    std::string m_objPath;
-    int initWindow(void);
-    void initOpenGLShaders();
-    void render(const MeshBin & m_meshBin, const Camera &m_camera);
-};
-
-void Viewer::run()
+void Viewer::Run()
 {
     //< second stage init
     MeshBin meshes{ m_objPath };
