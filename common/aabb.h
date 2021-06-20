@@ -4,6 +4,7 @@
 
 #include <string>
 #include <sstream>
+#include <iomanip>
 #include <algorithm>
 
 class AABB
@@ -61,6 +62,7 @@ public:
     {
         std::stringstream ss;
         ss  << " AABB : "
+            << std::setprecision(4)
             << "[ "
             << mMin.x << ","
             << mMin.y << ","

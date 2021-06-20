@@ -90,7 +90,7 @@ bool loadQuadOBJ(const char * path, std::vector<glm::vec3> &out_vertices, std::v
     return true;
 }
 
-bool load_obj(const std::string &filename, const std::string &base_dir, std::vector<Mesh> &meshes)
+AABB load_obj(const std::string &filename, const std::string &base_dir, std::vector<Mesh> &meshes)
 {
 
     std::stringstream ss;
@@ -98,17 +98,19 @@ bool load_obj(const std::string &filename, const std::string &base_dir, std::vec
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
 
+    AABB aabb;
+
     std::string err;
     if ( !tinyobj::LoadObj(&attrib, &shapes, &materials, &err, filename.c_str(), base_dir.c_str()) )
     {
         throw std::runtime_error("Failed to load model : " + filename);
-        return false;
+        return aabb;
     }
 
     if (materials.size() == 0)
     {
         throw std::runtime_error("No material found in model : " + filename);
-        return false;
+        return aabb;
     }
 
     //< There is a bug here: err may contain multiple '\n' terminated string
@@ -160,7 +162,7 @@ bool load_obj(const std::string &filename, const std::string &base_dir, std::vec
                 else
                 {
                     throw std::runtime_error("No normal channel found in vertex");
-                    return false;
+                    return aabb;
                 }
 
             }
@@ -169,7 +171,9 @@ bool load_obj(const std::string &filename, const std::string &base_dir, std::vec
         }
     }
 
-    AABB aabb{pmin, pmax};
+    aabb.Extend(pmin);
+    aabb.Extend(pmax);
+
     ss << "After binning," << meshes.size() << " meshes constructed(each mesh contains only one material)" << "\n"
        << "Mesh file : " << filename << "\n"
        << aabb.str()
@@ -192,7 +196,8 @@ bool load_obj(const std::string &filename, const std::string &base_dir, std::vec
     Log("[SCENE]: load {} meshes from file {}\t vertex position normalized to [-1, 1]", meshes.size(), filename);
 
 #endif
-    return true;
+
+    return aabb;
 }
 
 ///////////////////////////// Class MeshBin //////////////////////////////////////////////
