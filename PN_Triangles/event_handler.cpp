@@ -1,21 +1,12 @@
 #pragma once
 
-//#include <stdio.h>
 #include <iostream>
-//#include <stdlib.h>
-//#include <math.h>
-//#include <GL/glew.h>
 #include <glfw3.h>
 #include <glm/glm.hpp>
-//#include <glm/gtc/matrix_transform.hpp>
-//#include <glm/gtc/quaternion.hpp>
 #include <string>
-//#include <vector>
 
 #include "camera.h" 
 #include "event_handler.h" 
-
-
 
 void glfwindow_key_cb(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
