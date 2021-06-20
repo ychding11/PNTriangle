@@ -6,7 +6,8 @@
 #include <vector>
 
 
-
+class MeshBin;
+class Camera;
 
 //<
 //< It combines function of lighting, window management, rendering

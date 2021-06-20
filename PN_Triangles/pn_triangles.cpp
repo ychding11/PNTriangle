@@ -11,6 +11,7 @@
 #include <fstream>
 #include <vector>
 
+#include "viewer.h"
 #include "common/objloader.h"
 #include "shaderUtility.h"
 
@@ -224,6 +225,11 @@ int main(int argc, char **argv)
         modelPath = "Model/Suzanne.obj";
     }
 
+#if 1 
+    Viewer viewer{"Viewer", 1280, 720};
+    viewer.SetModel(modelPath);
+    viewer.Run();
+#else
     int errorCode = initWindow();
     if(errorCode != 0)
     {
@@ -249,6 +255,7 @@ int main(int argc, char **argv)
     } while(glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 
     cleanup();
+#endif
 
     return 0;
 }
