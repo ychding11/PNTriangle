@@ -36,6 +36,8 @@ private:
 
     std::vector<Mesh> m_meshes; //< binned meshes
 
+    AABB m_aabb;
+
 public:
     MeshBin() = delete;
 
@@ -50,9 +52,14 @@ public:
         }
     }
 
-    glm::vec3 center() const
+    glm::vec3 Center() const
     {
-        return glm::vec3{};
+        return m_aabb.Center();
+    }
+
+    float LogestDim() const
+    {
+        return m_aabb.LongestEdge();
     }
 
     size_t size() const
@@ -75,6 +82,6 @@ private:
     void create_vaos();
 };
 
-AABB load_obj(const std::string &filename, const std::string &base_dir, std::vector<Mesh> &meshes);
+//AABB load_obj(const std::string &filename, const std::string &base_dir, std::vector<Mesh> &meshes);
 
 #endif

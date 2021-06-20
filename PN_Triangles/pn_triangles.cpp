@@ -230,13 +230,13 @@ int main(int argc, char **argv)
         return errorCode;
     }
 
-    Camera camera(glm::vec3{0.f}, 5.f);
+    MeshBin meshes{modelPath};
+    Camera camera(meshes.Center(), meshes.LogestDim() * 1.618f);
     glfwCallbackData cb{ &camera };
     glfwSetWindowUserPointer(window, &cb);
 
     initOpenGLShaders();
 
-    MeshBin meshes{modelPath};
 
     gProjectionMatrix = camera.projMatrix();
 

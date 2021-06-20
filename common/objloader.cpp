@@ -203,9 +203,9 @@ AABB load_obj(const std::string &filename, const std::string &base_dir, std::vec
 ///////////////////////////// Class MeshBin //////////////////////////////////////////////
 
     MeshBin::MeshBin(const std::string &filename)
-        :m_max_object_num(256)
+        : m_max_object_num(256)
     {
-        load_obj(filename, "Model/", m_meshes);
+        m_aabb = load_obj(filename, "Model/", m_meshes);
         create_vaos();
     }
 
