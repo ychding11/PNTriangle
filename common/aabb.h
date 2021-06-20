@@ -21,39 +21,42 @@ public:
     void extend(const glm::vec3& p);
 
     /// Retrieves the center of the AABB.
-    glm::vec3 getCenter() const
+    glm::vec3 Center() const
     {
         return isNull() ? glm::vec3(0) : (mMin + mMax) * 0.5f;
     }
 
     /// Retrieves the diagonal vector (computed as mMax - mMin).
     /// If the AABB is NULL, then a vector of all zeros is returned.
-    glm::vec3 getDiagonal() const
+    glm::vec3 Diagonal() const
     {
         return isNull() ? glm::vec3(0) : mMax - mMin;
     }
 
     /// Retrieves the longest edge.
     /// If the AABB is NULL, then 0 is returned.
-    float getLongestEdge() const
+    float LongestEdge() const
     {
-        auto d = getDiagonal();
+        auto d = Diagonal();
         return std::max(d.x, std::max(d.y, d.z));
     }
 
     /// Retrieves the shortest edge.
     /// If the AABB is NULL, then 0 is returned.
-    float getShortestEdge() const
+    float ShortestEdge() const
     {
-        auto d = getDiagonal();
+        auto d = Diagonal();
         return std::min(d.x, std::min(d.y, d.z));
     }
 
     /// Retrieves the AABB's minimum point.
-    glm::vec3 getMin() const { return mMin; }
+    glm::vec3 Min() const { return mMin; }
 
     /// Retrieves the AABB's maximum point.
-    glm::vec3 getMax() const { return mMax; }
+    glm::vec3 Max() const { return mMax; }
+
+
+private:
 
     /// Set the AABB as NULL (not set).
     void setNull()
@@ -66,8 +69,6 @@ public:
     {
         return mMin.x > mMax.x || mMin.y > mMax.y || mMin.z > mMax.z;
     }
-
-private:
 
     glm::vec3 mMin;   ///< Minimum point.
     glm::vec3 mMax;   ///< Maximum point.
