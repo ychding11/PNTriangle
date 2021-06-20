@@ -82,6 +82,5 @@ private:
     void create_vaos();
 };
 
-//AABB load_obj(const std::string &filename, const std::string &base_dir, std::vector<Mesh> &meshes);
 
 #endif

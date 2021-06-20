@@ -91,7 +91,7 @@ void Viewer::run()
 {
     //< second stage init
     MeshBin meshes{ m_objPath };
-    Camera camera(glm::vec3{0.f}, 5.f); //< camera setting should according to Mesh info
+    Camera camera(meshes.Center(), meshes.LogestDim() * 1.618f); //< camera setting should according to Mesh info
 
     //< it should lighting here
 
