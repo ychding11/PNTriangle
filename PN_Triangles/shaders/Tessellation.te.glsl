@@ -16,6 +16,7 @@ struct T2F
 
 layout(triangles, equal_spacing, ccw) in;
 in TC2E tcdata[];
+
 out T2F tedata;
 out vec3 position_worldspace;
 out vec3 normal_cameraspace;
@@ -27,7 +28,8 @@ uniform mat4 V;
 uniform mat4 P;
 uniform vec3 lightPosition_worldspace;
 
-void main() {
+void main()
+{
     vec3 p1 = tcdata[0].position;
     vec3 p2 = tcdata[1].position;
     vec3 p3 = tcdata[2].position;
