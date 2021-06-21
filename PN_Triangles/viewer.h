@@ -10,7 +10,13 @@ class MeshBin;
 class Camera;
 
 //<
-//< It combines function of lighting, window management, rendering
+//< It serve as a container for modules such as
+//< 1. window management
+//< 2. keyboard & mouse event handling 
+//< 3. shader program management
+//< 4. lighting & camera arrangement
+//< 5. rendering & updating
+//< 6. interact with user
 //<
 class Viewer
 {
@@ -77,6 +83,6 @@ public:
 private:
     std::string m_objPath;
     int initWindow(void);
-    void initOpenGLShaders();
+    void initOpenGLShaders(void);
     void render(const MeshBin & m_meshBin, const Camera &m_camera);
 };

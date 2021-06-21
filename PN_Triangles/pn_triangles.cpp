@@ -35,12 +35,9 @@ int main(int argc, char **argv)
         modelPath = "Model/Suzanne.obj";
     }
 
-#if 1 
     Viewer viewer{"Viewer", 1280, 720};
     viewer.SetModel(modelPath);
     viewer.Run();
-#else
-#endif
 
     return 0;
 }
