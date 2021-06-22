@@ -14,7 +14,9 @@ struct T2F
     vec4 color;
 };
 
+//< specify domain, spacing policy for Tessellator
 layout(triangles, equal_spacing, ccw) in;
+
 in TC2E tcdata[];
 
 out T2F tedata;
@@ -28,6 +30,11 @@ uniform mat4 V;
 uniform mat4 P;
 uniform vec3 lightPosition_worldspace;
 
+//<
+//< evaluate surface for given UV coordinate
+//< interpolate attributes of vertex 
+//< maybe displacement here
+//<
 void main()
 {
     vec3 p1 = tcdata[0].position;
