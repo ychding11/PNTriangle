@@ -15,6 +15,11 @@ struct T2F
 };
 
 //< specify domain, spacing policy for Tessellator
+/*
+    - equal_spacing            : clamp to [1, max], rounded up to the nearest integer
+    - fractional_even_spacing  : clamp to [2, max], rounded up to the nearest even integer
+    - fractional_odd_spacing   : clamp to [1, max - 1], rounded up to the nearest odd integer
+*/
 layout(triangles, equal_spacing, ccw) in;
 
 in TC2E tcdata[];
@@ -49,6 +54,10 @@ void main()
     vec3 c2 = tcdata[1].color.rgb;
     vec3 c3 = tcdata[2].color.rgb;
 
+    //<
+    //< The built-in input variable vec3 gl_TessCoord, which comes from tessellator
+    //< It is used to identify the coordinate of generated point in "abstrct patch" or "domain"
+    //<
     float u = gl_TessCoord.x;
     float v = gl_TessCoord.y;
     float w = gl_TessCoord.z;
