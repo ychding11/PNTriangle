@@ -16,13 +16,22 @@ struct T2F
 
 //< specify domain, spacing policy for Tessellator
 /*
+    ## input layout qualifiers
+    - specify options that control the particular form of tessellation
     - equal_spacing            : clamp to [1, max], rounded up to the nearest integer
     - fractional_even_spacing  : clamp to [2, max], rounded up to the nearest even integer
     - fractional_odd_spacing   : clamp to [1, max - 1], rounded up to the nearest odd integer
+
+    - If all of the effective outer levels (as computed above) levels are exactly 1.0, and the effective inner level is also 1.0,
+      then nothing is tessellated, and the TES will get 3 vertices and one triangle. 
 */
 layout(triangles, equal_spacing, ccw) in;
 
+//<per-vertex inputs from the TCS are arrays indexed by index implicitly
 in TC2E tcdata[];
+
+//< per-patch outputs from the TCS as inputs in the TES using the patch keyword
+//patch in vec4 data;
 
 out T2F tedata;
 out vec3 position_worldspace;
@@ -40,6 +49,30 @@ uniform vec3 lightPosition_worldspace;
 //< interpolate attributes of vertex 
 //< maybe displacement here
 //<
+/*
+    - reference : https://www.khronos.org/opengl/wiki/Tessellation_Evaluation_Shader
+    - The inputs for the TES are : per-vertex & per-patch 
+    - built-in variables
+      - in vec3 gl_TessCoord : Barycentric coordinates of generated primitive
+      - in int gl_PatchVerticesIn : the vertex count for the patch being processed
+      - in int gl_PrimitiveID : the index of the current patch in the series of patches being processed for this draw call
+
+      - buit-in input 
+      in gl_PerVertex
+        {
+          vec4 gl_Position;
+          float gl_PointSize;
+          float gl_ClipDistance[];
+        } gl_in[gl_MaxPatchVertices];
+
+      - buit-in output
+      out gl_PerVertex
+      {
+      vec4 gl_Position;   //< the clip-space output position of the current vertex.
+      float gl_PointSize; //< the pixel width/height of the point being rasterized. valid for point primitives
+      float gl_ClipDistance[]; //< allows shader to set the distance from the vertex to each User-Defined Clip Plane
+      };
+*/
 void main()
 {
     vec3 p1 = tcdata[0].position;
