@@ -57,6 +57,7 @@ void main()
     //<
     //< The built-in input variable vec3 gl_TessCoord, which comes from tessellator
     //< It is used to identify the coordinate of generated point in "abstrct patch" or "domain"
+    //< It is  Barycentric coordinates
     //<
     float u = gl_TessCoord.x;
     float v = gl_TessCoord.y;
