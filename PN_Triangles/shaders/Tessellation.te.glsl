@@ -102,6 +102,7 @@ void main()
     vec3 b030 = p2;
     vec3 b003 = p3;
 
+    //< weighting 
     float w12 = dot(p2 - p1, n1);
     float w21 = dot(p1 - p2, n2);
     float w23 = dot(p3 - p2, n2);
@@ -109,16 +110,22 @@ void main()
     float w31 = dot(p1 - p3, n3);
     float w13 = dot(p3 - p1, n1);
 
-    vec3 b210 = (2.*p1 + p2 - w12*n1) / 3.;
-    vec3 b120 = (2.*p2 + p1 - w21*n2) / 3.;
-    vec3 b021 = (2.*p2 + p3 - w23*n2) / 3.;
-    vec3 b012 = (2.*p3 + p2 - w32*n3) / 3.;
-    vec3 b102 = (2.*p3 + p1 - w31*n3) / 3.;
-    vec3 b201 = (2.*p1 + p3 - w13*n1) / 3.;
+    //< tangent control points
+    vec3 b210 = (2.f*p1 + p2 - w12*n1) / 3.f;
+    vec3 b120 = (2.f*p2 + p1 - w21*n2) / 3.f;
+    vec3 b021 = (2.f*p2 + p3 - w23*n2) / 3.f;
+    vec3 b012 = (2.f*p3 + p2 - w32*n3) / 3.f;
+    vec3 b102 = (2.f*p3 + p1 - w31*n3) / 3.f;
+    vec3 b201 = (2.f*p1 + p3 - w13*n1) / 3.f;
 
-    vec3 ee = (b120 + b120 + b021 + b012 + b102 + b210) / 6.;
-    vec3 vv = (p1 + p2 + p3) / 3.;
-    vec3 b111 = ee + (ee - vv) / 2.;
+    //vec3 ee = (b120 + b120 + b021 + b012 + b102 + b210) / 6.;
+    //vec3 vv = (p1 + p2 + p3) / 3.;
+    //vec3 b111 = ee + (ee - vv) / 2.;
+
+    //< use another calculation
+    vec3 ee = (b120 + b120 + b021 + b012 + b102 + b210) / 4.f;
+    vec3 vv = (p1 + p2 + p3) / 6.f;
+    vec3 b111 = ee - vv ;
 
     float u3 = u * u * u;
     float v3 = v * v * v;
