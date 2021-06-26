@@ -62,6 +62,6 @@ target_link_libraries( ${TARGET_NAME} ${ALL_LIBS} )
 
 foreach(shader ${SHADER_FILES})
     set_source_files_properties( ${shader} PROPERTIES HEADER_FILE_ONLY TRUE )
-    add_custom_command( TARGET ${TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${shader} shaders/ )
+    add_custom_command( TARGET ${TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${shader} shaders/ )
     message(STATUS "copy ${shader} into build/shaders") 
 endforeach()
