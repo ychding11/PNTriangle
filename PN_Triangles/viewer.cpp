@@ -99,7 +99,7 @@ void Viewer::initOpenGLShaders()
     glDepthFunc(GL_LESS);
     glEnable(GL_CULL_FACE);
 
-    programID = loadStandardShaders("shaders/Standard.vert", "shaders/Standard.frag");
+    programID = loadStandardShaders("shaders/Standard.vert.glsl", "shaders/Standard.frag.glsl");
     tessProgramID = loadTessShaders("shaders/Tessellation.vs.glsl", "shaders/Tessellation.tc.glsl", "shaders/Tessellation.te.glsl", "shaders/Tessellation.fs.glsl");
 
     matrixID = glGetUniformLocation(programID, "MVP");

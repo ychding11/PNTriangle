@@ -32,8 +32,8 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Model/Suzanne.obj DESTINATION Model/)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Model/Suzanne.mtl DESTINATION Model/)
 
 # PN Triangle shaders copy
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Standard.vert DESTINATION shaders/)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Standard.frag DESTINATION shaders/)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Standard.vert.glsl DESTINATION shaders/)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Standard.frag.glsl DESTINATION shaders/)
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Tessellation.vs.glsl DESTINATION shaders/)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Tessellation.tc.glsl DESTINATION shaders/)
@@ -41,8 +41,8 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Tessellation.te.glsl 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Tessellation.fs.glsl DESTINATION shaders/)
 
 file(GLOB SHADER_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Standard.vert
-	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Standard.frag
+	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Standard.vert.glsl
+	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Standard.frag.glsl
 	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Tessellation.vs.glsl
 	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Tessellation.tc.glsl
 	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Tessellation.te.glsl
