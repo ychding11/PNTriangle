@@ -96,6 +96,8 @@ void main()
     float v = gl_TessCoord.y;
     float w = gl_TessCoord.z;
 
+    //< calculate control points in domain shader
+    //< maybe have a better place to do so ?
     vec3 b300 = p1;
     vec3 b030 = p2;
     vec3 b003 = p3;
