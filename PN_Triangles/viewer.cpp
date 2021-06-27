@@ -15,8 +15,8 @@
 #include "event_handler.h" 
 #include "gui.h"
 
-RenderSetting tempSetting;
-DisplayOption tempDisplayOption;
+#include "config.h"
+
 void drawMenuBar(RenderSetting &setting, DisplayOption & displayOption);
 
 void Viewer::Run()
@@ -37,6 +37,8 @@ void Viewer::Run()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_CULL_FACE);
 
+        RenderSetting &tempSetting = GetRenderSetting();
+        DisplayOption &tempDisplayOption = GetDisplayOption();
         drawMenuBar(tempSetting, tempDisplayOption);
         render(meshes, camera);
 

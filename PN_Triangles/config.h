@@ -7,9 +7,6 @@
 #include <glm/glm.hpp>
 
 
-class MeshBin;
-class Camera;
-
 
 struct RenderSetting
 {
@@ -29,4 +26,8 @@ struct DisplayOption
         : wireframe(false)
     { }
 };
+
+RenderSetting& GetRenderSetting() ;
+
+DisplayOption& GetDisplayOption() ;
 
