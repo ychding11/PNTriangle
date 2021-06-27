@@ -86,3 +86,23 @@ private:
     void initOpenGLShaders(void);
     void render(const MeshBin & m_meshBin, const Camera &m_camera);
 };
+
+struct RenderSetting
+{
+    // the input of current setting
+    int  onlyUseForIndentification;
+    int  width;
+    int  height;
+    int  bvhBuilderType;
+    bool enableTess;
+};
+
+struct DisplayOption
+{
+    bool wireframe;
+
+    DisplayOption()
+        : wireframe(false)
+    { }
+};
+

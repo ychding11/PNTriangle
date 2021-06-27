@@ -15,6 +15,10 @@
 #include "event_handler.h" 
 #include "gui.h"
 
+RenderSetting tempSetting;
+DisplayOption tempDisplayOption;
+void drawMenuBar(RenderSetting &setting, DisplayOption & displayOption);
+
 void Viewer::Run()
 {
     //< second stage init
@@ -29,6 +33,11 @@ void Viewer::Run()
     GUI::Setup(m_window, "#version 130");
     do
     {
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_CULL_FACE);
+
+        drawMenuBar(tempSetting, tempDisplayOption);
         render(meshes, camera);
 
     } while(glfwGetKey(m_window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(m_window) == 0);
@@ -43,10 +52,6 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
     glm::vec3 lightPos = glm::vec3(20.0f, 20.0f, 20.0f);
     glm::vec3 mesh_color = glm::vec3(0.9f, 0.5f, 3.0f);
     glm::mat4x4 modelMatrix = glm::mat4(1.0);
-
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_CULL_FACE);
 
     if(m_wireframeMode)
     {
@@ -161,56 +166,45 @@ int Viewer::initWindow()
     return 0;
 }
 
-#if 0
-int test(int argc, char **argv)
+///////////////////////////////////////////////////////////////////////////////////////
+/////
+///// UI
+/////
+///////////////////////////////////////////////////////////////////////////////////////
+
+#include "IconsFontAwesome4.h"
+static void drawMenuBar(RenderSetting &setting, DisplayOption & displayOption)
 {
-    std::string modelPath;
-    char **filename = nullptr; 
-    for (int i = 0; i < argc; ++i)
+    GUI::BeginFrame();
+
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5.0f, 5.0f));
+    if (ImGui::BeginMainMenuBar())
     {
-        if (i + 1 < argc && strcmp(argv[i], "-obj") == 0)
-            filename = argv + i + 1, ++i;
-        else
+        if (ImGui::BeginMenu(ICON_FA_CUBE " Model"))
         {
+            if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Open..."))
+            {
+            }
+            ImGui::EndMenu();
         }
+        if (ImGui::BeginMenu(ICON_FA_CAMERA " Camera"))
+        {
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu(ICON_FA_EYE " View"))
+        {
+            ImGui::Checkbox("wireframe", &displayOption.wireframe);
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu(ICON_FA_WINDOWS " Settings"))
+        {
+            ImGui::Checkbox("enable Tessellation", &setting.enableTess);
+            ImGui::EndMenu();
+        }
+        ImGui::EndMainMenuBar();
     }
+    ImGui::PopStyleVar();
 
-    if ( filename != nullptr )
-    {
-        modelPath = *filename;
-    }
-    else
-    {
-        modelPath = "Model/Suzanne.obj";
-    }
-
-    int errorCode = initWindow();
-    if(errorCode != 0)
-    {
-        return errorCode;
-    }
-
-    Camera camera(glm::vec3{0.f}, 5.f);
-    glfwCallbackData cb{ &camera };
-    glfwSetWindowUserPointer(window, &cb);
-
-    initOpenGLShaders();
-
-    MeshBin meshes{modelPath};
-
-    gProjectionMatrix = camera.projMatrix();
-
-    gViewMatrix = camera.viewMatrix();
-
-    do
-    {
-        render_scene(meshes, camera);
-
-    } while(glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
-
-    cleanup();
-
-    return 0;
+    GUI::EndFrame();
 }
-#endif
 
