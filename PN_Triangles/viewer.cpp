@@ -13,6 +13,7 @@
 #include "viewer.h" 
 
 #include "event_handler.h" 
+#include "gui.h"
 
 void Viewer::Run()
 {
@@ -25,11 +26,14 @@ void Viewer::Run()
     glfwCallbackData cb{ &camera, m_wireframeMode, m_tessellationEnable, m_tessellationLevel};
     glfwSetWindowUserPointer(m_window, &cb);
 
+    GUI::Setup(m_window, "#version 130");
     do
     {
         render(meshes, camera);
 
     } while(glfwGetKey(m_window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(m_window) == 0);
+
+    GUI::CleanUp();
 }
 
 void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
