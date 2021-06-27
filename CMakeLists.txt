@@ -8,6 +8,40 @@ find_package (OpenGL REQUIRED)
 # Compile external dependencies
 add_subdirectory (external)
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+option(VERBOSE_MODE "cmake verbose mode" ON)
+
+#######################################################################################
+## function definition
+#######################################################################################
+function(group_files src_files)
+    foreach(f ${src_files})
+        # replace "a/b/c" --> "a\\b\\c"
+        string(REPLACE / \\\\ f ${f})
+        # Get the path of the file relative to ${CMAKE_SOURCE_DIR}
+        file(RELATIVE_PATH relative_path ${CMAKE_SOURCE_DIR} ${f})
+        # Extract the folder, remove the filename from path 
+        string(REGEX REPLACE "(.*)(/[^/]*)$" "\\1" relative_path ${relative_path})
+
+        set(SRCGR "${relative_path}")
+        # Source_group expects \\ (double antislash), not / (slash)
+        string(REPLACE / \\\\ SRCGR ${SRCGR})
+        #message(STATUS "1. group name=${SRCGR}, file=${f}")
+
+        # regular expression https://cmake.org/cmake/help/latest/command/string.html#regex-specification
+        if ("${f}" MATCHES ".*\\.glsl$")
+           set(SRCGR "${SRCGR}\\\\shaders")
+        endif()    
+
+        if (VERBOSE_MODE)
+           message(STATUS "2. group name=${SRCGR}, file=${f}")
+        endif (VERBOSE_MODE)
+
+        source_group(${SRCGR} FILES ${f})
+    endforeach()
+endfunction()
+
 include_directories(
 	.
 	common/
@@ -55,6 +89,9 @@ file(GLOB SOURCE_FILES
 	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/*.cpp
 )
+
+group_files("${SOURCE_FILES}")
+group_files("${SHADER_FILES}")
 
 set(TARGET_NAME "PN_Triangles")
 add_executable( ${TARGET_NAME} ${SOURCE_FILES} ${SHADER_FILES} )
