@@ -46,11 +46,13 @@ include_directories(
 	.
 	common/
 	external/glew-1.13.0/include/
-	external/glfw-3.1.2/include/GLFW/
+	#external/glfw-3.1.2/include/GLFW/
+	external/glfw-3.1.2/include/
 	external/glm-0.9.7.1/
 )
 
 include_directories( ${CMAKE_SOURCE_DIR}/external/imgui )
+include_directories( ${CMAKE_SOURCE_DIR}/external/fonts )
 
 set(ALL_LIBS ${OPENGL_LIBRARY} glfw GLEW_1130)
 
@@ -92,11 +94,18 @@ file(GLOB SOURCE_FILES
 	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/*.cpp
 )
 
+file(GLOB UGS_EXT_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui/*.cpp
+)
+
+
 group_files("${SOURCE_FILES}")
+group_files("${UGS_EXT_FILES}")
 group_files("${SHADER_FILES}")
 
 set(TARGET_NAME "PN_Triangles")
-add_executable( ${TARGET_NAME} ${SOURCE_FILES} ${SHADER_FILES} )
+add_executable( ${TARGET_NAME} ${SOURCE_FILES} ${SHADER_FILES} ${UGS_EXT_FILES} )
 target_link_libraries( ${TARGET_NAME} ${ALL_LIBS} )
 
 foreach(shader ${SHADER_FILES})
