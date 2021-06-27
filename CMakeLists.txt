@@ -3,12 +3,12 @@ cmake_minimum_required (VERSION 2.6)
 
 project (PNTriangle-OGL)
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 find_package (OpenGL REQUIRED)
 
 # Compile external dependencies
 add_subdirectory (external)
-
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 option(VERBOSE_MODE "cmake verbose mode" ON)
 
@@ -31,7 +31,7 @@ function(group_files src_files)
 
         # regular expression https://cmake.org/cmake/help/latest/command/string.html#regex-specification
         if ("${f}" MATCHES ".*\\.glsl$")
-           set(SRCGR "${SRCGR}\\\\shaders")
+           set(SRCGR "${SRCGR}\\\\glsl")
         endif()    
 
         if (VERBOSE_MODE)
@@ -45,10 +45,12 @@ endfunction()
 include_directories(
 	.
 	common/
+	external/glew-1.13.0/include/
 	external/glfw-3.1.2/include/GLFW/
 	external/glm-0.9.7.1/
-	external/glew-1.13.0/include/
 )
+
+include_directories( ${CMAKE_SOURCE_DIR}/external/imgui )
 
 set(ALL_LIBS ${OPENGL_LIBRARY} glfw GLEW_1130)
 
