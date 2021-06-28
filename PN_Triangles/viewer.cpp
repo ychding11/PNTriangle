@@ -200,7 +200,14 @@ static void drawMenuBar(RenderSetting &setting, DisplayOption & displayOption)
         }
         if (ImGui::BeginMenu(ICON_FA_WINDOWS " Settings"))
         {
-            ImGui::Checkbox("enable Tessellation", &setting.enableTess);
+            bool changed = false;
+            ImGui::Checkbox("Enable Tessellation",  &setting.enableTess);
+            changed |= ImGui::SliderFloat4("outer Tess Level", &setting.outerTessLevel.x, 1, 64);
+            changed |= ImGui::SliderFloat4("Inner Tess Level", &setting.innerTessLevel.x, 1, 64);
+            if (changed)
+            {
+                printf("changed.\n");
+            }
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
