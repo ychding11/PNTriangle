@@ -202,6 +202,7 @@ static void drawMenuBar(RenderSetting &setting, DisplayOption & displayOption)
         {
             bool changed = false;
             ImGui::Checkbox("Enable Tessellation",  &setting.enableTess);
+            ImGui::Separator();
             changed |= ImGui::SliderFloat4("outer Tess Level", &setting.outerTessLevel.x, 1, 64);
             changed |= ImGui::SliderFloat4("Inner Tess Level", &setting.innerTessLevel.x, 1, 64);
             if (changed)
