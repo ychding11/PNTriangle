@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+#include "config.h"
 
 class MeshBin;
 class Camera;
@@ -30,6 +31,9 @@ private:
     GLFWwindow *m_window{nullptr};
 
     std::string m_window_title{ "PN Triangle" };
+
+    RenderSetting &m_setting; // = GetRenderSetting();
+    DisplayOption &m_option;  // = GetDisplayOption();
 
 private:
 
@@ -71,6 +75,8 @@ public:
         : m_window_title(title)
         , m_window_width(width)
         , m_window_height(height)
+        , m_setting(GetRenderSetting())
+        , m_option(GetDisplayOption())
     {
         initWindow();
         initOpenGLShaders();

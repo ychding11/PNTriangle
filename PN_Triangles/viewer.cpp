@@ -15,7 +15,6 @@
 #include "event_handler.h" 
 #include "gui.h"
 
-#include "config.h"
 
 void drawMenuBar(RenderSetting &setting, DisplayOption & displayOption);
 
@@ -37,9 +36,9 @@ void Viewer::Run()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_CULL_FACE);
 
-        RenderSetting &tempSetting = GetRenderSetting();
-        DisplayOption &tempDisplayOption = GetDisplayOption();
-        drawMenuBar(tempSetting, tempDisplayOption);
+        //RenderSetting &tempSetting = GetRenderSetting();
+        //DisplayOption &tempDisplayOption = GetDisplayOption();
+        drawMenuBar(m_setting, m_option);
         render(meshes, camera);
 
     } while(glfwGetKey(m_window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(m_window) == 0);
@@ -55,10 +54,10 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
     glm::vec3 mesh_color = glm::vec3(0.9f, 0.5f, 3.0f);
     glm::mat4x4 modelMatrix = glm::mat4(1.0);
 
-        RenderSetting &tempSetting = GetRenderSetting();
-        DisplayOption &tempDisplayOption = GetDisplayOption();
+        //RenderSetting &tempSetting = GetRenderSetting();
+        //DisplayOption &tempDisplayOption = GetDisplayOption();
 
-    if(tempDisplayOption.wireframe)
+    if(m_option.wireframe)
     {
         glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
     }
@@ -69,7 +68,7 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
 
     for (int i = 0; i < m_meshBin.size(); ++i)
     {
-        if(!tempSetting.enableTess)
+        if(!m_setting.enableTess)
         {
             glUseProgram(programID);
 
@@ -94,8 +93,8 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
 
                 //glUniform1f(tessellationLevelInnerID, m_tessellationLevel);
                 //glUniform1f(tessellationLevelOuterID, m_tessellationLevel);
-                glUniform1f(tessellationLevelInnerID, tempSetting.innerTessLevel.x); //< fix shader code latter
-                glUniform1f(tessellationLevelOuterID, tempSetting.outerTessLevel.x);
+                glUniform1f(tessellationLevelInnerID, m_setting.innerTessLevel.x); //< fix shader code latter
+                glUniform1f(tessellationLevelOuterID, m_setting.outerTessLevel.x);
 
                 glPatchParameteri(GL_PATCH_VERTICES, 3);
                 glBindVertexArray( m_meshBin.vao(i) );

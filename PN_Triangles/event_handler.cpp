@@ -17,7 +17,6 @@ void glfwindow_key_cb(GLFWwindow *window, int key, int scancode, int action, int
 
         RenderSetting &setting = cb->setting;
         DisplayOption &option  = cb->option;
-        
 
         switch (key)
         {
