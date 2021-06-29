@@ -58,7 +58,6 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
         RenderSetting &tempSetting = GetRenderSetting();
         DisplayOption &tempDisplayOption = GetDisplayOption();
 
-    //if(m_wireframeMode)
     if(tempDisplayOption.wireframe)
     {
         glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
@@ -70,7 +69,6 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
 
     for (int i = 0; i < m_meshBin.size(); ++i)
     {
-        //if(!m_tessellationEnable)
         if(!tempSetting.enableTess)
         {
             glUseProgram(programID);
@@ -96,7 +94,7 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
 
                 //glUniform1f(tessellationLevelInnerID, m_tessellationLevel);
                 //glUniform1f(tessellationLevelOuterID, m_tessellationLevel);
-                glUniform1f(tessellationLevelInnerID, tempSetting.innerTessLevel.x);
+                glUniform1f(tessellationLevelInnerID, tempSetting.innerTessLevel.x); //< fix shader code latter
                 glUniform1f(tessellationLevelOuterID, tempSetting.outerTessLevel.x);
 
                 glPatchParameteri(GL_PATCH_VERTICES, 3);

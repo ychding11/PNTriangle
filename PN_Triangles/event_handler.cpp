@@ -14,9 +14,6 @@ void glfwindow_key_cb(GLFWwindow *window, int key, int scancode, int action, int
     {
         glfwCallbackData *cb = static_cast<glfwCallbackData*>(glfwGetWindowUserPointer(window));
         assert(cb);
-        bool  &wireframeMode = cb->wireframeMode;
-        bool  &tessellationEnable = cb->tessellationEnable;
-        float &tessellationLevel = cb->tessellationLevel;
 
         RenderSetting &setting = cb->setting;
         DisplayOption &option  = cb->option;
@@ -34,26 +31,21 @@ void glfwindow_key_cb(GLFWwindow *window, int key, int scancode, int action, int
             break;
         case GLFW_KEY_T:
         {
-
             setting.enableTess = !setting.enableTess;
             setting.innerTessLevel = { 1.f, 1.f, 1.f };
             setting.outerTessLevel = { 1.f, 1.f, 1.f, 1.f };
 
-            tessellationEnable = !tessellationEnable;
-            tessellationLevel = 1.0f;
             break;
         }
         case GLFW_KEY_W:
         {
             option.wireframe = !option.wireframe;
-            wireframeMode = !wireframeMode;
             break;
         }
         case GLFW_KEY_LEFT_BRACKET:
         {
-            if (tessellationEnable)
+            if (setting.enableTess)
             {
-                --tessellationLevel;
                 setting.innerTessLevel.x--;
                 setting.innerTessLevel.y--;
                 setting.innerTessLevel.z--;
@@ -67,10 +59,8 @@ void glfwindow_key_cb(GLFWwindow *window, int key, int scancode, int action, int
         }
         case GLFW_KEY_RIGHT_BRACKET:
         {
-            if (tessellationEnable)
+            if (setting.enableTess)
             {
-                ++tessellationLevel;
-
                 setting.innerTessLevel.x++;
                 setting.innerTessLevel.y++;
                 setting.innerTessLevel.z++;
