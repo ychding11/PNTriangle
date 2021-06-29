@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GLFW/glfw3.h>
+#include "config.h"
 
 //<
 //<
@@ -13,6 +14,8 @@ struct glfwCallbackData
     bool  &wireframeMode;
     bool  &tessellationEnable;
     float &tessellationLevel;
+    RenderSetting &setting;
+    DisplayOption &option;
 };
 
 void glfwindow_key_cb(GLFWwindow *window, int key, int scancode, int action, int mods);

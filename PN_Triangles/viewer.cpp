@@ -27,7 +27,7 @@ void Viewer::Run()
 
     //< it should lighting here
 
-    glfwCallbackData cb{ &camera, m_wireframeMode, m_tessellationEnable, m_tessellationLevel};
+    glfwCallbackData cb{ &camera, m_wireframeMode, m_tessellationEnable, m_tessellationLevel, GetRenderSetting(), GetDisplayOption()};
     glfwSetWindowUserPointer(m_window, &cb);
 
     GUI::Setup(m_window, "#version 130");
