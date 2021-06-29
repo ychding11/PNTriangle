@@ -55,7 +55,11 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
     glm::vec3 mesh_color = glm::vec3(0.9f, 0.5f, 3.0f);
     glm::mat4x4 modelMatrix = glm::mat4(1.0);
 
-    if(m_wireframeMode)
+        RenderSetting &tempSetting = GetRenderSetting();
+        DisplayOption &tempDisplayOption = GetDisplayOption();
+
+    //if(m_wireframeMode)
+    if(tempDisplayOption.wireframe)
     {
         glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
     }
@@ -66,7 +70,8 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
 
     for (int i = 0; i < m_meshBin.size(); ++i)
     {
-        if(!m_tessellationEnable)
+        //if(!m_tessellationEnable)
+        if(!tempSetting.enableTess)
         {
             glUseProgram(programID);
 
@@ -89,8 +94,10 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
                 glUniformMatrix4fv(tessProjectionMatrixID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
                 glUniformMatrix4fv(tessModelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
 
-                glUniform1f(tessellationLevelInnerID, m_tessellationLevel);
-                glUniform1f(tessellationLevelOuterID, m_tessellationLevel);
+                //glUniform1f(tessellationLevelInnerID, m_tessellationLevel);
+                //glUniform1f(tessellationLevelOuterID, m_tessellationLevel);
+                glUniform1f(tessellationLevelInnerID, tempSetting.innerTessLevel.x);
+                glUniform1f(tessellationLevelOuterID, tempSetting.outerTessLevel.x);
 
                 glPatchParameteri(GL_PATCH_VERTICES, 3);
                 glBindVertexArray( m_meshBin.vao(i) );
