@@ -16,7 +16,7 @@
 #include "gui.h"
 
 
-void drawMenuBar(RenderSetting &setting, DisplayOption & displayOption);
+void drawUI(RenderSetting &setting, DisplayOption & displayOption);
 
 void drawOverlay(RenderSetting &setting);
 
@@ -38,9 +38,7 @@ void Viewer::Run()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_CULL_FACE);
 
-        //RenderSetting &tempSetting = GetRenderSetting();
-        //DisplayOption &tempDisplayOption = GetDisplayOption();
-        drawMenuBar(m_setting, m_option);
+        drawUI(m_setting, m_option);
         render(meshes, camera);
 
     } while(glfwGetKey(m_window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(m_window) == 0);
@@ -181,7 +179,7 @@ int Viewer::initWindow()
 ///////////////////////////////////////////////////////////////////////////////////////
 
 #include "IconsFontAwesome4.h"
-static void drawMenuBar(RenderSetting &setting, DisplayOption & displayOption)
+static void drawUI(RenderSetting &setting, DisplayOption & displayOption)
 {
     GUI::BeginFrame();
 
