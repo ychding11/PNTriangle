@@ -20,9 +20,11 @@ struct RenderSetting
 struct DisplayOption
 {
     bool wireframe;
+    bool showUI;
 
     DisplayOption()
         : wireframe(false)
+        , showUI(true)
     { }
 };
 

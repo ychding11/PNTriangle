@@ -28,6 +28,11 @@ void glfwindow_key_cb(GLFWwindow *window, int key, int scancode, int action, int
             break;
         case GLFW_KEY_DOWN:
             break;
+        case GLFW_KEY_X:
+        {
+            option.showUI = !option.showUI;
+            break;
+        }
         case GLFW_KEY_T:
         {
             setting.enableTess = !setting.enableTess;

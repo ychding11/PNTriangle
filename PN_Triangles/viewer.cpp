@@ -181,6 +181,11 @@ int Viewer::initWindow()
 #include "IconsFontAwesome4.h"
 static void drawUI(RenderSetting &setting, DisplayOption & displayOption)
 {
+    if (!displayOption.showUI)
+    {
+        return;
+    }
+
     GUI::BeginFrame();
 
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5.0f, 5.0f));
@@ -200,6 +205,7 @@ static void drawUI(RenderSetting &setting, DisplayOption & displayOption)
         if (ImGui::BeginMenu(ICON_FA_EYE " View"))
         {
             ImGui::Checkbox("wireframe", &displayOption.wireframe);
+            ImGui::Checkbox("showUI", &displayOption.showUI);
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu(ICON_FA_WINDOWS " Settings"))
