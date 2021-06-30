@@ -18,6 +18,8 @@
 
 void drawMenuBar(RenderSetting &setting, DisplayOption & displayOption);
 
+void drawOverlay(RenderSetting &setting);
+
 void Viewer::Run()
 {
     //< second stage init
@@ -219,6 +221,27 @@ static void drawMenuBar(RenderSetting &setting, DisplayOption & displayOption)
     }
     ImGui::PopStyleVar();
 
+    drawOverlay(setting);
+
     GUI::EndFrame();
 }
 
+static void drawOverlay(RenderSetting &setting)
+{
+    ImGui::SetNextWindowPos(ImVec2(10.0f, ImGui::GetIO().DisplaySize.y - 10.0f), ImGuiCond_Always, ImVec2(0, 1));
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.4f)); // Transparent background
+    if (ImGui::Begin("INFO", nullptr,
+        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize
+        | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove
+        | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBringToFrontOnFocus))
+    {
+        ImGui::Text("Toggle UI display with key [ x | X ]");
+        ImGui::Text("Renderer : %s", glGetString(GL_RENDERER));
+        ImGui::Text("OpenGL version : %s", glGetString(GL_VERSION));
+        ImGui::Text("outer level : %2d, %2d, %2d, %2d", setting.outerTessLevel.x, setting.outerTessLevel.y, setting.outerTessLevel.z, setting.outerTessLevel.w);
+        ImGui::Text("inner level : %.2f, %.2f, %.2f", setting.innerTessLevel.x, setting.innerTessLevel.y, setting.innerTessLevel.z);
+        ImGui::Text("fps : %.2f fps", ImGui::GetIO().Framerate);
+        ImGui::End();
+    }
+    ImGui::PopStyleColor();
+}
