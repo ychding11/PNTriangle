@@ -7,6 +7,7 @@ Applying PN Triangles by OpenGL .
 
 ## Plans
 - [] snap & save to file
+- [] animation support 
 
 ## Credits
 - [glew]()
