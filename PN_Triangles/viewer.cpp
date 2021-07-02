@@ -33,10 +33,6 @@ void Viewer::Run()
     GUI::Setup(m_window, "#version 130");
     do
     {
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glEnable(GL_CULL_FACE);
-
         render(meshes, camera);
         
     } while(glfwGetKey(m_window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(m_window) == 0);
@@ -52,8 +48,9 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
     glm::vec3 mesh_color = glm::vec3(0.9f, 0.5f, 3.0f);
     glm::mat4x4 modelMatrix = glm::mat4(1.0);
 
-        //RenderSetting &tempSetting = GetRenderSetting();
-        //DisplayOption &tempDisplayOption = GetDisplayOption();
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_CULL_FACE);
 
     if(m_option.wireframe)
     {
