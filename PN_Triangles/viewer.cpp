@@ -172,6 +172,9 @@ int Viewer::initWindow()
     return 0;
 }
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION 
+#include "stb_image_write.h" 
+
 void Viewer::SaveScreen(const std::string filename)
 {
     /**
@@ -182,7 +185,7 @@ void Viewer::SaveScreen(const std::string filename)
     const int kSize = m_window_height * m_window_width;
     std::vector<GLfloat> pixels((size_t)kSize * 3);
     glReadPixels(0, 0, m_window_width, m_window_height, GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
-
+    stbi_write_tga(filename.c_str(), m_window_width, m_window_height, 4, pixels.data());
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
