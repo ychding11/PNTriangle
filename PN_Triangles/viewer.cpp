@@ -16,7 +16,6 @@
 #include "gui.h"
 
 
-void drawUI(RenderSetting &setting, DisplayOption & displayOption);
 
 void drawOverlay(RenderSetting &setting);
 
@@ -38,7 +37,7 @@ void Viewer::Run()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_CULL_FACE);
 
-        drawUI(m_setting, m_option);
+        drawUI(*this);
         render(meshes, camera);
 
     } while(glfwGetKey(m_window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(m_window) == 0);
@@ -196,13 +195,16 @@ void Viewer::SaveScreen(const std::string filename)
 ///////////////////////////////////////////////////////////////////////////////////////
 
 #include "IconsFontAwesome4.h"
-static void drawUI(RenderSetting &setting, DisplayOption & displayOption)
+//static void drawUI(RenderSetting &setting, DisplayOption & displayOption)
+static void drawUI(Viewer &viewer)
 {
+    RenderSetting &setting = viewer.m_setting;
+    DisplayOption &displayOption = viewer.m_option;
+
     if (!displayOption.showUI)
     {
         return;
     }
-
     GUI::BeginFrame();
 
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5.0f, 5.0f));
@@ -215,6 +217,7 @@ static void drawUI(RenderSetting &setting, DisplayOption & displayOption)
             }
             if (ImGui::MenuItem(ICON_FA_FILM " Save..."))
             {
+                viewer.SaveScreen();
             }
             
             ImGui::EndMenu();

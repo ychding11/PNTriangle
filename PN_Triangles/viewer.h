@@ -13,6 +13,10 @@
 class MeshBin;
 class Camera;
 
+class Viewer;
+//void drawUI(RenderSetting &setting, DisplayOption & displayOption);
+void drawUI(Viewer &viewer);
+
 //<
 //< It serve as a container for modules such as
 //< 1. window management
@@ -34,6 +38,8 @@ private:
 
     RenderSetting &m_setting; // = GetRenderSetting();
     DisplayOption &m_option;  // = GetDisplayOption();
+
+    friend void drawUI(Viewer &viewer);
 
 private:
 
