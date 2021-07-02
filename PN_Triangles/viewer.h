@@ -35,6 +35,7 @@ private:
     GLFWwindow *m_window{nullptr};
 
     std::string m_window_title{ "PN Triangle" };
+    bool m_capture_colorbuffer{false};
 
     RenderSetting &m_setting; // = GetRenderSetting();
     DisplayOption &m_option;  // = GetDisplayOption();
@@ -95,7 +96,7 @@ public:
 
     void Run();
 
-    void SaveScreen(const std::string filename = "pic.ppm");
+    void SaveScreen(const std::string filename = "pic.tga");
 
 private:
     std::string m_objPath;

@@ -104,6 +104,13 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
     glBindVertexArray(0);
     glUseProgram(0);
 
+    //< shall capture color buffer here
+    if (m_capture_colorbuffer)
+    {
+        SaveScreen();
+        m_capture_colorbuffer = false;
+    }
+
     glfwSwapBuffers(m_window);
     glfwPollEvents();
 }
@@ -184,6 +191,12 @@ void Viewer::SaveScreen(const std::string filename)
     const int kSize = m_window_height * m_window_width;
     std::vector<GLfloat> pixels((size_t)kSize * 3);
     glReadPixels(0, 0, m_window_width, m_window_height, GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
+    GLenum errorCheckValue = glGetError();
+    if (errorCheckValue != GL_NO_ERROR)
+    {
+        fprintf(stderr, "Error: Could not read color buffer: %s\n", gluErrorString(errorCheckValue));
+    }
+
     stbi_write_tga(filename.c_str(), m_window_width, m_window_height, 4, pixels.data());
     printf("save color buffer into : %s \n", filename.c_str());
 }
@@ -217,7 +230,7 @@ static void drawUI(Viewer &viewer)
             }
             if (ImGui::MenuItem(ICON_FA_FILM " Save..."))
             {
-                viewer.SaveScreen();
+                viewer.m_capture_colorbuffer = true;
             }
             
             ImGui::EndMenu();
