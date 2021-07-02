@@ -186,6 +186,7 @@ void Viewer::SaveScreen(const std::string filename)
     std::vector<GLfloat> pixels((size_t)kSize * 3);
     glReadPixels(0, 0, m_window_width, m_window_height, GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
     stbi_write_tga(filename.c_str(), m_window_width, m_window_height, 4, pixels.data());
+    printf("save color buffer into : %s \n", filename.c_str());
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -254,7 +255,7 @@ static void drawOverlay(RenderSetting &setting)
 {
     ImGui::SetNextWindowPos(ImVec2(10.0f, ImGui::GetIO().DisplaySize.y - 10.0f), ImGuiCond_Always, ImVec2(0, 1));
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.4f)); // Transparent background
-    if (ImGui::Begin("INFO", nullptr,
+    if (ImGui::Begin("StatusOverlay", nullptr,
         ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize
         | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove
         | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBringToFrontOnFocus))
