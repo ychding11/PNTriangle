@@ -212,6 +212,10 @@ static void drawUI(RenderSetting &setting, DisplayOption & displayOption)
             if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Open..."))
             {
             }
+            if (ImGui::MenuItem(ICON_FA_FILM " Save..."))
+            {
+            }
+            
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu(ICON_FA_CAMERA " Camera"))
@@ -220,8 +224,8 @@ static void drawUI(RenderSetting &setting, DisplayOption & displayOption)
         }
         if (ImGui::BeginMenu(ICON_FA_EYE " View"))
         {
-            ImGui::Checkbox("wireframe", &displayOption.wireframe);
-            ImGui::Checkbox("showUI", &displayOption.showUI);
+            ImGui::Checkbox("Wireframe", &displayOption.wireframe);
+            ImGui::Checkbox("ShowUI", &displayOption.showUI);
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu(ICON_FA_WINDOWS " Settings"))
