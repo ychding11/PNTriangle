@@ -37,9 +37,8 @@ void Viewer::Run()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_CULL_FACE);
 
-        drawUI(*this);
         render(meshes, camera);
-
+        
     } while(glfwGetKey(m_window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(m_window) == 0);
 
     GUI::CleanUp();
@@ -110,6 +109,9 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
         SaveScreen();
         m_capture_colorbuffer = false;
     }
+
+    //< draw ui after render
+    drawUI(*this);
 
     glfwSwapBuffers(m_window);
     glfwPollEvents();
