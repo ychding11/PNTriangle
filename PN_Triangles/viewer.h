@@ -89,6 +89,8 @@ public:
 
     void Run();
 
+    void SaveScreen(const std::string filename = "pic.ppm");
+
 private:
     std::string m_objPath;
     int initWindow(void);

@@ -172,6 +172,19 @@ int Viewer::initWindow()
     return 0;
 }
 
+void Viewer::SaveScreen(const std::string filename)
+{
+    /**
+     * https://www.khronos.org/opengl/wiki/Framebuffer#Read_color_buffer
+     *
+     **/
+
+    const int kSize = m_window_height * m_window_width;
+    std::vector<GLfloat> pixels((size_t)kSize * 3);
+    glReadPixels(0, 0, m_window_width, m_window_height, GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
+
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 /////
 ///// UI
