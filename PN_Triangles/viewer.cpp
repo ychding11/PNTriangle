@@ -200,6 +200,11 @@ void Viewer::SaveScreen(const std::string filename)
     printf("save color buffer into : %s \n", filename.c_str());
 }
 
+void Viewer::SaveImageSequence(const std::string dir = "imageseq")
+{
+
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 /////
 ///// UI

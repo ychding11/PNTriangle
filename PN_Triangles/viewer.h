@@ -97,6 +97,7 @@ public:
     void Run();
 
     void SaveScreen(const std::string filename = "pic.tga");
+    void SaveImageSequence(const std::string dir = "imageseq");
 
 private:
     std::string m_objPath;
