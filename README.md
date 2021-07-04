@@ -12,6 +12,9 @@ Applying PN Triangle Tessellation by OpenGL .
 - [] snap & save to file
 - [] animation support 
 
+## Screen 
+- ![screen](./images/screen.png)
+
 ## Credits
 - [glew]()
 - [glfw]()
