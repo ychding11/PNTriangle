@@ -3,14 +3,14 @@
 Applying PN Triangle Tessellation by OpenGL .
 
 ## Features 
-- Implement PN Triangle Tessellation
-- Camera supporting rotate, pan, zoom in / out.
-- Cature Color Buffer & save to disk in tga format
-- Rendering Image sequence which can be encoded into video by ffmpeg
+- [x] Implement PN Triangle Tessellation
+- [x] Camera supporting rotate, pan, zoom in / out.
+- [x] Cature Color Buffer & save to disk in tga format
+- [x] Rendering Image sequence which can be encoded into video by ffmpeg
 
 ## Plans
-- [] snap & save to file
-- [] animation support 
+- [x] snap & save to file
+- [ ] animation support 
 
 ## Screen 
 - ![screen](./images/screen.png)
