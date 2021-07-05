@@ -255,8 +255,8 @@ static void drawUI(Viewer &viewer)
         }
         if (ImGui::BeginMenu(ICON_FA_CAMERA " Camera"))
         {
-            const char *play = ICON_FA_FILM " Start Image Sequence";
-            const char *stop = ICON_FA_FILM " Stop  Image Sequence";
+            const char *play = ICON_FA_PLAY " Start Image Sequence";
+            const char *stop = ICON_FA_STOP " Stop  Image Sequence";
             if (ImGui::MenuItem(viewer.m_save_image_sequence ? stop : play))
             {
                 viewer.m_save_image_sequence = !viewer.m_save_image_sequence;
