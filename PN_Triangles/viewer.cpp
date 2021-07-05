@@ -35,6 +35,10 @@ void Viewer::Run()
     GUI::Setup(m_window, "#version 130");
     do
     {
+        //< require a random number in [-1.0, 1.0]
+        glm::vec2 delta{0.01, 0.01};
+        camera.rotate(delta);
+
         render(meshes, camera);
         
     } while(glfwGetKey(m_window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(m_window) == 0);
@@ -246,15 +250,16 @@ static void drawUI(Viewer &viewer)
             {
                 viewer.m_capture_colorbuffer = true;
             }
-            if (ImGui::MenuItem(ICON_FA_FILM " Save Image Sequence"))
-            {
-                viewer.m_save_image_sequence = true;
-            }
             
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu(ICON_FA_CAMERA " Camera"))
         {
+            if (ImGui::MenuItem(ICON_FA_FILM " Save Image Sequence"))
+            {
+                //viewer.m_save_image_sequence = true;
+            }
+
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu(ICON_FA_EYE " View"))
