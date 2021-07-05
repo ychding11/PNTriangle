@@ -36,6 +36,8 @@ private:
 
     std::string m_window_title{ "PN Triangle" };
     bool m_capture_colorbuffer{false};
+    bool m_save_image_sequence{false};
+    int  m_sequence_count{ 0 };
 
     RenderSetting &m_setting; // = GetRenderSetting();
     DisplayOption &m_option;  // = GetDisplayOption();

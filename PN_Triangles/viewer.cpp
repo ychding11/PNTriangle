@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <iostream>
+#include <string>
+#include <sstream>
+#include <vector>
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
-#include <string>
-#include <vector>
 
 #include "common/objloader.h"
 #include "shaderUtility.h"
@@ -107,6 +109,11 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
         m_capture_colorbuffer = false;
     }
 
+    if (m_save_image_sequence)
+    {
+        SaveImageSequence();
+    }
+
     //< draw ui after render
     drawUI(*this);
 
@@ -202,7 +209,10 @@ void Viewer::SaveScreen(const std::string filename)
 
 void Viewer::SaveImageSequence(const std::string dir)
 {
-
+    std::ostringstream  iss;
+    iss << std::setw(4) << std::setfill('0') << m_sequence_count;
+    SaveScreen(iss.str() + ".tga");
+    m_sequence_count++;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -235,6 +245,10 @@ static void drawUI(Viewer &viewer)
             if (ImGui::MenuItem(ICON_FA_FILM " Save..."))
             {
                 viewer.m_capture_colorbuffer = true;
+            }
+            if (ImGui::MenuItem(ICON_FA_FILM " Save Image Sequence"))
+            {
+                viewer.m_save_image_sequence = true;
             }
             
             ImGui::EndMenu();
