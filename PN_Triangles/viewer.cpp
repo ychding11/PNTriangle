@@ -17,7 +17,7 @@
 #include "event_handler.h" 
 #include "gui.h"
 
-
+float myRandom();
 
 void drawOverlay(RenderSetting &setting);
 
@@ -37,6 +37,8 @@ void Viewer::Run()
     {
         //< require a random number in [-1.0, 1.0]
         glm::vec2 delta{0.01, 0.01};
+        auto v = myRandom();
+        v > 0 ? delta.x += v * 0.1 : delta.y += v * 0.1;
         camera.rotate(delta);
 
         render(meshes, camera);
@@ -319,4 +321,19 @@ static void drawOverlay(RenderSetting &setting)
         ImGui::End();
     }
     ImGui::PopStyleColor();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+/////
+///// 
+/////
+///////////////////////////////////////////////////////////////////////////////////////
+#include <random>
+
+static std::default_random_engine generator;
+static std::uniform_real_distribution<float> distribution(-1.f, 1.f); //from -1 to 1
+
+static float myRandom()
+{
+    return distribution(generator);
 }
