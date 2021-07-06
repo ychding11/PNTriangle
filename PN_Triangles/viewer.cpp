@@ -29,7 +29,7 @@ void Viewer::Run()
 
     //< it should lighting here
 
-    glfwCallbackData cb{ &camera, m_wireframeMode, m_tessellationEnable, m_tessellationLevel, GetRenderSetting(), GetDisplayOption()};
+    glfwCallbackData cb{ &camera, GetRenderSetting(), GetDisplayOption()};
     glfwSetWindowUserPointer(m_window, &cb);
 
     GUI::Setup(m_window, "#version 130");
@@ -94,8 +94,6 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
                 glUniformMatrix4fv(tessProjectionMatrixID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
                 glUniformMatrix4fv(tessModelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
 
-                //glUniform1f(tessellationLevelInnerID, m_tessellationLevel);
-                //glUniform1f(tessellationLevelOuterID, m_tessellationLevel);
                 glUniform1f(tessellationLevelInnerID, m_setting.innerTessLevel.x); //< fix shader code latter
                 glUniform1f(tessellationLevelOuterID, m_setting.outerTessLevel.x);
 

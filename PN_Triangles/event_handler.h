@@ -10,10 +10,6 @@
 struct glfwCallbackData
 {
     void *pCamera;
-
-    bool  &wireframeMode;
-    bool  &tessellationEnable;
-    float &tessellationLevel;
     RenderSetting &setting;
     DisplayOption &option;
 };

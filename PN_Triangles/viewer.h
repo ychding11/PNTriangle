@@ -67,10 +67,6 @@ private:
     GLfloat tessellationLevelInnerID;
     GLfloat tessellationLevelOuterID;
 
-    bool  m_wireframeMode{false};
-    bool  m_tessellationEnable{false};
-    float m_tessellationLevel{1.0f};
-
 public:
     Viewer() = delete;
     ~Viewer()
