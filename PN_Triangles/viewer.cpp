@@ -29,17 +29,20 @@ void Viewer::Run()
 
     //< it should lighting here
 
-    glfwCallbackData cb{ &camera, GetRenderSetting(), GetDisplayOption()};
+    glfwCallbackData cb{ &camera, m_animation_mode, GetRenderSetting(), GetDisplayOption()};
     glfwSetWindowUserPointer(m_window, &cb);
 
     GUI::Setup(m_window, "#version 130");
     do
     {
-        //< require a random number in [-1.0, 1.0]
-        glm::vec2 delta{0.01, 0.01};
-        auto v = myRandom();
-        v > 0 ? delta.x += v * 0.1 : delta.y += v * 0.1;
-        camera.rotate(delta);
+        if (m_animation_mode > 0)
+        {
+            //< require a random number in [-1.0, 1.0]
+            glm::vec2 delta{0.01, 0.01};
+            auto v = myRandom();
+            v > 0 ? delta.x += v * 0.1 : delta.y += v * 0.1;
+            camera.rotate(delta);
+        }
 
         render(meshes, camera);
         

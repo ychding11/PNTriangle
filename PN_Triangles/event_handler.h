@@ -10,6 +10,7 @@
 struct glfwCallbackData
 {
     void *pCamera;
+    int animation_mode;
     RenderSetting &setting;
     DisplayOption &option;
 };

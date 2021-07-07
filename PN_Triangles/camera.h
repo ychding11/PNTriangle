@@ -48,7 +48,7 @@ protected:
     float m_worldSize{1.f};
     float m_speed{0.25f};
 
-    bool m_invertRotation{false};
+    bool m_invertRotation{true};
 
     glm::vec3 m_eye;
     glm::vec3 m_at;
