@@ -35,20 +35,55 @@ void Viewer::Run()
     GUI::Setup(m_window, "#version 130");
     do
     {
-        if (m_animation_mode > 0)
+        animateCamera(camera);
+        render(meshes, camera);
+        
+    } while(glfwGetKey(m_window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(m_window) == 0);
+
+    GUI::CleanUp();
+}
+
+void Viewer::animateCamera(Camera &camera)
+{
+    switch (m_animation_mode)
+    {
+        case 0:
+        {
+            break;
+        }
+        case 1:
+        {
+            glm::vec2 delta{0.01, 0.0};
+            camera.rotate(delta);
+            break;
+        }
+        case 2:
+        {
+            float scale = -0.01;
+            camera.zoom(scale); 
+            break;
+        }
+        case 3:
+        {
+            float scale = 0.01;
+            camera.zoom(scale); 
+            break;
+        }
+        case 4:
         {
             //< require a random number in [-1.0, 1.0]
             glm::vec2 delta{0.01, 0.01};
             auto v = myRandom();
             v > 0 ? delta.x += v * 0.1 : delta.y += v * 0.1;
             camera.rotate(delta);
+            break;
         }
+        default:
+        {
+            break;
+        }
+    }
 
-        render(meshes, camera);
-        
-    } while(glfwGetKey(m_window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(m_window) == 0);
-
-    GUI::CleanUp();
 }
 
 void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)

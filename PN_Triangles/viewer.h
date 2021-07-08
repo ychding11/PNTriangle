@@ -103,6 +103,7 @@ private:
     int initWindow(void);
     void initOpenGLShaders(void);
     void render(const MeshBin & m_meshBin, const Camera &m_camera);
+    void animateCamera(Camera &m_camera);
 };
 
 //struct RenderSetting
