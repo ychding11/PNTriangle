@@ -14,7 +14,7 @@ void glfwindow_key_cb(GLFWwindow *window, int key, int scancode, int action, int
     {
         glfwCallbackData *cb = static_cast<glfwCallbackData*>(glfwGetWindowUserPointer(window));
         assert(cb);
-
+        int &animation_mode = cb->animation_mode;
         RenderSetting &setting = cb->setting;
         DisplayOption &option  = cb->option;
 
@@ -28,6 +28,11 @@ void glfwindow_key_cb(GLFWwindow *window, int key, int scancode, int action, int
             break;
         case GLFW_KEY_DOWN:
             break;
+        case GLFW_KEY_SPACE:
+        {
+            animation_mode = (++animation_mode) % 4;
+            break;
+        }
         case GLFW_KEY_X:
         {
             option.showUI = !option.showUI;
