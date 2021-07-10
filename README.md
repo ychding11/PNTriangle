@@ -19,4 +19,5 @@ Applying PN Triangle Tessellation by OpenGL .
 - [glew]()
 - [glfw]()
 - [glm]()
+- [stb image](https://github.com/nothings/stb)
 - [tiny obj loader]()
