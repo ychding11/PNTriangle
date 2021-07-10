@@ -1,0 +1,15 @@
+digraph G
+{
+    size = "8,8";  /* control what ? */
+    node [shape=box];
+
+    main -> parse -> viewer;
+    viewer -> load_model;
+    viewer -> load_shader -> create_camera
+
+    parse [label="parse args"];
+    viewer [label="Enter viewer"];
+    load_model[label="load 3D model"];
+    load_shader[label="load shader"];
+    create_camera[label="create camera"];
+ }
