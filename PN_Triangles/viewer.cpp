@@ -279,12 +279,12 @@ static void drawUI(Viewer &viewer)
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5.0f, 5.0f));
     if (ImGui::BeginMainMenuBar())
     {
-        if (ImGui::BeginMenu(ICON_FA_CUBE " Model"))
+        if (ImGui::BeginMenu(ICON_FA_CUBE " File"))
         {
             if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Open..."))
             {
             }
-            if (ImGui::MenuItem(ICON_FA_FILM " Save..."))
+            if (ImGui::MenuItem(ICON_FA_FILM " Capture..."))
             {
                 viewer.m_capture_colorbuffer = true;
             }
