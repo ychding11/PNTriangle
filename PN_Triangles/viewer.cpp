@@ -244,7 +244,7 @@ void Viewer::SaveScreen(const std::string filename)
     {
         fprintf(stderr, "Error: Could not read color buffer: %s\n", gluErrorString(errorCheckValue));
     }
-
+    stbi_flip_vertically_on_write(1);
     stbi_write_tga(filename.c_str(), m_window_width, m_window_height, 3, pixels.data()); //< only 3 channels
     printf("save color buffer into : %s \n", filename.c_str());
 }
