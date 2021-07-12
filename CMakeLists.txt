@@ -1,9 +1,16 @@
 
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 3.10 FATAL_ERROR)
 
-project (PNTriangle-OGL)
+project ( PNTriangle-OGL
+            VERSION 2020.3.1
+		    LANGUAGES C CXX )
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+message( STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID} (${CMAKE_CXX_COMPILER_VERSION})" )
+message( STATUS "target system: ${CMAKE_SYSTEM_NAME} (${CMAKE_SYSTEM_VERSION})" )
+message( STATUS "host system: ${CMAKE_HOST_SYSTEM_NAME} (${CMAKE_HOST_SYSTEM_VERSION})" )
+
 
 find_package (OpenGL REQUIRED)
 
