@@ -19,7 +19,7 @@
 
 float myRandom();
 
-void drawOverlay(RenderSetting &setting);
+void drawOverlay(const Viewer &viewer);
 
 void Viewer::Run()
 {
@@ -326,7 +326,7 @@ static void drawUI(Viewer &viewer)
             changed |= ImGui::SliderFloat4("Inner Tess Level", &setting.innerTessLevel.x, 1, 64);
             if (changed)
             {
-                printf("changed.\n");
+                printf("Tessellation level changed.\n");
             }
             ImGui::EndMenu();
         }
@@ -334,12 +334,12 @@ static void drawUI(Viewer &viewer)
     }
     ImGui::PopStyleVar();
 
-    drawOverlay(setting);
+    drawOverlay(viewer);
 
     GUI::EndFrame();
 }
 
-static void drawOverlay(RenderSetting &setting)
+static void drawOverlay(const Viewer &viewer)
 {
     ImGui::SetNextWindowPos(ImVec2(10.0f, ImGui::GetIO().DisplaySize.y - 10.0f), ImGuiCond_Always, ImVec2(0, 1));
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.4f)); // Transparent background
@@ -348,6 +348,7 @@ static void drawOverlay(RenderSetting &setting)
         | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove
         | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBringToFrontOnFocus))
     {
+        const RenderSetting &setting = viewer.m_setting;
         ImGui::Text("Toggle UI display with key [ x | X ]");
         ImGui::Text("Renderer : %s", glGetString(GL_RENDERER));
         ImGui::Text("OpenGL version : %s", glGetString(GL_VERSION));

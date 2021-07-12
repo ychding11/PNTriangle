@@ -44,6 +44,7 @@ private:
     DisplayOption &m_option;  // = GetDisplayOption();
 
     friend void drawUI(Viewer &viewer);
+    friend void drawOverlay(const Viewer &viewer);
 
 private:
 
