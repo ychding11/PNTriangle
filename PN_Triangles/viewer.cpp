@@ -352,7 +352,7 @@ static void drawOverlay(const Viewer &viewer)
         ImGui::Text("Toggle UI display with key [ x | X ]");
         ImGui::Text("Renderer : %s", glGetString(GL_RENDERER));
         ImGui::Text("OpenGL version : %s", glGetString(GL_VERSION));
-        ImGui::Text("outer level : %2d, %2d, %2d, %2d", setting.outerTessLevel.x, setting.outerTessLevel.y, setting.outerTessLevel.z, setting.outerTessLevel.w);
+        ImGui::Text("outer level : %.2f, %.2f, %.2f, %.2f", setting.outerTessLevel.x, setting.outerTessLevel.y, setting.outerTessLevel.z, setting.outerTessLevel.w);
         ImGui::Text("inner level : %.2f, %.2f, %.2f", setting.innerTessLevel.x, setting.innerTessLevel.y, setting.innerTessLevel.z);
         ImGui::Text("fps : %.2f fps", ImGui::GetIO().Framerate);
         ImGui::End();
