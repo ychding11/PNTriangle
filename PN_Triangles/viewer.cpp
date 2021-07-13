@@ -72,9 +72,9 @@ void Viewer::animateCamera(Camera &camera)
         case 4:
         {
             //< require a random number in [-1.0, 1.0]
-            glm::vec2 delta{0.01, 0.01};
-            auto v = myRandom();
-            v > 0 ? delta.x += v * 0.1 : delta.y += v * 0.1;
+            glm::vec2 delta{myRandom() * 0.01, 0.01};
+            //auto v = myRandom();
+            //v > 0 ? delta.x += v * 0.1 : delta.y += v * 0.1;
             camera.rotate(delta);
             break;
         }

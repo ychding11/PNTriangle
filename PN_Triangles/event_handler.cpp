@@ -30,7 +30,7 @@ void glfwindow_key_cb(GLFWwindow *window, int key, int scancode, int action, int
             break;
         case GLFW_KEY_SPACE:
         {
-            animation_mode = (++animation_mode) % 4;
+            animation_mode = (++animation_mode) % 5;
             break;
         }
         case GLFW_KEY_X:
