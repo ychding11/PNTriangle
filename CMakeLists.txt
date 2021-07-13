@@ -72,8 +72,16 @@ add_definitions(
 
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Model/Suzanne.obj DESTINATION Model/)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Model/Suzanne.mtl DESTINATION Model/)
+file(GLOB Model_3D_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/Model/*.obj
+    ${CMAKE_CURRENT_SOURCE_DIR}/Model/*.mtl
+)
+foreach(file ${Model_3D_FILES})
+    file(COPY ${file}  DESTINATION Model/)
+    message(STATUS "copy ${file} into build/Model") 
+endforeach()
+#file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Model/Suzanne.obj DESTINATION Model/)
+#file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Model/Suzanne.mtl DESTINATION Model/)
 
 file(GLOB SHADER_FILES
 	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Standard.vert.glsl
