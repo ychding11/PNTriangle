@@ -44,6 +44,20 @@ void Viewer::Run()
     GUI::CleanUp();
 }
 
+#include <chrono>
+#include <thread>
+
+auto now()
+{
+    return std::chrono::steady_clock::now();
+}
+
+auto awake_time()
+{
+    using std::chrono::operator""ms;
+    return now() + 30ms;
+}
+
 void Viewer::animateTessellation()
 {
     if (!m_setting.enableTess) return;
@@ -64,6 +78,8 @@ void Viewer::animateTessellation()
         if (m_setting.innerTessLevel.x > maxInnerLevel)
             m_setting.innerTessLevel.x = 1;
     }
+
+    std::this_thread::sleep_until(awake_time());
 }
 
 void Viewer::animateCamera(Camera &camera)
