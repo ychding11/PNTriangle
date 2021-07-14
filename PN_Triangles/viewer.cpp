@@ -36,11 +36,34 @@ void Viewer::Run()
     do
     {
         animateCamera(camera);
+        animateTessellation();
         render(meshes, camera);
         
     } while(glfwGetKey(m_window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(m_window) == 0);
 
     GUI::CleanUp();
+}
+
+void Viewer::animateTessellation()
+{
+    if (!m_setting.enableTess) return;
+
+    const int maxInnerLevel = 3;
+    const int maxOuterLevel = 64;
+
+    m_setting.outerTessLevel.x++;
+    m_setting.outerTessLevel.y++;
+    m_setting.outerTessLevel.z++;
+    if (m_setting.outerTessLevel.x > maxOuterLevel)
+    {
+        m_setting.innerTessLevel.x++;
+
+        m_setting.outerTessLevel.x = 1;
+        m_setting.outerTessLevel.y = 1;
+        m_setting.outerTessLevel.z = 1;
+        if (m_setting.innerTessLevel.x > maxInnerLevel)
+            m_setting.innerTessLevel.x = 1;
+    }
 }
 
 void Viewer::animateCamera(Camera &camera)
