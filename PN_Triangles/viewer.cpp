@@ -55,12 +55,12 @@ auto now()
 auto awake_time()
 {
     using std::chrono::operator""ms;
-    return now() + 30ms;
+    return now() + 300ms;
 }
 
 void Viewer::animateTessellation()
 {
-    if (!m_setting.enableTess) return;
+    if (!m_setting.enableTess || m_frame_num % 5 != 0) return;
 
     const int maxInnerLevel = 3;
     const int maxOuterLevel = 64;
@@ -79,7 +79,7 @@ void Viewer::animateTessellation()
             m_setting.innerTessLevel.x = 1;
     }
 
-    std::this_thread::sleep_until(awake_time());
+    //std::this_thread::sleep_until(awake_time());
 }
 
 void Viewer::animateCamera(Camera &camera)
@@ -197,6 +197,7 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
 
     //< draw ui after render
     drawUI(*this);
+    m_frame_num++;
 
     glfwSwapBuffers(m_window);
     glfwPollEvents();
