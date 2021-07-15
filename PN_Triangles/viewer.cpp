@@ -111,7 +111,7 @@ void Viewer::animateCamera(Camera &camera)
         case 4:
         {
             //< require a random number in [-1.0, 1.0]
-            glm::vec2 delta{myRandom() * 0.01, 0.01};
+            glm::vec2 delta{myRandom() * 0.05, myRandom() * 0.04};
             //auto v = myRandom();
             //v > 0 ? delta.x += v * 0.1 : delta.y += v * 0.1;
             camera.rotate(delta);
@@ -408,7 +408,7 @@ static void drawOverlay(const Viewer &viewer)
 #include <random>
 
 static std::default_random_engine generator;
-static std::uniform_real_distribution<float> distribution(-1.f, 1.f); //from -1 to 1
+static std::uniform_real_distribution<float> distribution(-0.5f, 0.5f); //from -.5 to .5
 
 static float myRandom()
 {
