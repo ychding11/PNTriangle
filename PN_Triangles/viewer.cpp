@@ -130,6 +130,10 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
     glm::vec3 mesh_color = glm::vec3(0.9f, 0.5f, 3.0f);
     glm::mat4x4 modelMatrix = glm::mat4(1.0);
 
+#if defined(MSAA_ENABLE)
+    glEnable(GL_MULTISAMPLE);
+#endif
+
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_CULL_FACE);
@@ -234,7 +238,9 @@ int Viewer::initWindow()
         return -1;
     }
 
+#if defined(MSAA_ENABLE)
     glfwWindowHint(GLFW_SAMPLES, 4);
+#endif
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);

@@ -6,6 +6,8 @@
 #include <vector>
 #include <glm/glm.hpp>
 
+ #define MSAA_ENABLE
+
 
 struct RenderSetting
 {
