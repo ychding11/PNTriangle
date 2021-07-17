@@ -76,27 +76,28 @@ foreach(file ${Model_3D_FILES})
     message(STATUS "copy ${file} into build/Model") 
 endforeach()
 
-file(GLOB SHADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/*.glsl)
+file(GLOB SHADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/shaders/*.glsl)
+
 file(GLOB SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/common/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/common/*.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/common/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
 
-file(GLOB UGS_EXT_FILES
+file(GLOB EXT_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui/*.cpp
 )
 
 
 group_files("${SOURCE_FILES}")
-group_files("${UGS_EXT_FILES}")
+group_files("${EXT_FILES}")
 group_files("${SHADER_FILES}")
 
-set(TARGET_NAME "PN_Triangles")
-add_executable( ${TARGET_NAME} ${SOURCE_FILES} ${SHADER_FILES} ${UGS_EXT_FILES} )
+set(TARGET_NAME "PNTriangle")
+add_executable( ${TARGET_NAME} ${SOURCE_FILES} ${SHADER_FILES} ${EXT_FILES} )
 target_link_libraries( ${TARGET_NAME} ${ALL_LIBS} )
 
 foreach(shader ${SHADER_FILES})
