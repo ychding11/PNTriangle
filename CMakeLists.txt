@@ -1,9 +1,7 @@
 
 cmake_minimum_required (VERSION 3.10 FATAL_ERROR)
 
-project ( PNTriangle-OGL
-            VERSION 2020.3.1
-		    LANGUAGES C CXX )
+project ( PNTriangle-OGL VERSION 1.0.0 LANGUAGES C CXX )
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -63,9 +61,6 @@ include_directories( ${CMAKE_SOURCE_DIR}/external/fonts )
 set(ALL_LIBS ${OPENGL_LIBRARY} glfw GLEW_1130)
 
 add_definitions(
-	-DTW_STATIC
-	-DTW_NO_LIB_PRAGMA
-	-DTW_NO_DIRECT3D
 	-DGLEW_STATIC
 	-D_CRT_SECURE_NO_WARNINGS
 )
@@ -80,17 +75,8 @@ foreach(file ${Model_3D_FILES})
     file(COPY ${file}  DESTINATION Model/)
     message(STATUS "copy ${file} into build/Model") 
 endforeach()
-#file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Model/Suzanne.obj DESTINATION Model/)
-#file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Model/Suzanne.mtl DESTINATION Model/)
 
-file(GLOB SHADER_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Standard.vert.glsl
-	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Standard.frag.glsl
-	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Tessellation.vs.glsl
-	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Tessellation.tc.glsl
-	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Tessellation.te.glsl
-	${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/Tessellation.fs.glsl
-)
+file(GLOB SHADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/PN_Triangles/shaders/*.glsl)
 file(GLOB SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/common/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/common/*.hpp
