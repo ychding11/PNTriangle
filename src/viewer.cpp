@@ -47,13 +47,9 @@ void Viewer::Run()
 #include <chrono>
 #include <thread>
 
-auto now()
-{
-    return std::chrono::steady_clock::now();
-}
-
 auto awake_time()
 {
+    auto now = []() { return std::chrono::steady_clock::now(); };
     using std::chrono::operator""ms;
     return now() + 300ms;
 }
