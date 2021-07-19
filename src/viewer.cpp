@@ -44,16 +44,6 @@ void Viewer::Run()
     GUI::CleanUp();
 }
 
-#include <chrono>
-#include <thread>
-
-auto awake_time()
-{
-    auto now = []() { return std::chrono::steady_clock::now(); };
-    using std::chrono::operator""ms;
-    return now() + 300ms;
-}
-
 void Viewer::animateTessellation()
 {
     if (!m_setting.enableTess || m_frame_num % 5 != 0) return;
@@ -401,7 +391,7 @@ static void drawOverlay(const Viewer &viewer)
 
 ///////////////////////////////////////////////////////////////////////////////////////
 /////
-///// 
+/////  Random
 /////
 ///////////////////////////////////////////////////////////////////////////////////////
 #include <random>
@@ -413,3 +403,22 @@ static float myRandom()
 {
     return distribution(generator);
 }
+
+///////////////////////////////////////////////////////////////////////////////////////
+/////
+///// Timing 
+/////
+///////////////////////////////////////////////////////////////////////////////////////
+#include <chrono>
+#include <thread>
+
+auto awake_time()
+{
+    auto now = []() { return std::chrono::steady_clock::now(); };
+    using std::chrono::operator""ms;
+    return now() + 300ms;
+}
+
+//< implement a function to sleep current thread a while
+//
+
