@@ -141,6 +141,7 @@ void main()
 
     tedata.position = pos;
 
+#if 1
     vec3 n200 = n1;
     vec3 n020 = n2;
     vec3 n002 = n3;
@@ -155,10 +156,11 @@ void main()
 
     tedata.normal = n200 * w2 + n020 * u2 + n002 * v2
 		    + n110 * w * u + n011 * u * v + n101 * w * v;
-    //tedata.normal = n1 * w + n2 * u + n3 * v;
+#else
+    tedata.normal = n1 * w + n2 * u + n3 * v;
+#endif
 
     tedata.color = vec4(c1 * w + c2 * u + c3 * v, 1.0);
-    //tedata.color = vec4(c1, 1.0);
 
     gl_Position = P * V * M * vec4(pos, 1.0);
 
