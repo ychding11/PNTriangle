@@ -7,7 +7,8 @@ struct V2T
     vec4 color;
 };
 
-struct TC2E {
+struct TC2E
+{
     vec3 position;
     vec3 normal;
     vec4 color;
@@ -20,7 +21,7 @@ uniform float tessellationLevelOuter;
 
 in  V2T vdata[];
 
-//< utput variables are passed directly to the Tessellation Evaluation Shader, without any form of interpolation.
+//< output variables are passed directly to the TES, without any form of interpolation.
 //< array size is implicit
 out TC2E tcdata[];
 
@@ -37,7 +38,7 @@ out TC2E tcdata[];
 //< gl_PrimitiveID     : the index of the current patch within this rendering command.
 //< gl_InvocationID    : the index of the TCS invocation within this patch. A TCS invocation writes to per-vertex output variables by using this to index them.
 //<
-//< uilt-in variables from output of vertex shader
+//< built-in variables from output of vertex shader
 /*
     in gl_PerVertex
     {
@@ -51,8 +52,8 @@ void main()
 {
     #define ID gl_InvocationID //< once per vertex(CP)
     tcdata[ID].position = vdata[ID].position;
-    tcdata[ID].normal = vdata[ID].normal;
-    tcdata[ID].color = vdata[ID].color;
+    tcdata[ID].normal   = vdata[ID].normal;
+    tcdata[ID].color    = vdata[ID].color;
 
     if(ID == 0)
     {

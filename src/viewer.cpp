@@ -293,7 +293,6 @@ void Viewer::SaveImageSequence(const std::string dir)
 ///////////////////////////////////////////////////////////////////////////////////////
 
 #include "IconsFontAwesome4.h"
-//static void drawUI(RenderSetting &setting, DisplayOption & displayOption)
 static void drawUI(Viewer &viewer)
 {
     RenderSetting &setting = viewer.m_setting;
