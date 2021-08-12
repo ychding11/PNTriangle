@@ -77,6 +77,7 @@ foreach(file ${Model_3D_FILES})
 endforeach()
 
 file(GLOB SHADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/shaders/*.glsl)
+file( COPY ${SHADER_FILES} DESTINATION shaders/ )
 
 file(GLOB SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/common/*.h
