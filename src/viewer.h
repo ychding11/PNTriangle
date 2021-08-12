@@ -37,6 +37,7 @@ private:
     std::string m_window_title{ "PN Triangle" };
     bool m_capture_colorbuffer{false};
     bool m_save_image_sequence{false};
+    bool m_enable_tess_anim{false};
     int  m_sequence_count{ 0 };
     int  m_animation_mode{ 0 };
     int  m_frame_num{ 0 };

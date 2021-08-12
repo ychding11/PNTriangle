@@ -46,7 +46,7 @@ void Viewer::Run()
 
 void Viewer::animateTessellation()
 {
-    if (!m_setting.enableTess || m_frame_num % 5 != 0) return;
+    if (!m_enable_tess_anim || !m_setting.enableTess || m_frame_num % 5 != 0) return;
 
     const int maxInnerLevel = 3;
     const int maxOuterLevel = 64;
@@ -349,6 +349,7 @@ static void drawUI(Viewer &viewer)
         {
             bool changed = false;
             ImGui::Checkbox("Enable Tessellation",  &setting.enableTess);
+            ImGui::Checkbox("Enable Tessellation Animation",  &viewer.m_enable_tess_anim);
             ImGui::Separator();
             changed |= ImGui::SliderFloat4("outer Tess Level", &setting.outerTessLevel.x, 1, 64);
             changed |= ImGui::SliderFloat4("Inner Tess Level", &setting.innerTessLevel.x, 1, 64);
