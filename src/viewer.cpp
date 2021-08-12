@@ -46,10 +46,10 @@ void Viewer::Run()
 
 void Viewer::animateTessellation()
 {
-    if (!m_enable_tess_anim || !m_setting.enableTess || m_frame_num % 5 != 0) return;
+    if (!m_enable_tess_anim || !m_setting.enableTess || m_frame_num % 10 != 0) return;
 
-    const int maxInnerLevel = 3;
-    const int maxOuterLevel = 64;
+    const int maxInnerLevel = 4;
+    const int maxOuterLevel = 6;
 
     m_setting.outerTessLevel.x++;
     m_setting.outerTessLevel.y++;
