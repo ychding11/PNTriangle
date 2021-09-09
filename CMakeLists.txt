@@ -53,6 +53,7 @@ include_directories(
 	external/glew-1.13.0/include/
 	external/glfw-3.1.2/include/
 	external/glm-0.9.7.1/
+	${CMAKE_CURRENT_SOURCE_DIR}/external/spdlog/include
 )
 
 include_directories( ${CMAKE_SOURCE_DIR}/external/imgui )
@@ -91,7 +92,6 @@ file(GLOB EXT_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui/*.cpp
 )
-
 
 group_files("${SOURCE_FILES}")
 group_files("${EXT_FILES}")
