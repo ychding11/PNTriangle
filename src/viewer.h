@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 
 #include "config.h"
+#include "Log.h"
 
 class MeshBin;
 class Camera;
@@ -109,23 +110,3 @@ private:
     void animateCamera(Camera &m_camera);
     void animateTessellation();
 };
-
-//struct RenderSetting
-//{
-//    // the input of current setting
-//    int  onlyUseForIndentification;
-//    int  width;
-//    int  height;
-//    int  bvhBuilderType;
-//    bool enableTess;
-//};
-//
-//struct DisplayOption
-//{
-//    bool wireframe;
-//
-//    DisplayOption()
-//        : wireframe(false)
-//    { }
-//};
-//
