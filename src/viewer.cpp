@@ -158,8 +158,11 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
                 glUniformMatrix4fv(tessProjectionMatrixID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
                 glUniformMatrix4fv(tessModelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
 
-                glUniform1f(tessellationLevelInnerID, m_setting.innerTessLevel.x); //< fix shader code latter
-                glUniform1f(tessellationLevelOuterID, m_setting.outerTessLevel.x);
+                //glUniform1f(tessellationLevelInnerID, m_setting.innerTessLevel.x); //< fix shader code latter
+                //glUniform1f(tessellationLevelOuterID, m_setting.outerTessLevel.x);
+
+                glUniform2f(tessellationLevelInnerID, m_setting.innerTessLevel.x, m_setting.innerTessLevel.y); //< fix shader code latter
+                glUniform3f(tessellationLevelOuterID, m_setting.outerTessLevel.x, m_setting.innerTessLevel.y, m_setting.innerTessLevel.z);
 
                 glPatchParameteri(GL_PATCH_VERTICES, 3);
                 glBindVertexArray( m_meshBin.vao(i) );
