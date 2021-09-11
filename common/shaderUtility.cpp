@@ -1,11 +1,11 @@
 
-#include "shaderUtility.h"
-
-
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <vector>
+
+#include "shaderUtility.h"
+#include "Log.h"
 
 GLuint loadStandardShaders(const char *vert_file_path, const char *frag_file_path)
 {
@@ -25,8 +25,8 @@ GLuint loadStandardShaders(const char *vert_file_path, const char *frag_file_pat
     }
     else
     {
-        throw std::runtime_error( std::string("Couldn't open ") + vert_file_path );
-        return 0;
+        Err(std::string("Couldn't open ") + vert_file_path );
+        exit(1);
     }
 
     std::string fragmentShaderCode;
@@ -42,14 +42,14 @@ GLuint loadStandardShaders(const char *vert_file_path, const char *frag_file_pat
     }
     else
     {
-        throw std::runtime_error( std::string("Couldn't open ") + vert_file_path );
-        return 0;
+        Err(std::string("Couldn't open ") + frag_file_path);
+        exit(1);
     }
 
     GLint result = GL_FALSE;
     int infoLogLength;
 
-    std::cout << "Compiling shader " <<  vert_file_path << std::endl;
+    Log(std::string("Compiling shader ") + vert_file_path);
     char const *vertexSource = vertexShaderCode.c_str();
     glShaderSource(vertexShaderID, 1, &vertexSource, NULL);
     glCompileShader(vertexShaderID);
@@ -63,7 +63,7 @@ GLuint loadStandardShaders(const char *vert_file_path, const char *frag_file_pat
         std::cout << &vertexShaderErrorMessage[0] << std::endl;
     }
 
-    std::cout << "Compiling shader " <<  frag_file_path << std::endl;
+    Log(std::string("Compiling shader ") + frag_file_path);
     char const *fragmentSource = fragmentShaderCode.c_str();
     glShaderSource(fragmentShaderID, 1, &fragmentSource, NULL);
     glCompileShader(fragmentShaderID);
@@ -77,7 +77,7 @@ GLuint loadStandardShaders(const char *vert_file_path, const char *frag_file_pat
         std::cout << &fragmentShaderErrorMessage[0] << std::endl;
     }
 
-    std::cout << "Linking shader" << std::endl;
+    Log(std::string("Linking shader "));
     GLuint programID = glCreateProgram();
     glAttachShader(programID, vertexShaderID);
     glAttachShader(programID, fragmentShaderID);
@@ -121,8 +121,8 @@ GLuint loadTessShaders(const char *tess_vert_file_path, const char *tess_ctrl_fi
 	}
     else
     {
-        throw std::runtime_error( std::string("Couldn't open ") + tess_vert_file_path);
-		return 0;
+        Err(std::string("Couldn't open ") + tess_vert_file_path);
+        exit(1);
 	}
 
 	std::string tessCtrlShaderCode;
@@ -138,8 +138,8 @@ GLuint loadTessShaders(const char *tess_vert_file_path, const char *tess_ctrl_fi
 	}
     else
     {
-        throw std::runtime_error( std::string("Couldn't open ") + tess_ctrl_file_path);
-		return 0;
+        Err(std::string("Couldn't open ") + tess_ctrl_file_path);
+        exit(1);
 	}
 
 	std::string tessEvalShaderCode;
@@ -155,8 +155,8 @@ GLuint loadTessShaders(const char *tess_vert_file_path, const char *tess_ctrl_fi
 	}
     else
     {
-        throw std::runtime_error( std::string("Couldn't open ") + tess_eval_file_path);
-		return 0;
+        Err(std::string("Couldn't open ") + tess_eval_file_path);
+        exit(1);
 	}
 
 	std::string tessFragShaderCode;
@@ -172,8 +172,8 @@ GLuint loadTessShaders(const char *tess_vert_file_path, const char *tess_ctrl_fi
 	}
     else
     {
-        throw std::runtime_error( std::string("Couldn't open ") + tess_frag_file_path);
-		return 0;
+        Err(std::string("Couldn't open ") + tess_frag_file_path);
+        exit(1);
 	}
 
 	GLint result = false;
