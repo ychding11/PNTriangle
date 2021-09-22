@@ -179,7 +179,7 @@ GLuint loadTessShaders(const char *tess_vert_file_path, const char *tess_ctrl_fi
 	GLint result = false;
 	int infoLogLength;
 
-	printf("Compiling shader: %s\n", tess_vert_file_path);
+	Log("Compiling shader: {}", tess_vert_file_path);
 	char const* tessVertSourcePointer = tessVertexShaderCode.c_str();
 	glShaderSource(tessVertShaderID, 1, &tessVertSourcePointer, NULL);
 	glCompileShader(tessVertShaderID);
@@ -189,10 +189,10 @@ GLuint loadTessShaders(const char *tess_vert_file_path, const char *tess_ctrl_fi
     {
 		std::vector<char> tessVertShaderErrMsg(infoLogLength + 1);
 		glGetShaderInfoLog(tessVertShaderID, infoLogLength, NULL, &tessVertShaderErrMsg[0]);
-		printf("%s\n", &tessVertShaderErrMsg[0]);
+		Err("{}\n", &tessVertShaderErrMsg[0]);
 	}
 
-	printf("Compiling shader: %s\n", tess_ctrl_file_path);
+	Log("Compiling shader: {}\n", tess_ctrl_file_path);
 	char const* tessCtrlSourcePointer = tessCtrlShaderCode.c_str();
 	glShaderSource(tessCtrlShaderID, 1, &tessCtrlSourcePointer, NULL);
 	glCompileShader(tessCtrlShaderID);
@@ -202,10 +202,10 @@ GLuint loadTessShaders(const char *tess_vert_file_path, const char *tess_ctrl_fi
     {
 		std::vector<char> tessCtrlShaderErrMsg(infoLogLength + 1);
 		glGetShaderInfoLog(tessCtrlShaderID, infoLogLength, NULL, &tessCtrlShaderErrMsg[0]);
-		printf("%s\n", &tessCtrlShaderErrMsg[0]);
+		Err("{}\n", &tessCtrlShaderErrMsg[0]);
 	}
 
-	printf("Compiling shader: %s\n", tess_eval_file_path);
+	Log("Compiling shader: {}", tess_eval_file_path);
 	char const* tessEvalSourcePointer = tessEvalShaderCode.c_str();
 	glShaderSource(tessEvalShaderID, 1, &tessEvalSourcePointer, NULL);
 	glCompileShader(tessEvalShaderID);
