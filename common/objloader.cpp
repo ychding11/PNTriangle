@@ -106,19 +106,20 @@ static AABB load_obj(const std::string &filename, const std::string &base_dir, s
         throw std::runtime_error("Failed to load model : " + filename);
         return aabb;
     }
-
-    if (materials.size() == 0)
-    {
-        throw std::runtime_error("No material found in model : " + filename);
-        return aabb;
-    }
-
     //< There is a bug here: err may contain multiple '\n' terminated string
     //< Yaochuang's Plan: Research how to output multiple line log by spdlog
     if (!err.empty())
         printf("%s", err.c_str());
 
-    meshes.resize(materials.size());
+
+    if (materials.size() == 0)
+    {
+        //throw std::runtime_error("No material found in model : " + filename);
+        //return aabb;
+        meshes.resize(1);
+    }
+    else
+        meshes.resize(materials.size());
 
     //< is this macro: FLT_MAX OS dependent ?
     //< should always prefer os independent ones
@@ -133,7 +134,10 @@ static AABB load_obj(const std::string &filename, const std::string &base_dir, s
         //< for triangle num_face_vertices = 3
         for (const auto &num_face_vertex : shape.mesh.num_face_vertices)
         {
-            int mat = shape.mesh.material_ids[face];
+            int mat = 0;
+            if (materials.size() > 0)
+                mat = shape.mesh.material_ids[face];
+
             // Loop over triangles in the face.
             for (size_t v = 0; v < num_face_vertex; ++v)
             {

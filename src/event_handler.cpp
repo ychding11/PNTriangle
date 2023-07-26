@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <string>
+#include <imgui.h>
 
 #include "camera.h" 
 #include "event_handler.h" 
@@ -163,6 +164,11 @@ static void mouseDragRight(GLFWwindow *window, const glm::ivec2  &where, const g
 /*! callback for _moving_ the mouse to a new position */
 void glfwindow_mouseMotion_cb(GLFWwindow *window, double x, double y)
 {
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.WantCaptureMouse) //< Ensure UI is served first
+    {
+        return;
+    }
     glm::ivec2 newMousePosition{ (int)x, (int)y };
     if (lastMousePosition != glm::ivec2(-1))
     {

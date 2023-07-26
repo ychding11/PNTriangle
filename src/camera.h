@@ -1,3 +1,6 @@
+//=================================================================================//
+// Copyright (c) 2021 Yaochuang Ding 
+//=================================================================================//
 
 #pragma once
 
@@ -20,7 +23,7 @@ class Camera
 public:
 
     Camera() = default;
-    Camera(glm::vec3 at, float dist, glm::vec2 azel = glm::vec2(0.f));
+    Camera(glm::vec3 at, float dist, glm::vec2 azel = glm::vec2(90.f, 0.f));
 
     void startNewRotation();
 
@@ -40,7 +43,7 @@ protected:
 
     void update();
 
-    OrbitAxis m_axis{OrbitAxis::POS_Y};
+    OrbitAxis m_axis{OrbitAxis::NEG_Y};
   
     glm::vec2 m_azel{0.f}; //< NOTE: unit is in degrees
 

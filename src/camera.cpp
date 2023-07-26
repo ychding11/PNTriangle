@@ -1,3 +1,6 @@
+//=================================================================================//
+// Copyright (c) 2021 Yaochuang Ding 
+//=================================================================================//
 
 #include "camera.h"
 
@@ -10,8 +13,9 @@ static inline float degreesToRadians(float degrees)
 
 static glm::vec3 azelToDirection(float az, float el, OrbitAxis axis)
 {
-    const float x = std::sin(az) * std::cos(el);
-    const float y = std::cos(az) * std::cos(el);
+    //< x, y, z order(z is up) is different with camera (y is up)
+    const float x = std::cos(az) * std::cos(el);
+    const float y = std::sin(az) * std::cos(el);
     const float z = std::sin(el);
 
     switch (axis)
@@ -66,7 +70,7 @@ static float maintainUnitCircle(float inDegrees)
 Camera::Camera(glm::vec3 at, float dist, glm::vec2 azel)
     : m_at(at), m_distance(dist), m_azel(azel)
 {
-  m_speed = m_distance;
+  m_speed = m_distance; // longer, faster
   update();
 }
 
@@ -89,6 +93,7 @@ void Camera::rotate(glm::vec2 delta)
 void Camera::zoom(float delta)
 {
     m_distance += m_speed * delta;
+    m_speed = m_distance;
     update();
 }
 
@@ -139,7 +144,7 @@ void Camera::update()
 
     const OrbitAxis axis = m_distance < 0.f ? negateAxis(m_axis) : m_axis;
 
-    const float azimuth = degreesToRadians(m_azel.x);
+    const float azimuth   = degreesToRadians(m_azel.x);
     const float elevation = degreesToRadians(m_azel.y);
 
     const glm::vec3 toLocalOrbit = azelToDirection(azimuth, elevation, axis);
@@ -147,7 +152,7 @@ void Camera::update()
     const glm::vec3 localOrbitPos = toLocalOrbit * distance;
     const glm::vec3 fromLocalOrbit = -localOrbitPos;
 
-    const glm::vec3 alteredElevation = azelToDirection(azimuth, elevation + 3, m_axis);
+    const glm::vec3 alteredElevation = azelToDirection(azimuth, elevation - 3, m_axis);
 
     const glm::vec3 cameraRight = glm::cross(toLocalOrbit, alteredElevation);
     const glm::vec3 cameraUp    = glm::cross(cameraRight, fromLocalOrbit);

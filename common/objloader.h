@@ -1,12 +1,8 @@
-#ifndef OBJLOADER_H
-#define OBJLOADER_H
+#pragma once
 
 #include <glm/glm.hpp>
-
 #include <GL/glew.h>
-
 #include <vector>
-
 #include "aabb.h" 
 
 bool loadQuadOBJ(const char * path, std::vector<glm::vec3> &out_vertices, std::vector<glm::vec3> &out_normals);
@@ -19,9 +15,7 @@ struct SimpleVertex
 struct Mesh
 {
     std::vector<SimpleVertex> vertices;
-
 };
-
 
 class MeshBin
 {
@@ -81,6 +75,3 @@ private:
 
     void create_vaos();
 };
-
-
-#endif

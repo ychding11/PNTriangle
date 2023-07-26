@@ -1,6 +1,6 @@
 ## Tessellation by OpenGL
 
-Implement PN Triangle tessellation by OpenGL .
+Implement PN Triangle tessellation by OpenGL.
 
 ## Features 
 - [x] Implement PN Triangle Tessellation
@@ -21,7 +21,7 @@ Implement PN Triangle tessellation by OpenGL .
 - Key 'w': toggle wireframe 
 
 ## Screen 
-- ![screen](./images/wireframe.png)
+  ![screen](./images/wireframe.png)
 
 ## Credits
 - [glew]()

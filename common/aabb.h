@@ -130,5 +130,3 @@ inline void AABB::Extend(const glm::vec3& p)
         mMax = glm::max(p, mMax);
     }
 }
-
-

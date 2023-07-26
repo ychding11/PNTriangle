@@ -112,9 +112,9 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
 {
     glm::mat4 gViewMatrix = m_camera.viewMatrix();
     glm::mat4 gProjectionMatrix = m_camera.projMatrix();
+    glm::mat4 modelMatrix = glm::mat4(1.0);
     glm::vec3 lightPos = glm::vec3(20.0f, 20.0f, 20.0f);
     glm::vec3 mesh_color = glm::vec3(0.9f, 0.5f, 3.0f);
-    glm::mat4x4 modelMatrix = glm::mat4(1.0);
 
 #if defined(MSAA_ENABLE)
     glEnable(GL_MULTISAMPLE);
@@ -122,6 +122,8 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
     glEnable(GL_CULL_FACE);
 
     if(m_option.wireframe)
@@ -158,11 +160,11 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
                 glUniformMatrix4fv(tessProjectionMatrixID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
                 glUniformMatrix4fv(tessModelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
 
-                //glUniform1f(tessellationLevelInnerID, m_setting.innerTessLevel.x); //< fix shader code latter
-                //glUniform1f(tessellationLevelOuterID, m_setting.outerTessLevel.x);
+                glUniform1f(tessellationLevelInnerID, m_setting.innerTessLevel.x); //< fix shader code latter
+                glUniform1f(tessellationLevelOuterID, m_setting.outerTessLevel.x);
 
-                glUniform2f(tessellationLevelInnerID, m_setting.innerTessLevel.x, m_setting.innerTessLevel.y); //< fix shader code latter
-                glUniform3f(tessellationLevelOuterID, m_setting.outerTessLevel.x, m_setting.innerTessLevel.y, m_setting.innerTessLevel.z);
+                //glUniform2f(tessellationLevelInnerID, m_setting.innerTessLevel.x, m_setting.innerTessLevel.y); //< fix shader code latter
+                //glUniform3f(tessellationLevelOuterID, m_setting.outerTessLevel.x, m_setting.innerTessLevel.y, m_setting.innerTessLevel.z);
 
                 glPatchParameteri(GL_PATCH_VERTICES, 3);
                 glBindVertexArray( m_meshBin.vao(i) );
@@ -194,10 +196,6 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
 }
 void Viewer::initOpenGLShaders()
 {
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-    glEnable(GL_CULL_FACE);
-
     programID = loadStandardShaders("shaders/Standard.vert.glsl", "shaders/Standard.frag.glsl");
     tessProgramID = loadTessShaders("shaders/Tessellation.vs.glsl", "shaders/Tessellation.tc.glsl", "shaders/Tessellation.te.glsl", "shaders/Tessellation.fs.glsl");
 
@@ -354,8 +352,8 @@ static void drawUI(Viewer &viewer)
             ImGui::Checkbox("Enable Tessellation",  &setting.enableTess);
             ImGui::Checkbox("Enable Tessellation Animation",  &viewer.m_enable_tess_anim);
             ImGui::Separator();
-            changed |= ImGui::SliderFloat4("outer Tess Level", &setting.outerTessLevel.x, 1, 64);
-            changed |= ImGui::SliderFloat4("Inner Tess Level", &setting.innerTessLevel.x, 1, 64);
+            changed |= ImGui::SliderFloat3("outer Tess Level", &setting.outerTessLevel.x, 1, 64);
+            changed |= ImGui::SliderFloat("Inner Tess Level", &setting.innerTessLevel.x, 1, 64);
             if (changed)
             {
                 printf("Tessellation level changed.\n");
@@ -384,7 +382,7 @@ static void drawOverlay(const Viewer &viewer)
         ImGui::Text("Toggle UI display with key [ x | X ]");
         ImGui::Text("Renderer : %s", glGetString(GL_RENDERER));
         ImGui::Text("OpenGL version : %s", glGetString(GL_VERSION));
-        ImGui::Text("outer level : %.2f, %.2f, %.2f, %.2f", setting.outerTessLevel.x, setting.outerTessLevel.y, setting.outerTessLevel.z, setting.outerTessLevel.w);
+        ImGui::Text("outer level : %.2f, %.2f, %.2f", setting.outerTessLevel.x, setting.outerTessLevel.y, setting.outerTessLevel.z);
         ImGui::Text("inner level : %.2f, %.2f, %.2f", setting.innerTessLevel.x, setting.innerTessLevel.y, setting.innerTessLevel.z);
         ImGui::Text("fps : %.2f fps", ImGui::GetIO().Framerate);
         ImGui::End();

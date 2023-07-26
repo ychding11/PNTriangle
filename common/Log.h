@@ -1,5 +1,4 @@
-#ifndef Log_MY_H_
-#define Log_MY_H_
+#pragma once
 
 //
 // https://github.com/gabime/spdlog
@@ -19,4 +18,3 @@ namespace Logging
 #define Warn(...) Logging::Logger()->warn(__VA_ARGS__); 
 #define Err(...)  Logging::Logger()->error(__VA_ARGS__); 
 
-#endif

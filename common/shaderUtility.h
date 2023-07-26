@@ -1,11 +1,11 @@
+//=================================================================================//
+// Copyright (c) 2021 Yaochuang Ding 
+//=================================================================================//
 
 #pragma once
 
 #include <GL/glew.h>
 
-//<
-//< It provides 
-//<
 
 GLuint loadStandardShaders(const char *vert_file_path, const char *frag_file_path);
 
