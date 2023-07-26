@@ -46,10 +46,10 @@ void Viewer::Run()
 
 void Viewer::animateTessellation()
 {
-    if (!m_setting.enableTess || m_frame_num % 5 != 0) return;
+    if (!m_enable_tess_anim || !m_setting.enableTess || m_frame_num % 10 != 0) return;
 
-    const int maxInnerLevel = 3;
-    const int maxOuterLevel = 64;
+    const int maxInnerLevel = 4;
+    const int maxOuterLevel = 6;
 
     m_setting.outerTessLevel.x++;
     m_setting.outerTessLevel.y++;
@@ -122,6 +122,8 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
     glEnable(GL_CULL_FACE);
 
     if(m_option.wireframe)
@@ -161,6 +163,9 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
                 glUniform1f(tessellationLevelInnerID, m_setting.innerTessLevel.x); //< fix shader code latter
                 glUniform1f(tessellationLevelOuterID, m_setting.outerTessLevel.x);
 
+                //glUniform2f(tessellationLevelInnerID, m_setting.innerTessLevel.x, m_setting.innerTessLevel.y); //< fix shader code latter
+                //glUniform3f(tessellationLevelOuterID, m_setting.outerTessLevel.x, m_setting.innerTessLevel.y, m_setting.innerTessLevel.z);
+
                 glPatchParameteri(GL_PATCH_VERTICES, 3);
                 glBindVertexArray( m_meshBin.vao(i) );
                 glDrawArrays( GL_PATCHES, 0, m_meshBin.vertex_num(i) );
@@ -191,10 +196,6 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
 }
 void Viewer::initOpenGLShaders()
 {
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-    glEnable(GL_CULL_FACE);
-
     programID = loadStandardShaders("shaders/Standard.vert.glsl", "shaders/Standard.frag.glsl");
     tessProgramID = loadTessShaders("shaders/Tessellation.vs.glsl", "shaders/Tessellation.tc.glsl", "shaders/Tessellation.te.glsl", "shaders/Tessellation.fs.glsl");
 
@@ -293,7 +294,6 @@ void Viewer::SaveImageSequence(const std::string dir)
 ///////////////////////////////////////////////////////////////////////////////////////
 
 #include "IconsFontAwesome4.h"
-//static void drawUI(RenderSetting &setting, DisplayOption & displayOption)
 static void drawUI(Viewer &viewer)
 {
     RenderSetting &setting = viewer.m_setting;
@@ -350,6 +350,7 @@ static void drawUI(Viewer &viewer)
         {
             bool changed = false;
             ImGui::Checkbox("Enable Tessellation",  &setting.enableTess);
+            ImGui::Checkbox("Enable Tessellation Animation",  &viewer.m_enable_tess_anim);
             ImGui::Separator();
             changed |= ImGui::SliderFloat4("outer Tess Level", &setting.outerTessLevel.x, 1, 64);
             changed |= ImGui::SliderFloat4("Inner Tess Level", &setting.innerTessLevel.x, 1, 64);

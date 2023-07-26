@@ -53,25 +53,25 @@ uniform vec3 lightPosition_worldspace;
     - reference : https://www.khronos.org/opengl/wiki/Tessellation_Evaluation_Shader
     - The inputs for the TES are : per-vertex & per-patch 
     - built-in variables
-      - in vec3 gl_TessCoord : Barycentric coordinates of generated primitive
+      - in vec3 gl_TessCoord      : Barycentric coordinates of generated primitive
       - in int gl_PatchVerticesIn : the vertex count for the patch being processed
-      - in int gl_PrimitiveID : the index of the current patch in the series of patches being processed for this draw call
+      - in int gl_PrimitiveID     : the index of the current patch in the series of patches being processed for this draw call
 
       - buit-in input 
-      in gl_PerVertex
-        {
-          vec4 gl_Position;
-          float gl_PointSize;
-          float gl_ClipDistance[];
-        } gl_in[gl_MaxPatchVertices];
+          in gl_PerVertex
+            {
+              vec4 gl_Position;
+              float gl_PointSize;
+              float gl_ClipDistance[];
+            } gl_in[gl_MaxPatchVertices];
 
       - buit-in output
-      out gl_PerVertex
-      {
-      vec4 gl_Position;   //< the clip-space output position of the current vertex.
-      float gl_PointSize; //< the pixel width/height of the point being rasterized. valid for point primitives
-      float gl_ClipDistance[]; //< allows shader to set the distance from the vertex to each User-Defined Clip Plane
-      };
+          out gl_PerVertex
+          {
+          vec4 gl_Position;   //< the clip-space output position of the current vertex.
+          float gl_PointSize; //< the pixel width/height of the point being rasterized. valid for point primitives
+          float gl_ClipDistance[]; //< allows shader to set the distance from the vertex to each User-Defined Clip Plane
+          };
 */
 void main()
 {
@@ -141,6 +141,7 @@ void main()
 
     tedata.position = pos;
 
+#if 1
     vec3 n200 = n1;
     vec3 n020 = n2;
     vec3 n002 = n3;
@@ -155,10 +156,11 @@ void main()
 
     tedata.normal = n200 * w2 + n020 * u2 + n002 * v2
 		    + n110 * w * u + n011 * u * v + n101 * w * v;
-    //tedata.normal = n1 * w + n2 * u + n3 * v;
+#else
+    tedata.normal = n1 * w + n2 * u + n3 * v;
+#endif
 
     tedata.color = vec4(c1 * w + c2 * u + c3 * v, 1.0);
-    //tedata.color = vec4(c1, 1.0);
 
     gl_Position = P * V * M * vec4(pos, 1.0);
 

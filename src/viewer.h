@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 
 #include "config.h"
+#include "Log.h"
 
 class MeshBin;
 class Camera;
@@ -37,6 +38,7 @@ private:
     std::string m_window_title{ "PN Triangle" };
     bool m_capture_colorbuffer{false};
     bool m_save_image_sequence{false};
+    bool m_enable_tess_anim{false};
     int  m_sequence_count{ 0 };
     int  m_animation_mode{ 0 };
     int  m_frame_num{ 0 };
@@ -108,23 +110,3 @@ private:
     void animateCamera(Camera &m_camera);
     void animateTessellation();
 };
-
-//struct RenderSetting
-//{
-//    // the input of current setting
-//    int  onlyUseForIndentification;
-//    int  width;
-//    int  height;
-//    int  bvhBuilderType;
-//    bool enableTess;
-//};
-//
-//struct DisplayOption
-//{
-//    bool wireframe;
-//
-//    DisplayOption()
-//        : wireframe(false)
-//    { }
-//};
-//

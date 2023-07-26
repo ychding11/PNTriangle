@@ -3,6 +3,9 @@ cmake_minimum_required (VERSION 3.10 FATAL_ERROR)
 
 project ( PNTriangle-OGL VERSION 1.0.0 LANGUAGES C CXX )
 
+set(APP_BINARY_DIR ${CMAKE_SOURCE_DIR}/bin CACHE STRING "Application Binary Dir" FORCE) #force update even if it in cache
+message(STATUS "APP_BINARY_DIR='${APP_BINARY_DIR}' ")
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 message( STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID} (${CMAKE_CXX_COMPILER_VERSION})" )
@@ -53,6 +56,7 @@ include_directories(
 	external/glew-1.13.0/include/
 	external/glfw-3.1.2/include/
 	external/glm-0.9.7.1/
+	${CMAKE_CURRENT_SOURCE_DIR}/external/spdlog/include
 )
 
 include_directories( ${CMAKE_SOURCE_DIR}/external/imgui )
@@ -72,11 +76,12 @@ file(GLOB Model_3D_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/Model/*.mtl
 )
 foreach(file ${Model_3D_FILES})
-    file(COPY ${file}  DESTINATION Model/)
-    message(STATUS "copy ${file} into build/Model") 
+    file(COPY ${file}  DESTINATION ${APP_BINARY_DIR}/Model/)
+    message(STATUS "copy ${file} into ${APP_BINARY_DIR}/Model") 
 endforeach()
 
 file(GLOB SHADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/shaders/*.glsl)
+file( COPY ${SHADER_FILES} DESTINATION ${APP_BINARY_DIR}/shaders/ )
 
 file(GLOB SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/common/*.h
@@ -91,7 +96,6 @@ file(GLOB EXT_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui/*.cpp
 )
 
-
 group_files("${SOURCE_FILES}")
 group_files("${EXT_FILES}")
 group_files("${SHADER_FILES}")
@@ -99,10 +103,17 @@ group_files("${SHADER_FILES}")
 set(TARGET_NAME "PNTriangle")
 add_executable( ${TARGET_NAME} ${SOURCE_FILES} ${SHADER_FILES} ${EXT_FILES} )
 target_link_libraries( ${TARGET_NAME} ${ALL_LIBS} )
+set_property(TARGET ${TARGET_NAME} PROPERTY CXX_STANDARD 17)
+set_target_properties(${TARGET_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${APP_BINARY_DIR})
+set_target_properties(${TARGET_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${APP_BINARY_DIR})
+set_target_properties(${TARGET_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${APP_BINARY_DIR})
+set_target_properties(${TARGET_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${APP_BINARY_DIR})
+set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX "_d")
+set_target_properties(${TARGET_NAME} PROPERTIES RELWITHDEBINFO_POSTFIX "RelWithDebInfo")
 
 foreach(shader ${SHADER_FILES})
     set_source_files_properties( ${shader} PROPERTIES HEADER_FILE_ONLY TRUE )
     # if no build happens, no copy
-    add_custom_command( TARGET ${TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${shader} shaders/ )
+    add_custom_command( TARGET ${TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${shader} ${APP_BINARY_DIR}/shaders/ )
     message(STATUS "copy ${shader} into build/shaders") 
 endforeach()

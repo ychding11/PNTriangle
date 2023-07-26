@@ -6,13 +6,6 @@
 #include "viewer.h"
 
 
-int window_width = 1280, window_height = 720;
-
-float tessellationLevel = 1.0f;
-bool shouldTessellateModel = false;
-
-bool shouldDisplayWireframeMode = false;
-
 int main(int argc, char **argv)
 {
     std::string modelPath;
@@ -32,7 +25,7 @@ int main(int argc, char **argv)
     }
     else
     {
-        modelPath = "Model/Suzanne.obj";
+        modelPath = "Model/bunny.obj";
     }
 
     Viewer viewer{"Viewer", 1280, 720};
