@@ -5,6 +5,18 @@
 
 #include "viewer.h"
 
+//< When the Nvidia and AMD drivers see their respective symbol exported and set to nonzero in a program, 
+//< they will take precedence over the integrated GPU when creating the OpenGL context.
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+    __declspec(dllexport) DWORD NvOptimusEnablement = 1;
+    __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
+
+#ifdef __cplusplus
+}
+#endif
 
 int main(int argc, char **argv)
 {

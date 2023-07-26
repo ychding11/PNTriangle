@@ -352,8 +352,8 @@ static void drawUI(Viewer &viewer)
             ImGui::Checkbox("Enable Tessellation",  &setting.enableTess);
             ImGui::Checkbox("Enable Tessellation Animation",  &viewer.m_enable_tess_anim);
             ImGui::Separator();
-            changed |= ImGui::SliderFloat4("outer Tess Level", &setting.outerTessLevel.x, 1, 64);
-            changed |= ImGui::SliderFloat4("Inner Tess Level", &setting.innerTessLevel.x, 1, 64);
+            changed |= ImGui::SliderFloat3("outer Tess Level", &setting.outerTessLevel.x, 1, 64);
+            changed |= ImGui::SliderFloat("Inner Tess Level", &setting.innerTessLevel.x, 1, 64);
             if (changed)
             {
                 printf("Tessellation level changed.\n");
