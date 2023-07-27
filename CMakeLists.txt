@@ -114,6 +114,6 @@ set_target_properties(${TARGET_NAME} PROPERTIES RELWITHDEBINFO_POSTFIX "RelWithD
 foreach(shader ${SHADER_FILES})
     set_source_files_properties( ${shader} PROPERTIES HEADER_FILE_ONLY TRUE )
     # if no build happens, no copy
-    add_custom_command( TARGET ${TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${shader} ${APP_BINARY_DIR}/shaders/ )
+    add_custom_command( TARGET ${TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${shader} ${APP_BINARY_DIR}/shaders/ )
     message(STATUS "copy ${shader} into build/shaders") 
 endforeach()

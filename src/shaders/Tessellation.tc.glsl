@@ -17,7 +17,7 @@ struct TC2E
 //< output patch size is the number of vertices in the output patch
 layout (vertices = 3) out;
 uniform float tessellationLevelInner;
-uniform float tessellationLevelOuter;
+uniform vec3  tessellationLevelOuter;
 
 in  V2T vdata[];
 
@@ -36,7 +36,8 @@ out TC2E tcdata[];
 //< built-in input variables:
 //< gl_PatchVerticesIn : the number of vertices in the input patch.
 //< gl_PrimitiveID     : the index of the current patch within this rendering command.
-//< gl_InvocationID    : the index of the TCS invocation within this patch. A TCS invocation writes to per-vertex output variables by using this to index them.
+//< gl_InvocationID    : the index of the TCS invocation within this patch.
+//<                      A TCS invocation writes to per-vertex output variables by using this to index them.
 //<
 //< built-in variables from output of vertex shader
 /*
@@ -50,7 +51,7 @@ out TC2E tcdata[];
 //<
 void main()
 {
-    #define ID gl_InvocationID //< once per vertex(CP)
+    #define ID gl_InvocationID //< once per vertex(Control Point)
     tcdata[ID].position = vdata[ID].position;
     tcdata[ID].normal   = vdata[ID].normal;
     tcdata[ID].color    = vdata[ID].color;
@@ -67,13 +68,14 @@ void main()
           - The effective tessellation levels = function{ value here, spacing policy }
 
           */
-	    gl_TessLevelInner[0] = tessellationLevelInner;
-	    gl_TessLevelOuter[0] = tessellationLevelOuter;
-	    gl_TessLevelOuter[1] = tessellationLevelOuter;
-	    gl_TessLevelOuter[2] = tessellationLevelOuter;
+        gl_TessLevelInner[0] = tessellationLevelInner;
+
+        gl_TessLevelOuter[0] = tessellationLevelOuter.x;
+        gl_TessLevelOuter[1] = tessellationLevelOuter.y;
+        gl_TessLevelOuter[2] = tessellationLevelOuter.z;
     }
     #undef ID
 }
 
 //< Where is "Patch Constant Function" ?
-//< which is called per patch to calculate constant values valid for full patch.
+//< It is called per patch to calculate constant values valid for full patch.

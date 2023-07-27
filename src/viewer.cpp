@@ -110,11 +110,11 @@ void Viewer::animateCamera(Camera &camera)
 
 void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
 {
-    glm::mat4 gViewMatrix = m_camera.viewMatrix();
-    glm::mat4 gProjectionMatrix = m_camera.projMatrix();
-    glm::vec3 lightPos = glm::vec3(20.0f, 20.0f, 20.0f);
-    glm::vec3 mesh_color = glm::vec3(0.9f, 0.5f, 3.0f);
     glm::mat4x4 modelMatrix = glm::mat4(1.0);
+    glm::mat4 gViewMatrix       = m_camera.viewMatrix();
+    glm::mat4 gProjectionMatrix = m_camera.projMatrix();
+    glm::vec3 lightPos   = glm::vec3(20.0f, 20.0f, 20.0f);
+    glm::vec3 mesh_color = glm::vec3(0.9f, 0.5f, 3.0f);
 
 #if defined(MSAA_ENABLE)
     glEnable(GL_MULTISAMPLE);
@@ -139,32 +139,32 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
     {
         if(!m_setting.enableTess)
         {
-            glUseProgram(programID);
+            glUseProgram(m_linked_shader_ID);
 
-            glUniform3f(lightID, lightPos.x, lightPos.y, lightPos.z);
-            glUniform3f(mesh_color_ID, mesh_color.x, mesh_color.y, mesh_color.z);
-            glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &gViewMatrix[0][0]);
-            glUniformMatrix4fv(projectionMatrixID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
-            glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
+            glUniform3f(m_light_pos_ID, lightPos.x, lightPos.y, lightPos.z);
+            glUniform3f(m_mesh_color_ID, mesh_color.x, mesh_color.y, mesh_color.z);
+            glUniformMatrix4fv(m_view_matrix_ID, 1, GL_FALSE, &gViewMatrix[0][0]);
+            glUniformMatrix4fv(m_proj_matrix_ID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
+            glUniformMatrix4fv(m_model_matrix_ID, 1, GL_FALSE, &modelMatrix[0][0]);
 
             glBindVertexArray( m_meshBin.vao(i) );
             glDrawArrays( GL_TRIANGLES, 0, m_meshBin.vertex_num(i) );
         }
         else
         {
-            glUseProgram(tessProgramID);
+            glUseProgram(m_tes_linked_shader_ID);
             {
-                glUniform3f(tessLightID, lightPos.x, lightPos.y, lightPos.z);
-                glUniform3f(tess_mesh_color_ID, mesh_color.x, mesh_color.y, mesh_color.z);
-                glUniformMatrix4fv(tessViewMatrixID, 1, GL_FALSE, &gViewMatrix[0][0]);
-                glUniformMatrix4fv(tessProjectionMatrixID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
-                glUniformMatrix4fv(tessModelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
+                glUniform3f(m_tes_light_pos_ID, lightPos.x, lightPos.y, lightPos.z);
+                glUniform3f(m_tes_mesh_color_ID, mesh_color.x, mesh_color.y, mesh_color.z);
+                glUniformMatrix4fv(m_tes_view_matrix_ID, 1, GL_FALSE, &gViewMatrix[0][0]);
+                glUniformMatrix4fv(m_tes_proj_matrix_ID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
+                glUniformMatrix4fv(m_tes_model_matrix_ID, 1, GL_FALSE, &modelMatrix[0][0]);
 
-                glUniform1f(tessellationLevelInnerID, m_setting.innerTessLevel.x); //< fix shader code latter
-                glUniform1f(tessellationLevelOuterID, m_setting.outerTessLevel.x);
+                glUniform1f(m_tes_inner_level_ID, m_setting.innerTessLevel.x); //< fix shader code latter
+                //glUniform1f(m_tes_outer_level_ID, m_setting.outerTessLevel.x);
+                glUniform3f(m_tes_outer_level_ID, m_setting.outerTessLevel.x, m_setting.outerTessLevel.y, m_setting.outerTessLevel.z);
 
-                //glUniform2f(tessellationLevelInnerID, m_setting.innerTessLevel.x, m_setting.innerTessLevel.y); //< fix shader code latter
-                //glUniform3f(tessellationLevelOuterID, m_setting.outerTessLevel.x, m_setting.innerTessLevel.y, m_setting.innerTessLevel.z);
+                //glUniform2f(m_tes_inner_level_ID, m_setting.innerTessLevel.x, m_setting.innerTessLevel.y); //< fix shader code latter
 
                 glPatchParameteri(GL_PATCH_VERTICES, 3);
                 glBindVertexArray( m_meshBin.vao(i) );
@@ -196,24 +196,22 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
 }
 void Viewer::initOpenGLShaders()
 {
-    programID = loadStandardShaders("shaders/Standard.vert.glsl", "shaders/Standard.frag.glsl");
-    tessProgramID = loadTessShaders("shaders/Tessellation.vs.glsl", "shaders/Tessellation.tc.glsl", "shaders/Tessellation.te.glsl", "shaders/Tessellation.fs.glsl");
+    m_linked_shader_ID = loadStandardShaders("shaders/Standard.vert.glsl", "shaders/Standard.frag.glsl");
+    m_tes_linked_shader_ID = loadTessShaders("shaders/Tessellation.vs.glsl", "shaders/Tessellation.tc.glsl", "shaders/Tessellation.te.glsl", "shaders/Tessellation.fs.glsl");
 
-    matrixID = glGetUniformLocation(programID, "MVP");
-    modelMatrixID = glGetUniformLocation(programID, "M");
-    viewMatrixID = glGetUniformLocation(programID, "V");
-    projectionMatrixID = glGetUniformLocation(programID, "P");
-    lightID = glGetUniformLocation(programID, "lightPosition_worldspace");
-    mesh_color_ID = glGetUniformLocation(programID, "mesh_color");
+    m_model_matrix_ID = glGetUniformLocation(m_linked_shader_ID, "M");
+    m_view_matrix_ID  = glGetUniformLocation(m_linked_shader_ID, "V");
+    m_proj_matrix_ID  = glGetUniformLocation(m_linked_shader_ID, "P");
+    m_light_pos_ID    = glGetUniformLocation(m_linked_shader_ID, "lightPosition_worldspace");
+    m_mesh_color_ID   = glGetUniformLocation(m_linked_shader_ID, "mesh_color");
 
-    tessModelMatrixID = glGetUniformLocation(tessProgramID, "M");
-    tessViewMatrixID = glGetUniformLocation(tessProgramID, "V");
-    tessProjectionMatrixID = glGetUniformLocation(tessProgramID, "P");
-    tessLightID = glGetUniformLocation(tessProgramID, "lightPosition_worldspace");
-    tessellationLevelInnerID = glGetUniformLocation(tessProgramID, "tessellationLevelInner");
-    tessellationLevelOuterID = glGetUniformLocation(tessProgramID, "tessellationLevelOuter");
-
-    tess_mesh_color_ID = glGetUniformLocation(tessProgramID, "mesh_color");
+    m_tes_model_matrix_ID = glGetUniformLocation(m_tes_linked_shader_ID, "M");
+    m_tes_view_matrix_ID  = glGetUniformLocation(m_tes_linked_shader_ID, "V");
+    m_tes_proj_matrix_ID  = glGetUniformLocation(m_tes_linked_shader_ID, "P");
+    m_tes_light_pos_ID    = glGetUniformLocation(m_tes_linked_shader_ID, "lightPosition_worldspace");
+    m_tes_inner_level_ID  = glGetUniformLocation(m_tes_linked_shader_ID, "tessellationLevelInner");
+    m_tes_outer_level_ID  = glGetUniformLocation(m_tes_linked_shader_ID, "tessellationLevelOuter");
+    m_tes_mesh_color_ID   = glGetUniformLocation(m_tes_linked_shader_ID, "mesh_color");
 
 }
 

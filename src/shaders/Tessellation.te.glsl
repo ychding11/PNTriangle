@@ -135,9 +135,9 @@ void main()
     float w2 = w * w;
 
     vec3 pos = b300 * w3 + b030 * u3 + b003 * v3
-		+ b210 * 3. * w2 * u + b120 * 3. * w * u2 + b201 * 3. * w2 * v
-		+ b021 * 3. * u2 * v + b102 * 3. * w * v2 + b012 * 3. * u * v2
-		+ b012 * 6. * w * u * v;
+        + b210 * 3. * w2 * u + b120 * 3. * w * u2 + b201 * 3. * w2 * v
+        + b021 * 3. * u2 * v + b102 * 3. * w * v2 + b012 * 3. * u * v2
+        + b012 * 6. * w * u * v;
 
     tedata.position = pos;
 
@@ -155,7 +155,7 @@ void main()
     vec3 n101 = normalize(n3 + n1 - v31*(p1 - p3));
 
     tedata.normal = n200 * w2 + n020 * u2 + n002 * v2
-		    + n110 * w * u + n011 * u * v + n101 * w * v;
+            + n110 * w * u + n011 * u * v + n101 * w * v;
 #else
     tedata.normal = n1 * w + n2 * u + n3 * v;
 #endif

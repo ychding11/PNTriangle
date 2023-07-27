@@ -51,33 +51,30 @@ private:
 
 private:
 
-    GLuint programID;
-    GLuint tessProgramID;
+    GLuint m_linked_shader_ID;
+    GLuint m_tes_linked_shader_ID;
 
 
-    GLuint lightID;
-    GLuint matrixID;
-    GLuint modelMatrixID;
-    GLuint viewMatrixID;
-    GLuint projectionMatrixID;
-    GLuint mesh_color_ID;
+    GLuint m_light_pos_ID;
+    GLuint m_model_matrix_ID;
+    GLuint m_view_matrix_ID;
+    GLuint m_proj_matrix_ID;
+    GLuint m_mesh_color_ID;
 
-    GLuint tessLightID;
-
-    GLuint tess_mesh_color_ID;
-    GLuint tessMatrixID;
-    GLuint tessModelMatrixID;
-    GLuint tessViewMatrixID;
-    GLuint tessProjectionMatrixID;
-    GLfloat tessellationLevelInnerID;
-    GLfloat tessellationLevelOuterID;
+    GLuint m_tes_light_pos_ID;
+    GLuint m_tes_mesh_color_ID;
+    GLuint m_tes_model_matrix_ID;
+    GLuint m_tes_view_matrix_ID;
+    GLuint m_tes_proj_matrix_ID;
+    GLuint m_tes_inner_level_ID;
+    GLuint m_tes_outer_level_ID;
 
 public:
     Viewer() = delete;
     ~Viewer()
     {
-        glDeleteProgram(programID);
-        glDeleteProgram(tessProgramID);
+        glDeleteProgram(m_linked_shader_ID);
+        glDeleteProgram(m_tes_linked_shader_ID);
         glfwTerminate();
     }
 
