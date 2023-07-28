@@ -37,7 +37,7 @@ int main(int argc, char **argv)
     }
     else
     {
-        modelPath = "Model/bunny.obj";
+        modelPath = "Model/Suzanne.obj";
     }
 
     Viewer viewer{"Viewer", 1280, 720};

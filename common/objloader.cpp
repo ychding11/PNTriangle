@@ -4,6 +4,8 @@
 #include <sstream>
 #include <cstring>
 
+#include "Log.h" 
+
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
@@ -157,10 +159,11 @@ static AABB load_obj(const std::string &filename, const std::string &base_dir, s
                         attrib.normals[3 * index.normal_index + 1],
                         attrib.normals[3 * index.normal_index + 2]
                     };
+                    Log("Normal = {:8.4},{:8.4},{:8.4}", vert.normal.x, vert.normal.y, vert.normal.z);
                 }
                 else
                 {
-                    throw std::runtime_error("No normal channel found in vertex");
+                    throw std::runtime_error("No normal channel found in vertex stream.");
                     return aabb;
                 }
 

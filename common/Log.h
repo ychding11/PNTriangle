@@ -9,6 +9,7 @@
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/fmt/ostr.h" // must be included for user type format
 
+//< https://hackingcpp.com/cpp/libs/fmt.html
 
 namespace Logging
 {
