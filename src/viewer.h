@@ -61,6 +61,7 @@ private:
     GLuint m_proj_matrix_ID;
     GLuint m_mesh_color_ID;
 
+    GLuint m_tes_eye_pos_ID;
     GLuint m_tes_light_pos_ID;
     GLuint m_tes_mesh_color_ID;
     GLuint m_tes_model_matrix_ID;

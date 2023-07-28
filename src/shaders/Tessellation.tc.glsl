@@ -66,7 +66,6 @@ void main()
           - Triangles only uses 1 inner level and 3 outer levels. The rest are ignored.
           - The patch can be discarded if any outer tessellation level <= 0, it gives chance to TCS to cull patches by passing 0 for a relevant outer tessellation level 
           - The effective tessellation levels = function{ value here, spacing policy }
-
           */
         gl_TessLevelInner[0] = tessellationLevelInner;
 

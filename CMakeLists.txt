@@ -69,7 +69,7 @@ add_definitions(
 	-D_CRT_SECURE_NO_WARNINGS
 )
 
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+#set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 file(GLOB Model_3D_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/Model/*.obj

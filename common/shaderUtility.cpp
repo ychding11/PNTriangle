@@ -214,10 +214,10 @@ GLuint loadTessShaders(const char *tess_vert_file_path, const char *tess_ctrl_fi
     if(infoLogLength > 0) {
         std::vector<char> tessEvalShaderErrMsg(infoLogLength + 1);
         glGetShaderInfoLog(tessEvalShaderID, infoLogLength, NULL, &tessEvalShaderErrMsg[0]);
-        Err("%s\n", &tessEvalShaderErrMsg[0]);
+        Err("{}\n", &tessEvalShaderErrMsg[0]);
     }
 
-    Log("Compiling shader: %s\n", tess_frag_file_path);
+    Log("Compiling shader: {}\n", tess_frag_file_path);
     char const* tessFragSourcePointer = tessFragShaderCode.c_str();
     glShaderSource(tessFragShaderID, 1, &tessFragSourcePointer, NULL);
     glCompileShader(tessFragShaderID);
@@ -227,7 +227,7 @@ GLuint loadTessShaders(const char *tess_vert_file_path, const char *tess_ctrl_fi
     {
         std::vector<char> tessFragShaderErrMsg(infoLogLength + 1);
         glGetShaderInfoLog(tessFragShaderID, infoLogLength, NULL, &tessFragShaderErrMsg[0]);
-        Err("%s\n", &tessFragShaderErrMsg[0]);
+        Err("{}\n", &tessFragShaderErrMsg[0]);
     }
 
     Log("Linking Shader...\n");
@@ -244,7 +244,7 @@ GLuint loadTessShaders(const char *tess_vert_file_path, const char *tess_ctrl_fi
     {
         std::vector<char> tessProgramErrMsg(infoLogLength + 1);
         glGetProgramInfoLog(m_tes_linked_shader_ID, infoLogLength, NULL, &tessProgramErrMsg[0]);
-        Err("%s\n", &tessProgramErrMsg[0]);
+        Err("{}\n", &tessProgramErrMsg[0]);
     }
 
     glDetachShader(m_tes_linked_shader_ID, tessVertShaderID);

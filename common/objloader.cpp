@@ -92,7 +92,6 @@ bool loadQuadOBJ(const char * path, std::vector<glm::vec3> &out_vertices, std::v
 
 static AABB load_obj(const std::string &filename, const std::string &base_dir, std::vector<Mesh> &meshes)
 {
-
     std::stringstream ss;
     std::vector<tinyobj::material_t> materials;
     tinyobj::attrib_t attrib;
