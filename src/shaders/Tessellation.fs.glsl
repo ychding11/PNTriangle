@@ -34,6 +34,6 @@ void main()
     float cosAlpha = clamp(dot(e, r), 0, 1);
 
     color = materialAmbientColor
-	    + materialDiffuseColor * lightColor * lightPower * cosTheta / (distance * distance)
-	    + materialSpecularColor * lightColor * lightPower * pow(cosAlpha, 5) / (distance * distance);
+        + materialDiffuseColor * lightColor * lightPower * cosTheta / (distance * distance)
+        + materialSpecularColor * lightColor * lightPower * pow(cosAlpha, 5) / (distance * distance);
 }

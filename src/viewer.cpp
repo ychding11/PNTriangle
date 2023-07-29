@@ -338,13 +338,13 @@ static void drawUI(Viewer &viewer)
         }
         if (ImGui::BeginMenu(ICON_FA_EYE " View"))
         {
-            ImGui::Checkbox("Wireframe", &displayOption.wireframe);
             ImGui::Checkbox("ShowUI", &displayOption.showUI);
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu(ICON_FA_WINDOWS " Settings"))
         {
             bool changed = false;
+            ImGui::Checkbox("Wireframe", &displayOption.wireframe);
             ImGui::Checkbox("Enable Tessellation",  &setting.enableTess);
             ImGui::Checkbox("Enable Tessellation Animation",  &viewer.m_enable_tess_anim);
             ImGui::Separator();
