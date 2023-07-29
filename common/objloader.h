@@ -11,17 +11,15 @@
 
 bool loadQuadOBJ(const char * path, std::vector<glm::vec3> &out_vertices, std::vector<glm::vec3> &out_normals);
 
-struct SimpleVertex
+struct PNVertex
 {
     glm::vec3 position, normal;
 };
 
 struct Mesh
 {
-    std::vector<SimpleVertex> vertices;
-
+    std::vector<PNVertex> vertices;
 };
-
 
 class MeshBin
 {

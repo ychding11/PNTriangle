@@ -23,7 +23,6 @@ void drawOverlay(const Viewer &viewer);
 
 void Viewer::Run()
 {
-    //< second stage init
     MeshBin meshes{ m_objPath };
     Camera camera(meshes.Center(), meshes.LogestDim() * 1.618f); //< camera setting should according to Mesh info
 
