@@ -24,10 +24,7 @@ void drawOverlay(const Viewer &viewer);
 void Viewer::Run()
 {
     MeshBin meshes{ m_objPath };
-    Camera camera(meshes.Center(), meshes.LogestDim() * 1.618f); //< camera setting should according to Mesh info
-
-    //< it should lighting here
-
+    Camera camera(meshes.Center(), meshes.LogestDim() * 1.618f); //< Set Camera by Mesh info
     glfwCallbackData cb{ &camera, m_animation_mode, GetRenderSetting(), GetDisplayOption()};
     glfwSetWindowUserPointer(m_window, &cb);
 
@@ -63,8 +60,6 @@ void Viewer::animateTessellation()
         if (m_setting.innerTessLevel.x > maxInnerLevel)
             m_setting.innerTessLevel.x = 1;
     }
-
-    //std::this_thread::sleep_until(awake_time());
 }
 
 void Viewer::animateCamera(Camera &camera)
@@ -104,7 +99,6 @@ void Viewer::animateCamera(Camera &camera)
             break;
         }
     }
-
 }
 
 void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)

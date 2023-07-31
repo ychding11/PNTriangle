@@ -15,7 +15,6 @@ class MeshBin;
 class Camera;
 
 class Viewer;
-//void drawUI(RenderSetting &setting, DisplayOption & displayOption);
 void drawUI(Viewer &viewer);
 
 //<
@@ -50,10 +49,8 @@ private:
     friend void drawOverlay(const Viewer &viewer);
 
 private:
-
     GLuint m_linked_shader_ID;
     GLuint m_tes_linked_shader_ID;
-
 
     GLuint m_light_pos_ID;
     GLuint m_model_matrix_ID;

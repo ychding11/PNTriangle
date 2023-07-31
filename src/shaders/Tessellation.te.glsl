@@ -31,14 +31,73 @@ layout(triangles, equal_spacing, ccw) in;
 //< They are in array indexed implicitly
 in TC2E tcdata[];
 
-//< per-patch outputs from the TCS as inputs in the TES using the patch keyword
-//patch in vec4 data;
 
 out TesOut tes_out;
 
 uniform mat4 M;
 uniform mat4 V;
 uniform mat4 P;
+uniform vec3 mesh_color;
+
+//< per-patch outputs from the TCS as inputs in the TES using the patch keyword
+patch in vec3 b300;
+patch in vec3 b030;
+patch in vec3 b003;
+patch in vec3 b210;
+patch in vec3 b120;
+patch in vec3 b021;
+patch in vec3 b012;
+patch in vec3 b102;
+patch in vec3 b201;
+patch in vec3 b111;
+patch in vec3 n200;
+patch in vec3 n020;
+patch in vec3 n002;
+patch in vec3 n110;
+patch in vec3 n011;
+patch in vec3 n101;
+
+vec3 evaluatePosistion(in vec3 tessCoord)
+{
+    float u =tessCoord.x;
+    float v =tessCoord.y;
+    float w =tessCoord.z;
+
+    float u3 = u * u * u;
+    float v3 = v * v * v;
+    float w3 = w * w * w;
+    float u2 = u * u;
+    float v2 = v * v;
+    float w2 = w * w;
+
+    vec3 pos = b300 * w3 + b030 * u3 + b003 * v3
+             + b210 * 3. * w2 * u + b120 * 3. * w * u2 + b201 * 3. * w2 * v
+             + b021 * 3. * u2 * v + b102 * 3. * w * v2 + b012 * 3. * u * v2
+             + b012 * 6. * w * u * v;
+    return pos;
+}
+
+vec3 evaluateNormal(in vec3 tessCoord)
+{
+    float u =tessCoord.x;
+    float v =tessCoord.y;
+    float w =tessCoord.z;
+
+    float u2 = u * u;
+    float v2 = v * v;
+    float w2 = w * w;
+
+    vec3 normal;
+#if 1
+    normal = n200 * w2 + n020 * u2 + n002 * v2
+           + n110 * w * u + n011 * u * v + n101 * w * v;
+#else
+    //< Linearly varying normals
+    normal = n1 * w + n2 * u + n3 * v;
+#endif
+    return normal;
+}
+
 
 //<
 //< Evaluate surface for given UV coordinate
@@ -71,90 +130,17 @@ uniform mat4 P;
 */
 void main()
 {
-    vec3 p1 = tcdata[0].position;
-    vec3 p2 = tcdata[1].position;
-    vec3 p3 = tcdata[2].position;
-
-    vec3 n1 = tcdata[0].normal;
-    vec3 n2 = tcdata[1].normal;
-    vec3 n3 = tcdata[2].normal;
-
-    vec3 c1 = tcdata[0].color.rgb;
-    vec3 c2 = tcdata[1].color.rgb;
-    vec3 c3 = tcdata[2].color.rgb;
-
     //<
     //< The built-in input variable vec3 gl_TessCoord, which comes from tessellator
     //< It is used to identify the coordinate of generated point in "abstrct patch" or "domain"
     //< It is Barycentric coordinate
     //<
-    float u = gl_TessCoord.x;
-    float v = gl_TessCoord.y;
-    float w = gl_TessCoord.z;
+    vec3 pos = evaluatePosistion(gl_TessCoord);
+    vec3 normal = evaluateNormal(gl_TessCoord);
 
-    //< Calculate Vertex control points
-    //< Maybe have a better place to do so ?
-    vec3 b300 = p1;
-    vec3 b030 = p2;
-    vec3 b003 = p3;
-
-    //< Weight
-    float w12 = dot(p2 - p1, n1);
-    float w21 = dot(p1 - p2, n2);
-    float w23 = dot(p3 - p2, n2);
-    float w32 = dot(p2 - p3, n3);
-    float w31 = dot(p1 - p3, n3);
-    float w13 = dot(p3 - p1, n1);
-
-    //< Tangent control points
-    vec3 b210 = (2.f*p1 + p2 - w12*n1) / 3.f;
-    vec3 b120 = (2.f*p2 + p1 - w21*n2) / 3.f;
-    vec3 b021 = (2.f*p2 + p3 - w23*n2) / 3.f;
-    vec3 b012 = (2.f*p3 + p2 - w32*n3) / 3.f;
-    vec3 b102 = (2.f*p3 + p1 - w31*n3) / 3.f;
-    vec3 b201 = (2.f*p1 + p3 - w13*n1) / 3.f;
-
-    //< Center Control point 
-    vec3 ee = (b120 + b120 + b021 + b012 + b102 + b210) * 0.25f;
-    vec3 vv = (p1 + p2 + p3) * 0.166666667f;
-    vec3 b111 = ee - vv ;
-
-    float u3 = u * u * u;
-    float v3 = v * v * v;
-    float w3 = w * w * w;
-    float u2 = u * u;
-    float v2 = v * v;
-    float w2 = w * w;
-
-    vec3 pos = b300 * w3 + b030 * u3 + b003 * v3
-        + b210 * 3. * w2 * u + b120 * 3. * w * u2 + b201 * 3. * w2 * v
-        + b021 * 3. * u2 * v + b102 * 3. * w * v2 + b012 * 3. * u * v2
-        + b012 * 6. * w * u * v;
-
-    vec3 normal;
-#if 1
-    vec3 n200 = n1;
-    vec3 n020 = n2;
-    vec3 n002 = n3;
-
-    float v12 = (2.*(dot(p2 - p1, n1 + n2) / dot(p2 - p1, p2 - p1)));
-    float v23 = (2.*(dot(p3 - p2, n2 + n3) / dot(p3 - p2, p3 - p2)));
-    float v31 = (2.*(dot(p1 - p3, n3 + n1) / dot(p1 - p3, p1 - p3)));
-
-    vec3 n110 = normalize(n1 + n2 - v12*(p2 - p1));
-    vec3 n011 = normalize(n2 + n3 - v23*(p3 - p2));
-    vec3 n101 = normalize(n3 + n1 - v31*(p1 - p3));
-
-    normal = n200 * w2 + n020 * u2 + n002 * v2
-           + n110 * w * u + n011 * u * v + n101 * w * v;
-#else
-    //< Linearly varying normals
-    normal = n1 * w + n2 * u + n3 * v;
-#endif
-
-    gl_Position = P * V * M * vec4(pos, 1.0);
-
-    tes_out.diffuse_color  = vec3(c1 * w + c2 * u + c3 * v);
+    tes_out.diffuse_color  = mesh_color;
     tes_out.position_world = (M * vec4(pos, 1.0)).xyz;
     tes_out.normal_world   = normal;
+
+    gl_Position = P * V * M * vec4(pos, 1.0);
 }

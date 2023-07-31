@@ -18,6 +18,6 @@ namespace Logging
 
 #define Log(...)  Logging::Logger()->info(__VA_ARGS__); 
 #define Warn(...) Logging::Logger()->warn(__VA_ARGS__); 
-#define Err(...)  Logging::Logger()->error(__VA_ARGS__); 
+#define Err(...)  Logging::Logger()->error(__VA_ARGS__);  assert(0);
 
 #endif

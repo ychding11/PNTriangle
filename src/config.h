@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <iostream>
@@ -7,7 +6,6 @@
 #include <glm/glm.hpp>
 
  #define MSAA_ENABLE
-
 
 struct RenderSetting
 {
