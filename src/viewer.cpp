@@ -108,7 +108,6 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
     glm::mat4 gProjectionMatrix = m_camera.projMatrix();
     glm::vec3 eye_position = m_camera.eye();
     glm::vec3 lightPos   = glm::vec3(20.0f, 20.0f, 20.0f);
-    glm::vec3 mesh_color = glm::vec3(0.9f, 0.5f, 3.0f);
 
 #if defined(MSAA_ENABLE)
     glEnable(GL_MULTISAMPLE);
@@ -136,7 +135,7 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
             glUseProgram(m_linked_shader_ID);
 
             glUniform3f(m_light_pos_ID, lightPos.x, lightPos.y, lightPos.z);
-            glUniform3f(m_mesh_color_ID, mesh_color.x, mesh_color.y, mesh_color.z);
+            glUniform3f(m_mesh_color_ID, m_mesh_color.x, m_mesh_color.y, m_mesh_color.z);
             glUniformMatrix4fv(m_view_matrix_ID, 1, GL_FALSE, &gViewMatrix[0][0]);
             glUniformMatrix4fv(m_proj_matrix_ID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
             glUniformMatrix4fv(m_model_matrix_ID, 1, GL_FALSE, &modelMatrix[0][0]);
@@ -149,7 +148,7 @@ void Viewer::render(const MeshBin & m_meshBin, const Camera &m_camera)
             glUseProgram(m_tes_linked_shader_ID);
             {
                 glUniform3f(m_tes_light_pos_ID, lightPos.x, lightPos.y, lightPos.z);
-                glUniform3f(m_tes_mesh_color_ID, mesh_color.x, mesh_color.y, mesh_color.z);
+                glUniform3f(m_tes_mesh_color_ID, m_mesh_color.x, m_mesh_color.y, m_mesh_color.z);
                 glUniformMatrix4fv(m_tes_view_matrix_ID, 1, GL_FALSE, &gViewMatrix[0][0]);
                 glUniformMatrix4fv(m_tes_proj_matrix_ID, 1, GL_FALSE, &gProjectionMatrix[0][0]);
                 glUniformMatrix4fv(m_tes_model_matrix_ID, 1, GL_FALSE, &modelMatrix[0][0]);
@@ -319,11 +318,11 @@ static void drawUI(Viewer &viewer)
                 viewer.m_sequence_count = 0;
                 if (viewer.m_save_image_sequence)
                 {
-                    printf("start Image sequence.\n");
+                    Log("start Image sequence.\n");
                 }
                 else
                 {
-                    printf("stop Image sequence.\n");
+                    Log("stop Image sequence.\n");
                 }
             }
 
@@ -337,6 +336,8 @@ static void drawUI(Viewer &viewer)
         if (ImGui::BeginMenu(ICON_FA_WINDOWS " Settings"))
         {
             bool changed = false;
+            ImGui::ColorEdit3("Mesh Diffuse Color", &viewer.m_mesh_color.x);
+            ImGui::Separator();
             ImGui::Checkbox("Wireframe", &displayOption.wireframe);
             ImGui::Checkbox("Enable Tessellation",  &setting.enableTess);
             ImGui::Checkbox("Enable Tessellation Animation",  &viewer.m_enable_tess_anim);
@@ -345,7 +346,7 @@ static void drawUI(Viewer &viewer)
             changed |= ImGui::SliderFloat("Inner Tess Level", &setting.innerTessLevel.x, 1, 64);
             if (changed)
             {
-                printf("Tessellation level changed.\n");
+                Log("Tessellation level changed.\n");
             }
             ImGui::EndMenu();
         }
@@ -371,8 +372,8 @@ static void drawOverlay(const Viewer &viewer)
         ImGui::Text("Toggle UI display with key [ x | X ]");
         ImGui::Text("Renderer : %s", glGetString(GL_RENDERER));
         ImGui::Text("OpenGL version : %s", glGetString(GL_VERSION));
-        ImGui::Text("outer level : %.2f, %.2f, %.2f, %.2f", setting.outerTessLevel.x, setting.outerTessLevel.y, setting.outerTessLevel.z, setting.outerTessLevel.w);
-        ImGui::Text("inner level : %.2f, %.2f, %.2f", setting.innerTessLevel.x, setting.innerTessLevel.y, setting.innerTessLevel.z);
+        ImGui::Text("outer level : %.2f, %.2f, %.2f", setting.outerTessLevel.x, setting.outerTessLevel.y, setting.outerTessLevel.z);
+        ImGui::Text("inner level : %.2f", setting.innerTessLevel.x);
         ImGui::Text("fps : %.2f fps", ImGui::GetIO().Framerate);
         ImGui::End();
     }

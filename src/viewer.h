@@ -48,6 +48,7 @@ private:
     friend void drawUI(Viewer &viewer);
     friend void drawOverlay(const Viewer &viewer);
 
+    glm::vec3 m_mesh_color{0.9f, 0.5f, 3.0f};
 private:
     GLuint m_linked_shader_ID;
     GLuint m_tes_linked_shader_ID;
