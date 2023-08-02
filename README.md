@@ -1,10 +1,51 @@
-## Tessellation by OpenGL
+## PNTrangle implementation by OpenGL
 
 A PN triangle is a cubic triangular Bezier patch. Control points are merely
 depending on the vertex positions and normals of a defining base triangle.
 Each PN triangle in a mesh is thus independent of neighboring triangles.
 
 Normals of base triangle shall have different values. If not,normal variation cannot work.
+
+### Control point calcualation
+
+![PNTriangle Control point](PNTriangle.drawio.svg)
+
+The diagrams are extracted from paper. Read paper "Curved PN Triangles" for details.
+
+### GLSL TCS code
+
+``` glsl
+void evaluateControlPoints(in vec3 p1, in vec3 p2, in vec3 p3,in vec3 n1, in vec3 n2, in vec3 n3)
+{
+    //< Calculate Vertex control points
+    b300 = p1;
+    b030 = p2;
+    b003 = p3;
+
+    //< Weight
+    float w12 = dot(p2 - p1, n1);
+    float w21 = dot(p1 - p2, n2);
+    float w23 = dot(p3 - p2, n2);
+    float w32 = dot(p2 - p3, n3);
+    float w31 = dot(p1 - p3, n3);
+    float w13 = dot(p3 - p1, n1);
+
+    //< Tangent control points
+    b210 = (2.f * p1 + p2 - w12 * n1) / 3.f;
+    b120 = (2.f * p2 + p1 - w21 * n2) / 3.f;
+    b021 = (2.f * p2 + p3 - w23 * n2) / 3.f;
+    b012 = (2.f * p3 + p2 - w32 * n3) / 3.f;
+    b102 = (2.f * p3 + p1 - w31 * n3) / 3.f;
+    b201 = (2.f * p1 + p3 - w13 * n1) / 3.f;
+
+    //< Center Control point 
+    vec3 ee = (b120 + b120 + b021 + b012 + b102 + b210) * 0.25f;
+    vec3 vv = (p1 + p2 + p3) * 0.166666667f;
+    b111 = ee - vv;
+}
+```
+
+### Questions
 How to ensure no cracks after tessellation. I feel that it is hard to ensure that.
 
 
