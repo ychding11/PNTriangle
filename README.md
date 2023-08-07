@@ -43,6 +43,22 @@ void evaluateControlPoints(in vec3 p1, in vec3 p2, in vec3 p3,in vec3 n1, in vec
     vec3 vv = (p1 + p2 + p3) * 0.166666667f;
     b111 = ee - vv;
 }
+
+
+void evaluateNormalControlPoints(in vec3 p1, in vec3 p2, in vec3 p3,in vec3 n1, in vec3 n2, in vec3 n3)
+{
+    n200 = n1;
+    n020 = n2;
+    n002 = n3;
+
+    float v12 = (2. * (dot(p2 - p1, n1 + n2) / dot(p2 - p1, p2 - p1)));
+    float v23 = (2. * (dot(p3 - p2, n2 + n3) / dot(p3 - p2, p3 - p2)));
+    float v31 = (2. * (dot(p1 - p3, n3 + n1) / dot(p1 - p3, p1 - p3)));
+
+    n110 = normalize(n1 + n2 - v12 * (p2 - p1));
+    n011 = normalize(n2 + n3 - v23 * (p3 - p2));
+    n101 = normalize(n3 + n1 - v31 * (p1 - p3));
+}
 ```
 
 ### Questions
