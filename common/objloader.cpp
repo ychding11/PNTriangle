@@ -4,7 +4,7 @@
 #include <sstream>
 #include <cstring>
 
-#include "Log.h" 
+#include "log.h" 
 
 
 #define TINYOBJLOADER_IMPLEMENTATION

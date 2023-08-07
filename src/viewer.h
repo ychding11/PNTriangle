@@ -9,7 +9,7 @@
 #include <glm/glm.hpp>
 
 #include "config.h"
-#include "Log.h"
+#include "log.h"
 
 class MeshBin;
 class Camera;

@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "shaderUtility.h"
-#include "Log.h"
+#include "log.h"
 
 GLuint loadStandardShaders(const char *vert_file_path, const char *frag_file_path)
 {
