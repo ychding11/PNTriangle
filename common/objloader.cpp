@@ -87,7 +87,8 @@ static AABB load_obj(const std::string &filename, const std::string &base_dir, s
                         attrib.normals[3 * index.normal_index + 2]
                     };
                     vert.normal = glm::normalize(vert.normal);
-                    Log("Normal = {:8.4},{:8.4},{:8.4}", vert.normal.x, vert.normal.y, vert.normal.z);
+                    //Log("Normal = {:8.4},{:8.4},{:8.4}", vert.normal.x, vert.normal.y, vert.normal.z);
+                    Log("Normal = {}", vert.normal);
                 }
                 else
                 {
