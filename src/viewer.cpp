@@ -339,7 +339,14 @@ static void drawUI(Viewer &viewer)
             ImGui::ColorEdit3("Mesh Diffuse Color", &viewer.m_mesh_color.x);
             ImGui::Separator();
             ImGui::Checkbox("Wireframe", &displayOption.wireframe);
-            ImGui::Checkbox("Enable Tessellation",  &setting.enableTess);
+            if (ImGui::Checkbox("Enable Tessellation", &setting.enableTess))
+            {
+                if (false == setting.enableTess)
+                {
+                    setting.outerTessLevel = glm::vec4{1};
+                    setting.innerTessLevel = glm::vec3{1};
+                }
+            }
             ImGui::Checkbox("Enable Tessellation Animation",  &viewer.m_enable_tess_anim);
             ImGui::Separator();
             changed |= ImGui::SliderFloat3("outer Tess Level", &setting.outerTessLevel.x, 1, 64);
