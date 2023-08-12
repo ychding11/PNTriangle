@@ -85,8 +85,8 @@ It is to mplement PN Triangle tessellation by OpenGL.
 - Key 't': toggle tesselation
 - Key 'w': toggle wireframe 
 
-## Screen 
-- ![screen](./images/wireframe.png)
+## Demo 
+![screen](./images/anim.gif)
 
 ## Credits
 - [glew]()
